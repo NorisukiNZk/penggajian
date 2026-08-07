@@ -106,7 +106,10 @@
             <i class="fa fa-bars"></i>
           </button>
 
-          <h4 class="font-weight-bold text-white mb-0">KLINIK PRATAMA DR.H.M.HIDAYATULLAH</h4>
+          <div class="d-none d-lg-block ml-3">
+              <h5 class="font-weight-bold text-white mb-0" style="letter-spacing: 1px;">KLINIK PRATAMA <span class="text-info">HIDAYATULLAH</span></h5>
+              <div class="text-white-50 small mt-1 font-weight-bold" id="live-clock"><i class="fas fa-clock"></i> Memuat Jam...</div>
+          </div>
 
           <!-- Topbar Navbar -->
           <ul class="navbar-nav ml-auto">

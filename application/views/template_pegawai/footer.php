@@ -219,6 +219,20 @@ $(document).ready(function() {
           }
       }, 300); // 300ms delay for smoothness
   });
+
+  // Live Digital Clock
+  function updateLiveClock() {
+      var now = new Date();
+      var h = String(now.getHours()).padStart(2, '0');
+      var m = String(now.getMinutes()).padStart(2, '0');
+      var s = String(now.getSeconds()).padStart(2, '0');
+      var clockEl = document.getElementById('live-clock');
+      if (clockEl) {
+          clockEl.innerHTML = '<i class="fas fa-clock text-info"></i> ' + h + ':' + m + ':' + s + ' WIB';
+      }
+  }
+  setInterval(updateLiveClock, 1000);
+  updateLiveClock(); // initial call
 </script>
 
 </body>
