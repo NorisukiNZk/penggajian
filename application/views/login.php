@@ -13,6 +13,10 @@
   <!-- Custom styles for this template-->
   <link href="<?php echo base_url(); ?>assets/css/sb-admin-2.min.css" rel="stylesheet">
   
+  <!-- Google reCAPTCHA -->
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+  
   <style>
     body {
         background-color: #f4f7f6;
@@ -171,6 +175,11 @@
             <input type="password" class="form-control" name="password" id="password" placeholder="Masukkan Password Anda..." required>
             <i class="fas fa-eye input-icon clickable" id="togglePassword" title="Tampilkan Password"></i>
             <?php echo form_error('password', '<div class="text-small text-danger mt-1">', '</div>') ?>
+          </div>
+          
+          <!-- reCAPTCHA Widget (Test Keys) -->
+          <div class="form-group mb-4 d-flex justify-content-center">
+            <div class="g-recaptcha" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"></div>
           </div>
           
           <button type="submit" class="btn btn-login btn-block">
