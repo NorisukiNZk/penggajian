@@ -5,9 +5,7 @@
 			FIlter Slip Gaji Pegawai
 		</div>
 
-		<form method="POST" action="<?php echo base_url('admin/slip_gaji/cetak_slip_gaji')?>
-<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" style="display: none">
-">
+		<form method="POST" action="<?php echo base_url('admin/slip_gaji/cetak_slip_gaji')?>">
 		<div class="card-body">
 			<div class="form-group row">
 				<label for="inputPassword" class="col-sm-3 col-form-label">Bulan</label>
@@ -57,6 +55,8 @@
 
 			<button style="width: 100%" type="submit" class="btn btn-primary"><i class="fas fa-print"></i>Cetak Slip Gaji</button>
 	</div>
-	</form>
+	
+<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" style="display: none">
+</form>
 </div>
 <!-- /.container-fluid -->

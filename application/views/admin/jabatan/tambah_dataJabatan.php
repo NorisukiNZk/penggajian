@@ -11,9 +11,7 @@
 
 <div class="card" style="width: 60% ; margin-bottom: 100px">
 	<div class="card-body">
-		<form method="POST" action="<?php echo base_url('admin/data_jabatan/tambah_data_aksi')?>
-<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" style="display: none">
-">
+		<form method="POST" action="<?php echo base_url('admin/data_jabatan/tambah_data_aksi')?>">
 
 			<div class="form-group">
 				<label>Nama Jabatan</label>
@@ -43,6 +41,8 @@
 			<button type="reset" class="btn btn-danger" >Reset</button>
 			<a href="<?php echo base_url('admin/data_jabatan')?>" class="btn btn-warning">Kembali</a>
 
-		</form>
+		
+<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" style="display: none">
+</form>
 	</div>
 </div>

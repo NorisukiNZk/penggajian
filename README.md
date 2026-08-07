@@ -38,6 +38,14 @@ Aplikasi ini dipersenjatai dengan modifikasi *Frontend* mutakhir untuk memastika
 
 ---
 
+## 🛡️ Standar Keamanan (Security Hardening)
+Aplikasi ini telah diperkeras perlindungannya dari serangan siber umum yang sering menjadi kelemahan sistem konvensional:
+- **Anti CSRF (Cross-Site Request Forgery):** Token pelindung dinamis disuntikkan secara otomatis di seluruh *form* aplikasi, mencegah penyerang mengirimkan permintaan palsu dari luar domain.
+- **Global XSS Filtering:** Sistem pembersih otomatis (Sanitization) yang melucuti skrip jahat (*Javascript / HTML injection*) dari input pengguna (misalnya pada form Alasan Cuti).
+- **SQL Injection Prevention:** Penerapan *Query Builder* secara ketat untuk melindungi *database* dari ancaman peretasan URL (*ID Spoofing* dan *Union-Based Injection*).
+
+---
+
 ## 💻 Panduan Instalasi
 Untuk menjalankan aplikasi ini secara lokal (*localhost*):
 

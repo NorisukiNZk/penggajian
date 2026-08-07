@@ -8,9 +8,7 @@
 
   <div class="card" style="width: 40%">
   	<div class="card-body">
-  		<form method="POST" action="<?php echo base_url('pegawai/ganti_password/ganti_password_aksi')?>
-<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" style="display: none">
-">
+  		<form method="POST" action="<?php echo base_url('pegawai/ganti_password/ganti_password_aksi')?>">
   			
   			<div class="form-grup">
   				<label>Password Baru</label>
@@ -25,7 +23,9 @@
   			</div>
   			<br>
   			<button type="submint" class="btn btn-success">Simpan</button>
-  		</form>
+  		
+<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" style="display: none">
+</form>
   	</div>
   </div>
 

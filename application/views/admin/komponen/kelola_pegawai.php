@@ -71,7 +71,9 @@
 					</select>
 				</div>
 				<button type="submit" class="btn btn-info mb-2 ml-3"><i class="fas fa-search"></i> Tampilkan</button>
-			</form>
+			
+<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" style="display: none">
+</form>
 		</div>
 	</div>
 
@@ -89,9 +91,7 @@
 				Isi nominal hanya jika pegawai tersebut mendapat nilai <strong>berbeda</strong> dari default.
 			</div>
 
-			<form method="POST" action="<?php echo base_url('admin/komponen_gaji/simpan_komponen_pegawai') ?>
-<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" style="display: none">
-">
+			<form method="POST" action="<?php echo base_url('admin/komponen_gaji/simpan_komponen_pegawai') ?>">
 				<input type="hidden" name="id_komponen" value="<?php echo $komponen->id_komponen ?>">
 				<input type="hidden" name="bulan" value="<?php echo $bulan ?>">
 				<input type="hidden" name="tahun" value="<?php echo $tahun ?>">
@@ -149,7 +149,9 @@
 				<hr>
 				<button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Simpan Override</button>
 				<a href="<?php echo base_url('admin/komponen_gaji') ?>" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Kembali</a>
-			</form>
+			
+<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" style="display: none">
+</form>
 		</div>
 	</div>
 </div>

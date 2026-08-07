@@ -43,7 +43,9 @@
 	  </div>
 	  
 	  <button type="submit" class="btn btn-primary mb-2 ml-auto"><i class="fas fa-eye"></i> Generate Form</button>
-	</form>
+	
+<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" style="display: none">
+</form>
   </div>
 </div>
 	
@@ -63,8 +65,6 @@
 		Menampilkan Data Kehadiran Pegawai Bulan: <span class="font-weight-bold"><?php echo $bulan ?></span> Tahun: <span class="font-weight-bold"><?php echo $tahun ?></span>
 	</div>
 	<form method="POST">
-<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" style="display: none">
-
 	<button class="btn btn-success mb-3" type="submit" name="submit" value="submit">Simpan</button>
 	<table class="table table-bordered table-striped">
 		<tr>
@@ -96,7 +96,9 @@
 				<td><input type="number" name="alpha[]" class="form-control" value="0"></td>
 		<?php endforeach; ?>
 	</table><br></br><br></br>
-	</form>
+	
+<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" style="display: none">
+</form>
 
 </div>
 <!-- /.container-fluid -->

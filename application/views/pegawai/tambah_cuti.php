@@ -7,9 +7,7 @@
 
   <div class="card shadow mb-4" style="width: 60%;">
     <div class="card-body">
-      <form method="POST" action="<?php echo base_url('pegawai/cuti/tambah_aksi') ?>
-<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" style="display: none">
-">
+      <form method="POST" action="<?php echo base_url('pegawai/cuti/tambah_aksi') ?>">
 
         <div class="form-group">
             <label>Tanggal Mulai</label>
@@ -40,7 +38,9 @@
         <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Kirim Pengajuan</button>
         <a href="<?php echo base_url('pegawai/cuti')?>" class="btn btn-secondary">Kembali</a>
 
-      </form>
+      
+<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" style="display: none">
+</form>
     </div>
   </div>
 

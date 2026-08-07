@@ -5,9 +5,7 @@
             Filter Laporan Gaji Pegawai
         </div>
 
-        <form method="POST" action="<?php echo base_url('admin/laporan_gaji/cetak_laporan_gaji') ?>
-<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" style="display: none">
-">
+        <form method="POST" action="<?php echo base_url('admin/laporan_gaji/cetak_laporan_gaji') ?>">
             <div class="card-body">
                 <div class="form-group row">
                     <label for="inputBulan" class="col-sm-3 col-form-label">Bulan</label>
@@ -46,7 +44,9 @@
 
                 <button style="width: 100%" type="submit" class="btn btn-primary"><i class="fas fa-print"></i> Cetak Laporan Gaji</button>
             </div>
-        </form>
+        
+<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" style="display: none">
+</form>
     </div>
     <!-- /.container-fluid -->
 </div>

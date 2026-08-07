@@ -50,7 +50,9 @@
 					</select>
 				</div>
 				<button type="submit" class="btn btn-info mb-2 ml-3"><i class="fas fa-search"></i> Tampilkan</button>
-			</form>
+			
+<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" style="display: none">
+</form>
 		</div>
 	</div>
 
@@ -136,9 +138,7 @@
 												<h5 class="modal-title">Ubah Status Absensi</h5>
 												<button type="button" class="close text-white" data-dismiss="modal"><span>&times;</span></button>
 											</div>
-											<form method="POST" action="<?php echo base_url('admin/absensi_harian/update_status') ?>
-<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" style="display: none">
-">
+											<form method="POST" action="<?php echo base_url('admin/absensi_harian/update_status') ?>">
 												<div class="modal-body">
 													<input type="hidden" name="id" value="<?php echo $d->id ?>">
 													<input type="hidden" name="nik" value="<?php echo $nik ?>">
@@ -167,7 +167,9 @@
 													<button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Simpan</button>
 													<button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
 												</div>
-											</form>
+											
+<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" style="display: none">
+</form>
 										</div>
 									</div>
 								</div>
@@ -192,9 +194,7 @@
 				<h5 class="modal-title"><i class="fas fa-plus"></i> Tambah Absensi Manual</h5>
 				<button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
 			</div>
-			<form method="POST" action="<?php echo base_url('admin/absensi_harian/tambah_manual') ?>
-<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" style="display: none">
-">
+			<form method="POST" action="<?php echo base_url('admin/absensi_harian/tambah_manual') ?>">
 				<div class="modal-body">
 					<input type="hidden" name="nik" value="<?php echo $nik ?>">
 					<input type="hidden" name="bulan" value="<?php echo $bulan ?>">
@@ -224,7 +224,9 @@
 					<button type="submit" class="btn btn-warning"><i class="fas fa-save"></i> Simpan</button>
 					<button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
 				</div>
-			</form>
+			
+<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" style="display: none">
+</form>
 		</div>
 	</div>
 </div>

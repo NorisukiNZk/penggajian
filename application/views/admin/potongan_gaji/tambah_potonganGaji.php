@@ -1,6 +1,4 @@
 <form method="post" id="form">
-<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" style="display: none">
-
     <div class="form-group">
         <label for="email">Potongan</label>
         <input type="text" class="form-control"  name="potongan" placeholder="Masukan Potongan">
@@ -10,6 +8,8 @@
         <input type="text" class="form-control"  name="jml_potongan" placeholder="Masukan Jumlah Potongan">
     </div>
     <button id="tombol_tambah" type="button" class="btn btn-primary" data-dismiss="modal" >Tambah</button>
+
+<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" style="display: none">
 </form>
 <script type="text/javascript">
     $(document).ready(function(){

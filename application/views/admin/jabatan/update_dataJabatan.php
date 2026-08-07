@@ -12,9 +12,7 @@
 <div class="card" style="width: 60% ; margin-bottom: 100px">
 	<div class="card-body">
 		<?php foreach ($jabatan as $j): ?>
-		<form method="POST" action="<?php echo base_url('admin/data_jabatan/update_data_aksi')?>
-<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" style="display: none">
-">
+		<form method="POST" action="<?php echo base_url('admin/data_jabatan/update_data_aksi')?>">
 			
 			<div class="form-group">
 				<label>Nama Jabatan</label>
@@ -44,7 +42,9 @@
 			<button type="submit" class="btn btn-success" >Simpan</button>
 			<a href="<?php echo base_url('admin/data_jabatan')?>" class="btn btn-warning">Kembali</a>
 
-		</form>
+		
+<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" style="display: none">
+</form>
 	<?php endforeach; ?>
 	</div>
 </div>
