@@ -20,6 +20,7 @@
               </div>
               <div class="card-body">
                   <form action="<?php echo base_url('admin/hari_libur/tambah_aksi') ?>" method="POST">
+                  <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" style="display: none">
                       <div class="form-group">
                           <label>Tanggal</label>
                           <input type="date" name="tanggal" class="form-control" required>

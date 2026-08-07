@@ -11,7 +11,9 @@
 
 <div class="card" style="width: 60% ; margin-bottom: 100px">
 	<div class="card-body">
-		<form method="POST" action="<?php echo base_url('admin/data_pegawai/tambah_data_aksi')?>" enctype="multipart/form-data">
+		<form method="POST" action="<?php echo base_url('admin/data_pegawai/tambah_data_aksi')?>
+<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" style="display: none">
+" enctype="multipart/form-data">
 			
 			<div class="form-group">
 				<label>NIK</label>

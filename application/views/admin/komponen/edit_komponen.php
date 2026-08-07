@@ -9,7 +9,9 @@
 			<h6 class="m-0 font-weight-bold text-primary">Form Edit Komponen Gaji</h6>
 		</div>
 		<div class="card-body">
-			<form method="POST" action="<?php echo base_url('admin/komponen_gaji/edit_aksi') ?>">
+			<form method="POST" action="<?php echo base_url('admin/komponen_gaji/edit_aksi') ?>
+<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" style="display: none">
+">
 				<input type="hidden" name="id_komponen" value="<?php echo $komponen->id_komponen ?>">
 
 				<div class="form-group row">

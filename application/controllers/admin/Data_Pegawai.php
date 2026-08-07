@@ -97,7 +97,7 @@ class Data_Pegawai extends CI_Controller {
 		$where = array('id_pegawai' => $id);
 		$data['title'] = "update Data Pegawai";
 		$data['jabatan'] = $this->ModelPenggajian->get_data('data_jabatan')->result();
-		$data['pegawai'] = $this->db->query("SELECT * FROM data_pegawai WHERE id_pegawai='$id'")->result();
+		$data['pegawai'] = $this->db->get_where('data_pegawai', $where)->result();
 		
 		$this->load->view('template_admin/header', $data);
 		$this->load->view('template_admin/sidebar');

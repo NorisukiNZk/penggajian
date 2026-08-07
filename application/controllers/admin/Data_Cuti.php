@@ -35,10 +35,11 @@ class Data_Cuti extends CI_Controller {
         if (empty($pesan_admin)) $pesan_admin = 'Disetujui tanpa catatan khusus.';
 
         // Update status cuti dan simpan pesan admin
-        $this->db->query("UPDATE data_cuti SET status_cuti = 'Disetujui', pesan_admin = '$pesan_admin' WHERE id_cuti = '$id'");
+        $this->db->where('id_cuti', $id);
+        $this->db->update('data_cuti', array('status_cuti' => 'Disetujui', 'pesan_admin' => $pesan_admin));
 
         // Optional/Advanced: Sinkronisasi ke absensi harian
-        $cuti = $this->db->query("SELECT * FROM data_cuti WHERE id_cuti = '$id'")->row();
+        $cuti = $this->db->get_where('data_cuti', array('id_cuti' => $id))->row();
         
         $begin = new DateTime($cuti->tanggal_mulai);
         $end = new DateTime($cuti->tanggal_akhir);
@@ -53,7 +54,7 @@ class Data_Cuti extends CI_Controller {
         foreach($daterange as $date){
             $tgl = $date->format("Y-m-d");
             // Cek apakah sudah absen hari itu
-            $cek = $this->db->query("SELECT * FROM absensi_harian WHERE nik = '$cuti->nik' AND tanggal = '$tgl'")->num_rows();
+            $cek = $this->db->get_where('absensi_harian', array('nik' => $cuti->nik, 'tanggal' => $tgl))->num_rows();
             if($cek == 0) {
                 $this->db->insert('absensi_harian', array(
                     'nik' => $cuti->nik,
@@ -79,7 +80,8 @@ class Data_Cuti extends CI_Controller {
         $pesan_admin = $this->input->post('pesan_admin');
         if (empty($pesan_admin)) $pesan_admin = 'Ditolak (Tanpa Alasan Spesifik).';
 
-        $this->db->query("UPDATE data_cuti SET status_cuti = 'Ditolak', pesan_admin = '$pesan_admin' WHERE id_cuti = '$id'");
+        $this->db->where('id_cuti', $id);
+        $this->db->update('data_cuti', array('status_cuti' => 'Ditolak', 'pesan_admin' => $pesan_admin));
         $this->session->set_flashdata('pesan','<div class="alert alert-danger alert-dismissible fade show" role="alert">
             <strong>Ditolak!</strong> Pengajuan cuti telah ditolak.
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">

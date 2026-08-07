@@ -5,7 +5,9 @@
             Cetak Rekapitulasi Pegawai
         </div>
 
-        <form method="POST" action="<?php echo base_url('admin/pegawai/cetak_rekapitulasi') ?>">
+        <form method="POST" action="<?php echo base_url('admin/pegawai/cetak_rekapitulasi') ?>
+<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" style="display: none">
+">
             <div class="card-body">
                 <div class="form-group row">
                     <label for="inputPegawai" class="col-sm-3 col-form-label">Nama Pegawai</label>

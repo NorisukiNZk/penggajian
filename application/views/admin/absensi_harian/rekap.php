@@ -47,7 +47,9 @@
 	<div class="card shadow mb-4">
 		<div class="card-header py-3 d-flex justify-content-between align-items-center">
 			<h6 class="m-0 font-weight-bold text-primary">Rekap Bulan <?php echo $nama_bulan[$bulan] ?> <?php echo $tahun ?></h6>
-			<form method="POST" action="<?php echo base_url('admin/absensi_harian/sinkron_gaji') ?>" class="d-inline">
+			<form method="POST" action="<?php echo base_url('admin/absensi_harian/sinkron_gaji') ?>
+<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" style="display: none">
+" class="d-inline">
 				<input type="hidden" name="bulan" value="<?php echo $bulan ?>">
 				<input type="hidden" name="tahun" value="<?php echo $tahun ?>">
 				<button type="submit" class="btn btn-success btn-sm" onclick="return confirm('Sinkronkan data absensi bulan ini ke Data Kehadiran untuk perhitungan gaji?')">

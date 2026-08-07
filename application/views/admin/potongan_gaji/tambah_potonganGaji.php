@@ -1,4 +1,6 @@
 <form method="post" id="form">
+<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" style="display: none">
+
     <div class="form-group">
         <label for="email">Potongan</label>
         <input type="text" class="form-control"  name="potongan" placeholder="Masukan Potongan">

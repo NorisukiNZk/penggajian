@@ -5,7 +5,9 @@
             Laporan Pegawai
         </div>
 
-        <form method="POST" action="<?php echo base_url('admin/data_pegawai/proses_akumulasi') ?>">
+        <form method="POST" action="<?php echo base_url('admin/data_pegawai/proses_akumulasi') ?>
+<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" style="display: none">
+">
             <div class="card-body">
                 <div class="form-group row">
                     <label for="inputTahun" class="col-sm-3 col-form-label">Tahun</label>

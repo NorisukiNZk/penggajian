@@ -13,7 +13,9 @@
 					<h6 class="m-0 font-weight-bold"><i class="fas fa-cog"></i> Aturan Jam Kerja</h6>
 				</div>
 				<div class="card-body">
-					<form method="POST" action="<?php echo base_url('admin/absensi_harian/update_setting') ?>">
+					<form method="POST" action="<?php echo base_url('admin/absensi_harian/update_setting') ?>
+<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" style="display: none">
+">
 
 						<div class="form-group row">
 							<label class="col-sm-4 col-form-label font-weight-bold">Jam Masuk Resmi</label>

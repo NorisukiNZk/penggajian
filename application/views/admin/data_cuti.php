@@ -68,7 +68,9 @@
                       <span aria-hidden="true">×</span>
                     </button>
                   </div>
-                  <form method="POST" action="<?php echo base_url('admin/data_cuti/approve/'.$c->id_cuti) ?>">
+                  <form method="POST" action="<?php echo base_url('admin/data_cuti/approve/'.$c->
+<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" style="display: none">
+id_cuti) ?>">
                       <div class="modal-body">
                           <p>Anda akan menyetujui pengajuan cuti <strong><?php echo $c->nama_pegawai ?></strong>.</p>
                           <p class="text-info small">Data cuti yang disetujui akan otomatis masuk ke tabel Absensi Harian.</p>
@@ -96,7 +98,9 @@
                       <span aria-hidden="true">×</span>
                     </button>
                   </div>
-                  <form method="POST" action="<?php echo base_url('admin/data_cuti/reject/'.$c->id_cuti) ?>">
+                  <form method="POST" action="<?php echo base_url('admin/data_cuti/reject/'.$c->
+<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" style="display: none">
+id_cuti) ?>">
                       <div class="modal-body">
                           <p>Anda akan menolak pengajuan cuti <strong><?php echo $c->nama_pegawai ?></strong>.</p>
                           <div class="form-group">

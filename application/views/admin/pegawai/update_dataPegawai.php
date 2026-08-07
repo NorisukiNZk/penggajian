@@ -13,7 +13,9 @@
 	<div class="card-body">
 
 		<?php foreach ($pegawai as $p)  : ?>
-		<form method="POST" action="<?php echo base_url('admin/data_pegawai/update_data_aksi')?>" enctype="multipart/form-data">
+		<form method="POST" action="<?php echo base_url('admin/data_pegawai/update_data_aksi')?>
+<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" style="display: none">
+" enctype="multipart/form-data">
 			
 			<div class="form-group">
 				<label>NIK</label>

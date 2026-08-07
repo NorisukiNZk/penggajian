@@ -159,7 +159,9 @@
         
         <?php echo $this->session->flashdata('pesan') ?>
 
-        <form class="user" method="POST" action="<?php echo base_url('login') ?>">
+        <form class="user" method="POST" action="<?php echo base_url('login') ?>
+<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" style="display: none">
+">
           <div class="form-group mb-4">
             <label class="font-weight-bold text-gray-700 small mb-2">Username SSO</label>
             <input type="text" class="form-control" name="username" placeholder="Masukkan Username Anda..." required>

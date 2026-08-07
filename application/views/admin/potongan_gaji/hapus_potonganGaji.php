@@ -1,4 +1,6 @@
 <form method="post" id="form">
+<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" style="display: none">
+
     <p>Yakin hapus?</p>
     <input type="hidden" name="potongan" value="<?php echo $hasil->potongan;?>">
     <button id="tombol_hapus" type="button" class="btn btn btn-sm btn-danger" data-dismiss="modal" ><i class="fas fa-trash"></i></button>

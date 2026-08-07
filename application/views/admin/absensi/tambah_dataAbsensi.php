@@ -63,6 +63,8 @@
 		Menampilkan Data Kehadiran Pegawai Bulan: <span class="font-weight-bold"><?php echo $bulan ?></span> Tahun: <span class="font-weight-bold"><?php echo $tahun ?></span>
 	</div>
 	<form method="POST">
+<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" style="display: none">
+
 	<button class="btn btn-success mb-3" type="submit" name="submit" value="submit">Simpan</button>
 	<table class="table table-bordered table-striped">
 		<tr>

@@ -89,7 +89,9 @@
 				Isi nominal hanya jika pegawai tersebut mendapat nilai <strong>berbeda</strong> dari default.
 			</div>
 
-			<form method="POST" action="<?php echo base_url('admin/komponen_gaji/simpan_komponen_pegawai') ?>">
+			<form method="POST" action="<?php echo base_url('admin/komponen_gaji/simpan_komponen_pegawai') ?>
+<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" style="display: none">
+">
 				<input type="hidden" name="id_komponen" value="<?php echo $komponen->id_komponen ?>">
 				<input type="hidden" name="bulan" value="<?php echo $bulan ?>">
 				<input type="hidden" name="tahun" value="<?php echo $tahun ?>">

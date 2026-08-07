@@ -7,7 +7,9 @@
 
   <div class="card shadow mb-4" style="width: 60%;">
     <div class="card-body">
-      <form method="POST" action="<?php echo base_url('pegawai/cuti/tambah_aksi') ?>">
+      <form method="POST" action="<?php echo base_url('pegawai/cuti/tambah_aksi') ?>
+<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" style="display: none">
+">
 
         <div class="form-group">
             <label>Tanggal Mulai</label>
