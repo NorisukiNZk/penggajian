@@ -53,12 +53,24 @@
         top: 0; left: 0; right: 0; bottom: 0;
         background: inherit;
         filter: blur(2px);
-        z-index: -1;
+        z-index: 0;
+    }
+    #particles-js {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        z-index: 1;
+    }
+    .login-image img, .login-image h3, .login-image p {
+        position: relative;
+        z-index: 2;
     }
     .login-image img {
         width: 150px;
         margin-bottom: 1.5rem;
-        drop-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
     }
     .login-form-container {
         flex: 1;
@@ -133,6 +145,7 @@
       
       <!-- Left Side: Image/Branding -->
       <div class="login-image">
+        <div id="particles-js"></div>
         <!-- Logo Klinik -->
         <img src="<?php echo base_url(); ?>assets/img/kpmh.png" alt="Logo Klinik">
         <h3 class="font-weight-bold mb-3">Portal HRIS</h3>
@@ -173,7 +186,62 @@
   <script src="<?php echo base_url(); ?>assets/vendor/jquery/jquery.min.js"></script>
   <script src="<?php echo base_url(); ?>assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
   
+  <!-- Particles.js -->
+  <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+  
   <script>
+    // Initialize Particles.js
+    particlesJS('particles-js', {
+      "particles": {
+        "number": {
+          "value": 60,
+          "density": { "enable": true, "value_area": 800 }
+        },
+        "color": { "value": "#ffffff" },
+        "shape": { "type": "circle" },
+        "opacity": {
+          "value": 0.5,
+          "random": true,
+          "anim": { "enable": true, "speed": 1, "opacity_min": 0.1, "sync": false }
+        },
+        "size": {
+          "value": 3,
+          "random": true,
+          "anim": { "enable": false }
+        },
+        "line_linked": {
+          "enable": true,
+          "distance": 150,
+          "color": "#ffffff",
+          "opacity": 0.4,
+          "width": 1
+        },
+        "move": {
+          "enable": true,
+          "speed": 2,
+          "direction": "none",
+          "random": true,
+          "straight": false,
+          "out_mode": "out",
+          "bounce": false,
+        }
+      },
+      "interactivity": {
+        "detect_on": "canvas",
+        "events": {
+          "onhover": { "enable": true, "mode": "grab" },
+          "onclick": { "enable": true, "mode": "push" },
+          "resize": true
+        },
+        "modes": {
+          "grab": { "distance": 140, "line_linked": { "opacity": 1 } },
+          "push": { "particles_nb": 4 }
+        }
+      },
+      "retina_detect": true
+    });
+
+    // Password Toggle Logic
     const togglePassword = document.querySelector('#togglePassword');
     const password = document.querySelector('#password');
 
