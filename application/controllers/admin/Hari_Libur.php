@@ -69,14 +69,14 @@ class Hari_Libur extends CI_Controller {
 
     public function sync_api() {
         $year = date('Y');
-        // Menggunakan API pihak ketiga untuk hari libur Indonesia
-        $url = "https://dayoffapi.vercel.app/api?year=" . $year;
+        // Menggunakan sumber JSON statis dari Github (lebih stabil daripada API Vercel gratisan)
+        $url = "https://raw.githubusercontent.com/guangrei/APIHariLibur_V2/main/calendar.json";
         
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 5); // 5 detik timeout
+        curl_setopt($ch, CURLOPT_TIMEOUT, 15); // 15 detik timeout (file cukup besar)
         $output = curl_exec($ch);
         $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
@@ -85,21 +85,23 @@ class Hari_Libur extends CI_Controller {
             $data = json_decode($output, true);
             $berhasil = 0;
             if (is_array($data)) {
-                foreach($data as $d) {
-                    $tanggal = $d['tanggal']; // asumsikan format YYYY-MM-DD
-                    $keterangan = $d['keterangan'];
-                    if(isset($d['is_cuti']) && $d['is_cuti'] == true) {
-                        $keterangan .= ' (Cuti Bersama)';
-                    }
-                    
-                    // Cek duplikat agar tidak dobel
-                    $cek = $this->db->get_where('hari_libur', array('tanggal' => $tanggal))->num_rows();
-                    if($cek == 0) {
-                        $this->db->insert('hari_libur', array(
-                            'tanggal' => $tanggal,
-                            'keterangan' => $keterangan
-                        ));
-                        $berhasil++;
+                foreach($data as $tanggal => $info) {
+                    // Hanya filter tahun saat ini
+                    if (strpos($tanggal, (string)$year) === 0) {
+                        // Hanya ambil jika benar-benar hari libur
+                        if (isset($info['holiday']) && $info['holiday'] == true) {
+                            $keterangan = implode(", ", $info['summary']);
+                            
+                            // Cek duplikat agar tidak dobel
+                            $cek = $this->db->get_where('hari_libur', array('tanggal' => $tanggal))->num_rows();
+                            if($cek == 0) {
+                                $this->db->insert('hari_libur', array(
+                                    'tanggal' => $tanggal,
+                                    'keterangan' => $keterangan
+                                ));
+                                $berhasil++;
+                            }
+                        }
                     }
                 }
                 
@@ -112,7 +114,7 @@ class Hari_Libur extends CI_Controller {
             }
         } else {
             $this->session->set_flashdata('pesan','<div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <strong>Gagal Sync API!</strong> Server API pihak ketiga sedang tidak merespon (HTTP '.$http_code.') atau butuh koneksi internet. Silakan input manual sementara waktu.
+                <strong>Gagal Sync API!</strong> Server Github sedang tidak merespon (HTTP '.$http_code.') atau butuh koneksi internet. Silakan input manual sementara waktu.
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
                 </button>

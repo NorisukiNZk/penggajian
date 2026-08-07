@@ -111,6 +111,11 @@
         right: 15px;
         top: 43px;
         color: #d1d3e2;
+        transition: color 0.2s;
+    }
+    .input-icon.clickable:hover {
+        color: #0c2b4d;
+        cursor: pointer;
     }
     .form-group {
         position: relative;
@@ -150,8 +155,8 @@
           </div>
           <div class="form-group mb-4">
             <label class="font-weight-bold text-gray-700 small mb-2">Password</label>
-            <input type="password" class="form-control" name="password" placeholder="Masukkan Password Anda..." required>
-            <i class="fas fa-lock input-icon"></i>
+            <input type="password" class="form-control" name="password" id="password" placeholder="Masukkan Password Anda..." required>
+            <i class="fas fa-eye input-icon clickable" id="togglePassword" title="Tampilkan Password"></i>
             <?php echo form_error('password', '<div class="text-small text-danger mt-1">', '</div>') ?>
           </div>
           
@@ -167,5 +172,26 @@
   <!-- Scripts -->
   <script src="<?php echo base_url(); ?>assets/vendor/jquery/jquery.min.js"></script>
   <script src="<?php echo base_url(); ?>assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  
+  <script>
+    const togglePassword = document.querySelector('#togglePassword');
+    const password = document.querySelector('#password');
+
+    togglePassword.addEventListener('click', function (e) {
+        // Toggle the type attribute
+        const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+        password.setAttribute('type', type);
+        
+        // Toggle the eye slash icon
+        this.classList.toggle('fa-eye-slash');
+        
+        // Change title tooltip
+        if (type === 'text') {
+            this.setAttribute('title', 'Sembunyikan Password');
+        } else {
+            this.setAttribute('title', 'Tampilkan Password');
+        }
+    });
+  </script>
 </body>
 </html>

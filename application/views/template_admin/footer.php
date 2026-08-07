@@ -50,44 +50,52 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
 $(document).ready(function() {
+    const Toast = Swal.mixin({
+      toast: true,
+      position: 'top', // Top Down notification
+      showConfirmButton: false,
+      timer: 3500,
+      timerProgressBar: true,
+      didOpen: (toast) => {
+        toast.addEventListener('mouseenter', Swal.stopTimer)
+        toast.addEventListener('mouseleave', Swal.resumeTimer)
+      }
+    });
+
     <?php if($this->session->flashdata('welcome_msg')): ?>
-        const Toast = Swal.mixin({
-          toast: true,
-          position: 'top-end',
-          showConfirmButton: false,
-          timer: 4500,
-          timerProgressBar: true,
-          didOpen: (toast) => {
-            toast.addEventListener('mouseenter', Swal.stopTimer)
-            toast.addEventListener('mouseleave', Swal.resumeTimer)
-          }
-        });
         Toast.fire({
-          icon: 'success',
-          title: '<?php echo $this->session->flashdata("welcome_msg"); ?>'
+          icon: 'info',
+          title: '<?php echo $this->session->flashdata("welcome_msg"); ?>',
+          iconColor: 'white',
+          background: '#36b9cc',
+          color: 'white'
         });
     <?php endif; ?>
 
     if ($('.alert-success').length > 0) {
-        var msg = $('.alert-success').text().replace('×', '').replace('Berhasil!', '').trim();
+        var msg = $('.alert-success').text().replace('×', '').replace('Berhasil!', '').replace('Sync API Berhasil!', '').trim();
         $('.alert-success').hide();
-        Swal.fire({
+        Toast.fire({
             icon: 'success',
-            title: 'Sukses',
+            title: 'Berhasil',
             text: msg,
-            showConfirmButton: false,
-            timer: 2500
+            iconColor: 'white',
+            background: '#1cc88a',
+            color: 'white'
         });
     }
 
     if ($('.alert-danger').length > 0) {
+        var msg = $('.alert-danger').text().replace('×', '').replace('Gagal!', '').trim();
         if (msg === "") msg = "Terjadi Kesalahan / Ditolak";
         $('.alert-danger').hide();
-        Swal.fire({
+        Toast.fire({
             icon: 'error',
-            title: 'Peringatan',
+            title: 'Oops!',
             text: msg,
-            confirmButtonColor: '#d33'
+            iconColor: 'white',
+            background: '#e74a3b',
+            color: 'white'
         });
     }
 });
