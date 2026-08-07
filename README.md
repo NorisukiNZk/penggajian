@@ -76,5 +76,5 @@ Untuk menjalankan aplikasi ini secara lokal (*localhost*):
 ---
 <div align="center">
   Dibuat dengan ❤️ untuk kebutuhan Portofolio & Tugas Akhir. <br>
-  <strong>Hak Cipta © 2026 - HRIS Klinik Pratama Hidayatullah</strong>
+  <strong>Hak Cipta © 2026 - NorisukiNZK</strong>
 </div>
