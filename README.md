@@ -25,6 +25,8 @@ Aplikasi ini dipersenjatai dengan modifikasi *Frontend* mutakhir untuk memastika
 - 🌓 **Dark Mode Global:** Mode Gelap elegan dengan transisi warna mulus (*gapless*) yang preferensinya tersimpan secara permanen melalui `localStorage`.
 - 🔔 **Toast Notifications:** Meninggalkan *pop-up* kaku konvensional, aplikasi ini menggunakan notifikasi **SweetAlert2** bertipe *Top-Down Colored Toast* yang meluncur elegan dari atas layar.
 - 🌀 **Full-screen Preloader:** Indikator *loading* memutar yang mencegah layar putih (*blank*) saat perpindahan halaman yang berat.
+- 💼 **UI/UX Data Master Kelas Enterprise:** Transformasi desain *form* Tambah/Edit (Pegawai & Jabatan) menggunakan *Grid System 2 Kolom*, *Card* bersudut membulat (*rounded*), dan injeksi *Input Icons* (FontAwesome).
+- 📊 **Tabel Data Interaktif & Informatif:** Penggunaan *Badge* warna untuk membedakan status/hak akses, foto profil bulat (*rounded-circle*), dan perataan kanan (*right-aligned*) khusus untuk angka/nominal uang agar standar akuntansi terpenuhi.
 - 🎨 **Modern Micro-interactions:** *Custom Scrollbar* elegan bergaya macOS, *Hover Effect* pada baris tabel dan kartu, serta panel navigasi modern yang menyatu.
 
 ---
@@ -40,9 +42,10 @@ Aplikasi ini dipersenjatai dengan modifikasi *Frontend* mutakhir untuk memastika
 
 ## 🛡️ Standar Keamanan (Security Hardening)
 Aplikasi ini telah diperkeras perlindungannya dari serangan siber umum yang sering menjadi kelemahan sistem konvensional:
+- **BCRYPT Hashing & Password Protection:** Menggantikan MD5 usang dengan BCRYPT murni. Terdapat lapisan keamanan tambahan yang mencegah *hijacking* (*form* Edit Pegawai tidak akan mereset password secara diam-diam jika dibiarkan kosong, dan pengguna wajib memasukkan Password Lama saat merubah *password* pribadi).
 - **Anti CSRF (Cross-Site Request Forgery):** Token pelindung dinamis disuntikkan secara otomatis di seluruh *form* aplikasi, mencegah penyerang mengirimkan permintaan palsu dari luar domain.
-- **Global XSS Filtering:** Sistem pembersih otomatis (Sanitization) yang melucuti skrip jahat (*Javascript / HTML injection*) dari input pengguna (misalnya pada form Alasan Cuti).
-- **SQL Injection Prevention:** Penerapan *Query Builder* secara ketat untuk melindungi *database* dari ancaman peretasan URL (*ID Spoofing* dan *Union-Based Injection*).
+- **Global XSS Filtering:** Sistem pembersih otomatis (Sanitization) yang melucuti skrip jahat (*Javascript / HTML injection*) dari input pengguna maupun parameter URL (`$_GET`).
+- **SQL Injection Prevention:** Penerapan *Query Binding* (`?`) secara ketat di seluruh fitur Filter, Laporan, dan Pencarian untuk melindungi *database* dari ancaman peretasan *URL Spoofing* dan *Union-Based Injection*.
 
 ---
 
@@ -75,6 +78,6 @@ Untuk menjalankan aplikasi ini secara lokal (*localhost*):
 
 ---
 <div align="center">
-  Dibuat dengan ❤️ untuk kebutuhan Portofolio & Tugas Akhir. <br>
+  Dibuat untuk Portofolio & Tugas Akhir. <br>
   <strong>NorisukiNZK</strong>
 </div>
