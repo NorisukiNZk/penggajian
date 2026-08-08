@@ -43,7 +43,7 @@ class Laporan_Absensi extends CI_Controller {
 		}
 	
 		// Mengambil data kehadiran berdasarkan bulan dan tahun
-		$data['lap_kehadiran'] = $this->db->query("SELECT * FROM data_kehadiran WHERE bulan='$bulantahun' ORDER BY nama_pegawai ASC")->result();
+		$data['lap_kehadiran'] = $this->db->query("SELECT * FROM data_kehadiran WHERE bulan=? ORDER BY nama_pegawai ASC", array($bulantahun))->result();
 	
 		// Menyimpan bulan dan tahun ke dalam data untuk ditampilkan di view
 		$data['bulan'] = $bulan;

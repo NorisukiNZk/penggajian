@@ -54,7 +54,7 @@ class Data_Pegawai extends CI_Controller {
 			$status			= $this->input->post('status');
 			$hak_akses		= $this->input->post('hak_akses');
 			$photo			= $_FILES['photo']['name'];
-			if($photo=''){}else{
+			if($photo==''){}else{
 				$config['upload_path'] 		= './photo';
 				$config['allowed_types'] 	= 'jpg|jpeg|png|tiff';
 				$config['max_size']			= 	2048;
@@ -117,7 +117,7 @@ class Data_Pegawai extends CI_Controller {
 			$nik			= $this->input->post('nik');
 			$nama_pegawai	= $this->input->post('nama_pegawai');
 			$username		= $this->input->post('username');
-			$password		= password_hash($this->input->post('password'), PASSWORD_BCRYPT);
+			$password_input	= $this->input->post('password');
 			$jenis_kelamin	= $this->input->post('jenis_kelamin');
 			$jabatan		= $this->input->post('jabatan');
 			$tanggal_masuk	= $this->input->post('tanggal_masuk');
@@ -142,13 +142,17 @@ class Data_Pegawai extends CI_Controller {
 				'nik' 			=> $nik,
 				'nama_pegawai' 	=> $nama_pegawai,
 				'username' 		=> $username,
-				'password' 		=> $password,
 				'jenis_kelamin' => $jenis_kelamin,
 				'jabatan' 		=> $jabatan,
 				'tanggal_masuk' => $tanggal_masuk,
 				'status' 		=> $status,
 				'hak_akses' 	=> $hak_akses,
 			);
+			
+			// Hanya update password jika diisi
+			if (!empty($password_input)) {
+				$data['password'] = password_hash($password_input, PASSWORD_BCRYPT);
+			}
 
 			$where = array(
 				'id_pegawai' => $id

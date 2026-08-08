@@ -20,9 +20,9 @@ class Data_Absensi extends CI_Controller {
 	{
 		$data['title'] = "Data Absensi Pegawai";
 
-		if((isset($_GET['bulan']) && $_GET['bulan']!='') && (isset($_GET['tahun']) && $_GET['tahun']!='')){
-			$bulan = $_GET['bulan'];
-			$tahun = $_GET['tahun'];
+		$bulan = $this->input->get('bulan', TRUE);
+		$tahun = $this->input->get('tahun', TRUE);
+		if(!empty($bulan) && !empty($tahun)){
 			$bulantahun = $bulan.$tahun;
 		}else{
 			$bulan = date('m');
@@ -34,7 +34,7 @@ class Data_Absensi extends CI_Controller {
 			FROM data_kehadiran
 			INNER JOIN data_pegawai ON data_kehadiran.nik= data_pegawai.nik
 			INNER JOIN data_jabatan ON data_pegawai.jabatan = data_jabatan.nama_jabatan
-			WHERE data_kehadiran.bulan='$bulantahun' ORDER BY data_pegawai.nama_pegawai ASC")->result();
+			WHERE data_kehadiran.bulan=? ORDER BY data_pegawai.nama_pegawai ASC", array($bulantahun))->result();
 
 		$this->load->view('template_admin/header', $data);
 		$this->load->view('template_admin/sidebar');
@@ -75,9 +75,9 @@ class Data_Absensi extends CI_Controller {
 
 		$data['title'] = "Form Input Absensi";
 
-		if((isset($_GET['bulan']) && $_GET['bulan']!='') && (isset($_GET['tahun']) && $_GET['tahun']!='')){
-			$bulan = $_GET['bulan'];
-			$tahun = $_GET['tahun'];
+		$bulan = $this->input->get('bulan', TRUE);
+		$tahun = $this->input->get('tahun', TRUE);
+		if(!empty($bulan) && !empty($tahun)){
 			$bulantahun = $bulan.$tahun;
 		}else{
 			$bulan = date('m');
@@ -86,7 +86,7 @@ class Data_Absensi extends CI_Controller {
 		}
 		$data['input_absensi'] = $this->db->query("SELECT data_pegawai.*, data_jabatan.nama_jabatan FROM data_pegawai
 			INNER JOIN data_jabatan ON data_pegawai.jabatan = data_jabatan.nama_jabatan
-			WHERE NOT EXISTS (SELECT * FROM data_kehadiran WHERE bulan='$bulantahun' AND data_pegawai.nik=data_kehadiran.nik) ORDER BY data_pegawai.nama_pegawai ASC")->result();
+			WHERE NOT EXISTS (SELECT * FROM data_kehadiran WHERE bulan=? AND data_pegawai.nik=data_kehadiran.nik) ORDER BY data_pegawai.nama_pegawai ASC", array($bulantahun))->result();
 		$this->load->view('template_admin/header', $data);
 		$this->load->view('template_admin/sidebar');
 		$this->load->view('admin/absensi/tambah_dataAbsensi', $data);

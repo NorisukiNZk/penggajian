@@ -53,9 +53,9 @@ class Laporan_Gaji extends CI_Controller {
 			FROM data_pegawai
 			INNER JOIN data_kehadiran ON data_kehadiran.nik = data_pegawai.nik
 			INNER JOIN data_jabatan ON data_jabatan.nama_jabatan = data_pegawai.jabatan
-			WHERE data_kehadiran.bulan = '$bulantahun'
+			WHERE data_kehadiran.bulan = ?
 			GROUP BY data_pegawai.nik
-			ORDER BY data_pegawai.nama_pegawai ASC")->result();
+			ORDER BY data_pegawai.nama_pegawai ASC", array($bulantahun))->result();
 
 		// Komponen dinamis per pegawai
 		$data['komponen_per_pegawai'] = array();

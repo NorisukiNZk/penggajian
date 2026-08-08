@@ -18,7 +18,7 @@ class Cuti extends CI_Controller {
         $data['title'] = "Riwayat Pengajuan Cuti/Izin";
         $nik = $this->session->userdata('nik');
         
-        $data['cuti'] = $this->db->query("SELECT * FROM data_cuti WHERE nik='$nik' ORDER BY id_cuti DESC")->result();
+        $data['cuti'] = $this->db->query("SELECT * FROM data_cuti WHERE nik=? ORDER BY id_cuti DESC", array($nik))->result();
 
         $this->load->view('template_pegawai/header', $data);
         $this->load->view('template_pegawai/sidebar');

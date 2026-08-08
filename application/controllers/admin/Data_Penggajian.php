@@ -19,9 +19,9 @@ class Data_Penggajian extends CI_Controller {
 	public function index() 
 	{
 		$data['title'] = "Data Gaji Pegawai";
-		if((isset($_GET['bulan']) && $_GET['bulan']!='') && (isset($_GET['tahun']) && $_GET['tahun']!='')){
-			$bulan = $_GET['bulan'];
-			$tahun = $_GET['tahun'];
+		$bulan = $this->input->get('bulan', TRUE);
+		$tahun = $this->input->get('tahun', TRUE);
+		if(!empty($bulan) && !empty($tahun)){
 			$bulantahun = $bulan.$tahun;
 		}else{
 			$bulan = date('m');
@@ -34,8 +34,8 @@ class Data_Penggajian extends CI_Controller {
 			data_jabatan.tj_transport,data_jabatan.uang_makan,data_kehadiran.alpha FROM data_pegawai
 			INNER JOIN data_kehadiran ON data_kehadiran.nik=data_pegawai.nik
 			INNER JOIN data_jabatan ON data_jabatan.nama_jabatan=data_pegawai.jabatan
-			WHERE data_kehadiran.bulan='$bulantahun'
-			ORDER BY data_pegawai.nama_pegawai ASC")->result();
+			WHERE data_kehadiran.bulan=?
+			ORDER BY data_pegawai.nama_pegawai ASC", array($bulantahun))->result();
 
 		// Komponen dinamis: hitung per pegawai
 		$data['komponen_per_pegawai'] = array();
@@ -57,9 +57,9 @@ class Data_Penggajian extends CI_Controller {
 	public function cetak_gaji(){
 
 	$data['title'] = "Cetak Data Gaji Pegawai";
-		if((isset($_GET['bulan']) && $_GET['bulan']!='') && (isset($_GET['tahun']) && $_GET['tahun']!='')){
-			$bulan = $_GET['bulan'];
-			$tahun = $_GET['tahun'];
+		$bulan = $this->input->get('bulan', TRUE);
+		$tahun = $this->input->get('tahun', TRUE);
+		if(!empty($bulan) && !empty($tahun)){
 			$bulantahun = $bulan.$tahun;
 		}else{
 			$bulan = date('m');
@@ -72,8 +72,8 @@ class Data_Penggajian extends CI_Controller {
 			data_jabatan.tj_transport,data_jabatan.uang_makan,data_kehadiran.alpha FROM data_pegawai
 			INNER JOIN data_kehadiran ON data_kehadiran.nik=data_pegawai.nik
 			INNER JOIN data_jabatan ON data_jabatan.nama_jabatan=data_pegawai.jabatan
-			WHERE data_kehadiran.bulan='$bulantahun'
-			ORDER BY data_pegawai.nama_pegawai ASC")->result();
+			WHERE data_kehadiran.bulan=?
+			ORDER BY data_pegawai.nama_pegawai ASC", array($bulantahun))->result();
 
 		// Komponen dinamis: hitung per pegawai
 		$data['komponen_per_pegawai'] = array();

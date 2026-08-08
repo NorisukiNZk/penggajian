@@ -6,43 +6,70 @@
     <h1 class="h3 mb-0 text-gray-800"><?php echo $title?></h1>
   </div>
 
+	<div class="card shadow mb-5" style="max-width: 60%">
+		<div class="card-header bg-primary text-white">
+			<h6 class="m-0 font-weight-bold"><i class="fas fa-plus-circle"></i> Form Tambah Jabatan</h6>
+		</div>
+		<div class="card-body">
+			<form method="POST" action="<?php echo base_url('admin/data_jabatan/tambah_data_aksi')?>">
+
+				<div class="form-group">
+					<label class="font-weight-bold text-dark">Nama Jabatan</label>
+					<div class="input-group">
+						<div class="input-group-prepend">
+							<span class="input-group-text"><i class="fas fa-briefcase"></i></span>
+						</div>
+						<input type="text" name="nama_jabatan" class="form-control" placeholder="Masukkan Nama Jabatan">
+					</div>
+					<?php echo form_error('nama_jabatan', '<div class="text-small text-danger mt-1"> </div>')?>
+				</div>
+
+				<div class="form-group">
+					<label class="font-weight-bold text-dark">Gaji Pokok</label>
+					<div class="input-group">
+						<div class="input-group-prepend">
+							<span class="input-group-text"><strong>Rp</strong></span>
+						</div>
+						<input type="number" name="gaji_pokok" class="form-control" placeholder="0">
+					</div>
+					<?php echo form_error('gaji_pokok', '<div class="text-small text-danger mt-1"> </div>')?>
+				</div>
+
+				<div class="form-group">
+					<label class="font-weight-bold text-dark">Tunjangan Transport</label>
+					<div class="input-group">
+						<div class="input-group-prepend">
+							<span class="input-group-text"><strong>Rp</strong></span>
+						</div>
+						<input type="number" name="tj_transport" class="form-control" placeholder="0">
+					</div>
+					<?php echo form_error('tj_transport', '<div class="text-small text-danger mt-1"> </div>')?>
+				</div>
+
+				<div class="form-group">
+					<label class="font-weight-bold text-dark">Uang Makan</label>
+					<div class="input-group">
+						<div class="input-group-prepend">
+							<span class="input-group-text"><strong>Rp</strong></span>
+						</div>
+						<input type="number" name="uang_makan" class="form-control" placeholder="0">
+					</div>
+					<?php echo form_error('uang_makan', '<div class="text-small text-danger mt-1"> </div>')?>
+				</div>
+
+				<hr>
+				<div class="d-flex justify-content-between">
+					<a href="<?php echo base_url('admin/data_jabatan')?>" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Kembali</a>
+					<div>
+						<button type="reset" class="btn btn-warning"><i class="fas fa-undo"></i> Reset</button>
+						<button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Simpan Data</button>
+					</div>
+				</div>
+			
+			<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" style="display: none">
+			</form>
+		</div>
+	</div>
+
 </div>
 <!-- /.container-fluid -->
-
-<div class="card" style="width: 60% ; margin-bottom: 100px">
-	<div class="card-body">
-		<form method="POST" action="<?php echo base_url('admin/data_jabatan/tambah_data_aksi')?>">
-
-			<div class="form-group">
-				<label>Nama Jabatan</label>
-				<input type="text" name="nama_jabatan" class="form-control">
-				<?php echo form_error('nama_jabatan', '<div class="text-small text-danger"> </div>')?>
-			</div>
-
-			<div class="form-group">
-				<label>Gaji Pokok</label>
-				<input type="number" name="gaji_pokok" class="form-control">
-				<?php echo form_error('gaji_pokok', '<div class="text-small text-danger"> </div>')?>
-			</div>
-
-			<div class="form-group">
-				<label>Tunjangan Transport</label>
-				<input type="number" name="tj_transport" class="form-control">
-				<?php echo form_error('tj_transport', '<div class="text-small text-danger"> </div>')?>
-			</div>
-
-			<div class="form-group">
-				<label>Uang Makan</label>
-				<input type="number" name="uang_makan" class="form-control">
-				<?php echo form_error('uang_makan', '<div class="text-small text-danger"> </div>')?>
-			</div>
-
-			<button type="submit" class="btn btn-success" >Simpan</button>
-			<button type="reset" class="btn btn-danger" >Reset</button>
-			<a href="<?php echo base_url('admin/data_jabatan')?>" class="btn btn-warning">Kembali</a>
-
-		
-<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" style="display: none">
-</form>
-	</div>
-</div>

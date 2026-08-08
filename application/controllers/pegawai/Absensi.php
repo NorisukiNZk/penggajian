@@ -120,8 +120,8 @@ class Absensi extends CI_Controller {
 		$data['title'] = "Riwayat Absensi";
 		$nik = $this->session->userdata('nik');
 
-		$bulan = isset($_GET['bulan']) && $_GET['bulan'] != '' ? $_GET['bulan'] : date('m');
-		$tahun = isset($_GET['tahun']) && $_GET['tahun'] != '' ? $_GET['tahun'] : date('Y');
+		$bulan = $this->input->get('bulan', TRUE) != '' ? $this->input->get('bulan', TRUE) : date('m');
+		$tahun = $this->input->get('tahun', TRUE) != '' ? $this->input->get('tahun', TRUE) : date('Y');
 
 		$data['bulan'] = $bulan;
 		$data['tahun'] = $tahun;

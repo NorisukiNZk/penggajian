@@ -47,9 +47,9 @@
 </div>
 	
 	<?php
-		if((isset($_GET['bulan']) && $_GET['bulan']!='') && (isset($_GET['tahun']) && $_GET['tahun']!='')){
-			$bulan = $_GET['bulan'];
-			$tahun = $_GET['tahun'];
+		if(($this->input->get('bulan', TRUE)!='') && ($this->input->get('tahun', TRUE)!='')){
+			$bulan = $this->input->get('bulan', TRUE);
+			$tahun = $this->input->get('tahun', TRUE);
 			$bulantahun = $bulan.$tahun;
 		}else{
 			$bulan = date('m');

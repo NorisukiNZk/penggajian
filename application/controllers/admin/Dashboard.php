@@ -25,13 +25,13 @@ class Dashboard extends CI_Controller {
 		$data['total_pegawai'] = $this->db->query("SELECT * FROM data_pegawai")->num_rows();
 		
 		// Asumsi menggunakan absensi_harian jika ada, jika tidak 0
-		$q_hadir = $this->db->query("SELECT * FROM absensi_harian WHERE tanggal='$hari_ini' AND status='tepat_waktu'");
+		$q_hadir = $this->db->query("SELECT * FROM absensi_harian WHERE tanggal=? AND status='tepat_waktu'", array($hari_ini));
 		$data['hadir_hari_ini'] = $q_hadir ? $q_hadir->num_rows() : 0;
 
-		$q_terlambat = $this->db->query("SELECT * FROM absensi_harian WHERE tanggal='$hari_ini' AND status='terlambat'");
+		$q_terlambat = $this->db->query("SELECT * FROM absensi_harian WHERE tanggal=? AND status='terlambat'", array($hari_ini));
 		$data['terlambat_hari_ini'] = $q_terlambat ? $q_terlambat->num_rows() : 0;
 
-		$q_sakit_izin = $this->db->query("SELECT * FROM absensi_harian WHERE tanggal='$hari_ini' AND status IN ('sakit', 'izin')");
+		$q_sakit_izin = $this->db->query("SELECT * FROM absensi_harian WHERE tanggal=? AND status IN ('sakit', 'izin')", array($hari_ini));
 		$data['sakit_izin_hari_ini'] = $q_sakit_izin ? $q_sakit_izin->num_rows() : 0;
 
 		// 2. Data Grafik 1: Distribusi Jabatan (Pie Chart)

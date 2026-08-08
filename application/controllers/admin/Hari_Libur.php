@@ -29,7 +29,7 @@ class Hari_Libur extends CI_Controller {
         $keterangan = $this->input->post('keterangan');
 
         // Check for duplicate
-        $cek = $this->db->query("SELECT * FROM hari_libur WHERE tanggal = '$tanggal'")->num_rows();
+        $cek = $this->db->query("SELECT * FROM hari_libur WHERE tanggal = ?", array($tanggal))->num_rows();
         
         if ($cek > 0) {
             $this->session->set_flashdata('pesan','<div class="alert alert-danger alert-dismissible fade show" role="alert">

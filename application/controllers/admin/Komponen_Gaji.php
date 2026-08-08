@@ -177,9 +177,9 @@ class Komponen_Gaji extends CI_Controller {
 		}
 
 		// Ambil bulan & tahun dari GET
-		if ((isset($_GET['bulan']) && $_GET['bulan'] != '') && (isset($_GET['tahun']) && $_GET['tahun'] != '')) {
-			$bulan = $_GET['bulan'];
-			$tahun = $_GET['tahun'];
+		if ($this->input->get('bulan', TRUE) != '' && $this->input->get('tahun', TRUE) != '') {
+			$bulan = $this->input->get('bulan', TRUE);
+			$tahun = $this->input->get('tahun', TRUE);
 		} else {
 			$bulan = date('m');
 			$tahun = date('Y');

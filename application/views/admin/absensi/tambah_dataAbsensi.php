@@ -34,12 +34,11 @@
 	    <label for="staticEmail2">Tahun</label>
 	    <select class="form-control ml-3" name="tahun">
 		    <option value=""> Pilih Tahun </option>
-		    <?php $tahun = date('Y');
-		    for($i=2020;$i<$tahun+5;$i++) { ?>
+		    <?php $tahun_now = date('Y');
+		    for($i=2020;$i<$tahun_now+5;$i++) { ?>
 		    <option value="<?php echo $i ?>"><?php echo $i ?></option>
 		<?php }?>
 		</select>
-	    </select>
 	  </div>
 	  
 	  <button type="submit" class="btn btn-primary mb-2 ml-auto"><i class="fas fa-eye"></i> Generate Form</button>
@@ -50,9 +49,9 @@
 </div>
 	
 	<?php
-		if((isset($_GET['bulan']) && $_GET['bulan']!='') && (isset($_GET['tahun']) && $_GET['tahun']!='')){
-			$bulan = $_GET['bulan'];
-			$tahun = $_GET['tahun'];
+		if(($this->input->get('bulan', TRUE)!='') && ($this->input->get('tahun', TRUE)!='')){
+			$bulan = $this->input->get('bulan', TRUE);
+			$tahun = $this->input->get('tahun', TRUE);
 			$bulantahun = $bulan.$tahun;
 		}else{
 			$bulan = date('m');
@@ -71,7 +70,7 @@
 			<td class="text-center">No</td>
 			<td class="text-center">NIK</td>
 			<td class="text-center">Nama Pegawai</td>
-			<td class="text-center">Jenias Kalamin</td>
+			<td class="text-center">Jenis Kelamin</td>
 			<td class="text-center">Jabatan</td>
 			<td class="text-center" width="8%">Hadir</td>
 			<td class="text-center" width="8%">Sakit</td>
@@ -95,7 +94,7 @@
 				<td><input type="number" name="sakit[]" class="form-control" value="0"></td>
 				<td><input type="number" name="alpha[]" class="form-control" value="0"></td>
 		<?php endforeach; ?>
-	</table><br></br><br></br>
+	</table><br><br>
 	
 <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" style="display: none">
 </form>

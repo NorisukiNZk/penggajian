@@ -20,7 +20,7 @@ class Dashboard extends CI_Controller {
 		$data['title'] = "Dashboard";
 		$id=$this->session->userdata('id_pegawai');
 		$nik=$this->session->userdata('nik');
-		$data['pegawai'] = $this->db->query("SELECT * FROM data_pegawai WHERE id_pegawai='$id'")->result();
+		$data['pegawai'] = $this->db->query("SELECT * FROM data_pegawai WHERE id_pegawai=?", array($id))->result();
 
 		// Data absensi hari ini
 		$data['absensi_hari_ini'] = $this->ModelAbsensiHarian->get_absensi_hari_ini($nik);

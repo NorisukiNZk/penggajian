@@ -26,8 +26,8 @@ class Data_Gaji extends CI_Controller {
 			FROM data_pegawai
 			INNER JOIN data_kehadiran ON data_kehadiran.nik = data_pegawai.nik
 			INNER JOIN data_jabatan ON data_jabatan.nama_jabatan = data_pegawai.jabatan
-			WHERE data_kehadiran.nik = '$nik'
-			ORDER BY data_kehadiran.bulan DESC")->result();
+			WHERE data_kehadiran.nik = ?
+			ORDER BY data_kehadiran.bulan DESC", array($nik))->result();
 
 		// Komponen dinamis per bulan
 		$data['komponen_per_bulan'] = array();
@@ -55,7 +55,7 @@ class Data_Gaji extends CI_Controller {
 			FROM data_pegawai
 			INNER JOIN data_kehadiran ON data_kehadiran.nik=data_pegawai.nik
 			INNER JOIN data_jabatan ON data_jabatan.nama_jabatan=data_pegawai.jabatan
-			WHERE data_kehadiran.id_kehadiran = '$id'")->result();
+			WHERE data_kehadiran.id_kehadiran = ?", array($id))->result();
 
 		// Komponen dinamis per pegawai
 		$data['komponen_per_pegawai'] = array();

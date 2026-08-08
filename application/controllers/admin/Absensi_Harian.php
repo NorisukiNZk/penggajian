@@ -40,8 +40,8 @@ class Absensi_Harian extends CI_Controller {
 	{
 		$data['title'] = "Rekap Absensi Bulanan";
 
-		$bulan = isset($_GET['bulan']) && $_GET['bulan'] != '' ? $_GET['bulan'] : date('m');
-		$tahun = isset($_GET['tahun']) && $_GET['tahun'] != '' ? $_GET['tahun'] : date('Y');
+		$bulan = $this->input->get('bulan', TRUE) != '' ? $this->input->get('bulan', TRUE) : date('m');
+		$tahun = $this->input->get('tahun', TRUE) != '' ? $this->input->get('tahun', TRUE) : date('Y');
 
 		$data['bulan'] = $bulan;
 		$data['tahun'] = $tahun;
@@ -123,8 +123,8 @@ class Absensi_Harian extends CI_Controller {
 	{
 		$data['title'] = "Detail Absensi Pegawai";
 
-		$bulan = isset($_GET['bulan']) && $_GET['bulan'] != '' ? $_GET['bulan'] : date('m');
-		$tahun = isset($_GET['tahun']) && $_GET['tahun'] != '' ? $_GET['tahun'] : date('Y');
+		$bulan = $this->input->get('bulan', TRUE) != '' ? $this->input->get('bulan', TRUE) : date('m');
+		$tahun = $this->input->get('tahun', TRUE) != '' ? $this->input->get('tahun', TRUE) : date('Y');
 
 		$data['bulan'] = $bulan;
 		$data['tahun'] = $tahun;
