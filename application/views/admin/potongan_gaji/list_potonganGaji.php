@@ -11,7 +11,7 @@
 <script type="text/javascript">
 $(document).ready(function() {
     $.ajax({
-        type: 'POST',
+        type: 'GET',
         url: "<?php echo base_url(); ?>admin/potongan_gaji/tampilPotongan",
         cache: false,
         success: function(data) {

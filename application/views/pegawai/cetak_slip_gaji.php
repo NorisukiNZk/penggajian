@@ -140,13 +140,18 @@
         ?>
     </div>
 
-    <?php foreach ($potongan as $p) {
-        $potongan = $p->jml_potongan;
-    } ?>
+    <?php 
+    $alpha_deduction = 0;
+    foreach ($potongan as $p) {
+        if (strtolower($p->potongan) == 'alpha') {
+            $alpha_deduction = $p->jml_potongan;
+        }
+    } 
+    ?>
 
     <?php foreach ($print_slip as $ps) : ?>
         <?php 
-        $potongan_gaji = $ps->alpha * $potongan;
+        $potongan_gaji = $ps->alpha * $alpha_deduction;
         // Komponen dinamis
         $tj_detail = isset($komponen_per_pegawai[$ps->nik]) ? $komponen_per_pegawai[$ps->nik]['tunjangan'] : array('total' => 0, 'detail' => array());
         $pot_detail = isset($komponen_per_pegawai[$ps->nik]) ? $komponen_per_pegawai[$ps->nik]['potongan'] : array('total' => 0, 'detail' => array());

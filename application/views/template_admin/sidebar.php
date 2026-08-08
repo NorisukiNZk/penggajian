@@ -163,26 +163,39 @@
                 <?php } ?>
               </a>
               <!-- Dropdown - Alerts -->
-              <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="alertsDropdown">
-                <h6 class="dropdown-header">
-                  Pusat Notifikasi
-                </h6>
-                <?php if($notif_cuti > 0) { ?>
-                  <a class="dropdown-item d-flex align-items-center" href="<?php echo base_url('admin/data_cuti') ?>">
-                    <div class="mr-3">
-                      <div class="icon-circle bg-warning">
-                        <i class="fas fa-file-alt text-white"></i>
+              <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in p-0 border-0" aria-labelledby="alertsDropdown" style="border-radius: 12px; overflow: hidden; min-width: 320px;">
+                <div class="dropdown-header bg-modern-blue text-white d-flex align-items-center justify-content-between" style="padding: 1rem; font-size: 0.9rem; letter-spacing: 1px;">
+                  <span><i class="fas fa-bell mr-2"></i> PUSAT NOTIFIKASI</span>
+                  <?php if($notif_cuti > 0) { ?>
+                      <span class="badge badge-danger badge-pill shadow-sm"><?php echo $notif_cuti ?> Baru</span>
+                  <?php } ?>
+                </div>
+                <div class="p-2">
+                  <?php if($notif_cuti > 0) { ?>
+                    <a class="dropdown-item d-flex align-items-center py-3 rounded" href="<?php echo base_url('admin/data_cuti') ?>" style="transition: all 0.2s; background-color: #f8f9fc;">
+                      <div class="mr-3">
+                        <div class="icon-circle bg-warning-light">
+                          <i class="fas fa-file-signature text-warning"></i>
+                        </div>
                       </div>
+                      <div>
+                        <div class="small text-primary font-weight-bold mb-1"><i class="fas fa-calendar-day mr-1"></i> <?php echo date('d M Y') ?></div>
+                        <span class="font-weight-bold text-gray-800 d-block" style="font-size: 0.95rem;">Pengajuan Cuti / Izin</span>
+                        <span class="small text-muted"><?php echo $notif_cuti ?> pengajuan menunggu persetujuan Anda.</span>
+                      </div>
+                    </a>
+                  <?php } else { ?>
+                    <div class="text-center py-4">
+                      <div class="icon-circle bg-light mx-auto mb-3" style="width: 60px; height: 60px;">
+                        <i class="fas fa-check-circle text-success" style="font-size: 2rem;"></i>
+                      </div>
+                      <span class="text-gray-500 font-weight-bold d-block">Semua Terkendali!</span>
+                      <span class="small text-muted">Tidak ada notifikasi baru saat ini.</span>
                     </div>
-                    <div>
-                      <div class="small text-gray-500"><?php echo date('d M Y') ?></div>
-                      <span class="font-weight-bold">Ada <?php echo $notif_cuti ?> pengajuan cuti/izin baru yang menunggu persetujuan!</span>
-                    </div>
-                  </a>
-                <?php } else { ?>
-                  <a class="dropdown-item text-center small text-gray-500" href="#">Tidak ada notifikasi baru</a>
-                <?php } ?>
-                <a class="dropdown-item text-center small text-gray-500" href="<?php echo base_url('admin/data_cuti') ?>">Lihat Semua Pengajuan</a>
+                  <?php } ?>
+                </div>
+                <div class="dropdown-divider my-0"></div>
+                <a class="dropdown-item text-center small text-primary font-weight-bold py-3 bg-light" href="<?php echo base_url('admin/data_cuti') ?>" style="border-radius: 0 0 12px 12px;">Tampilkan Semua <i class="fas fa-arrow-right ml-1"></i></a>
               </div>
             </li>
 

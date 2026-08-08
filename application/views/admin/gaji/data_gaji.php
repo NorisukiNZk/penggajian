@@ -3,16 +3,16 @@
 		<h1 class="h3 mb-0 text-gray-800"><?php echo $title ?></h1>
 	</div>
 
-	<div class="card mb-3">
-		<div class="card-header bg-primary text-white">
-			Filter Data Gaji Pegawai
+	<div class="card shadow mb-4 border-0">
+		<div class="card-header bg-modern-blue text-white d-flex flex-row align-items-center justify-content-between" style="border-radius: 10px 10px 0 0;">
+			<h6 class="m-0 font-weight-bold"><i class="fas fa-filter mr-2"></i> Filter Data Gaji Pegawai</h6>
 		</div>
 		<div class="card-body">
 			<form class="form-inline">
 				<div class="form-group mb-2">
-					<label for="staticEmail2">Bulan</label>
-					<select class="form-control ml-3" name="bulan">
-						<option value=""> Pilih Bulan </option>
+					<label for="bulan" class="font-weight-bold mr-2">Bulan</label>
+					<select class="form-control form-control-sm" name="bulan" id="bulan">
+						<option value="">-- Pilih Bulan --</option>
 						<option value="01">Januari</option>
 						<option value="02">Februari</option>
 						<option value="03">Maret</option>
@@ -27,10 +27,10 @@
 						<option value="12">Desember</option>
 					</select>
 				</div>
-				<div class="form-group mb-2 ml-5">
-					<label for="staticEmail2">Tahun</label>
-					<select class="form-control ml-3" name="tahun">
-						<option value=""> Pilih Tahun </option>
+				<div class="form-group mb-2 ml-4">
+					<label for="tahun" class="font-weight-bold mr-2">Tahun</label>
+					<select class="form-control form-control-sm" name="tahun" id="tahun">
+						<option value="">-- Pilih Tahun --</option>
 						<?php $tahun = date('Y');
 						for ($i = 2020; $i < $tahun + 5; $i++) { ?>
 							<option value="<?php echo $i ?>"><?php echo $i ?></option>
@@ -50,13 +50,13 @@
 				}
 				?>
 
-				<button type="submit" class="btn btn-primary mb-2 ml-auto"><i class="fas fa-eye"></i> Tampilkan Data</button>
+				<button type="submit" class="btn btn-sm btn-primary mb-2 ml-auto shadow-sm"><i class="fas fa-eye mr-1"></i> Tampilkan Data</button>
 
 				<?php if (count($gaji) > 0) { ?>
-					<a href="<?php echo base_url('admin/data_penggajian/cetak_gaji?bulan=' . $bulan), '&tahun=' . $tahun ?>" class="btn btn-success mb-2 ml-3"><i class="fas fa-print"></i> Cetak Daftar Gaji</a>
+					<a href="<?php echo base_url('admin/data_penggajian/cetak_gaji?bulan=' . $bulan), '&tahun=' . $tahun ?>" class="btn btn-sm btn-success mb-2 ml-3 shadow-sm" target="_blank"><i class="fas fa-print mr-1"></i> Cetak Daftar Gaji</a>
 				<?php } else { ?>
-					<button type="button" class="btn btn-success mb-2 ml-3" data-toggle="modal" data-target="#exampleModal">
-						<i class="fas fa-print"></i> Cetak Daftar Gaji</button>
+					<button type="button" class="btn btn-sm btn-success mb-2 ml-3 shadow-sm" data-toggle="modal" data-target="#exampleModal">
+						<i class="fas fa-print mr-1"></i> Cetak Daftar Gaji</button>
 				<?php } ?>
 
 			</form>
@@ -107,47 +107,56 @@ if ($jml_data > 0) { ?>
 							</tr>
 						</thead>
 						<tbody>
-							<?php foreach ($potongan as $p) : {
-									$alpha = $p->jml_potongan;
-								} ?>
-								<?php $no = 1;
-								foreach ($gaji as $g) : ?>
-									<?php 
+							<?php 
+								// Mengambil nilai potongan khusus Alpha
+								$alpha = 0;
+								foreach ($potongan as $p) {
+									if (strtolower($p->potongan) == 'alpha') {
+										$alpha = $p->jml_potongan;
+									}
+								}
+								
+								$no = 1;
+								foreach ($gaji as $g) : 
 									$potongan_alpha = $g->alpha * $alpha;
 									// Komponen dinamis
 									$tj_lain = isset($komponen_per_pegawai[$g->nik]) ? $komponen_per_pegawai[$g->nik]['tunjangan']['total'] : 0;
 									$pot_lain = isset($komponen_per_pegawai[$g->nik]) ? $komponen_per_pegawai[$g->nik]['potongan']['total'] : 0;
 									$total_gaji = $g->gaji_pokok + $g->tj_transport + $g->uang_makan + $tj_lain - $potongan_alpha - $pot_lain;
-									?>
+							?>
 									<tr>
-										<td class="text-center"><?php echo $no++ ?></td>
-										<td class="text-center"><?php echo $g->nik ?></td>
-										<td class="text-center"><?php echo $g->nama_pegawai ?></td>
-										<td class="text-center"><?php echo $g->jenis_kelamin ?></td>
-										<td class="text-center"><?php echo $g->nama_jabatan ?></td>
-										<td class="text-center">Rp. <?php echo number_format($g->gaji_pokok, 0, ',', '.') ?></td>
-										<td class="text-center">Rp. <?php echo number_format($g->tj_transport, 0, ',', '.') ?></td>
-										<td class="text-center">Rp. <?php echo number_format($g->uang_makan, 0, ',', '.') ?></td>
-										<td class="text-center">
+										<td class="text-center align-middle"><?php echo $no++ ?></td>
+										<td class="text-center align-middle"><?php echo $g->nik ?></td>
+										<td class="text-left align-middle font-weight-bold"><?php echo $g->nama_pegawai ?></td>
+										<td class="text-center align-middle"><?php echo $g->jenis_kelamin ?></td>
+										<td class="text-center align-middle"><?php echo $g->nama_jabatan ?></td>
+										<td class="text-right align-middle">Rp. <?php echo number_format($g->gaji_pokok, 0, ',', '.') ?></td>
+										<td class="text-right align-middle">Rp. <?php echo number_format($g->tj_transport, 0, ',', '.') ?></td>
+										<td class="text-right align-middle">Rp. <?php echo number_format($g->uang_makan, 0, ',', '.') ?></td>
+										<td class="text-right align-middle">
 											<?php if ($tj_lain > 0) : ?>
 												<span class="text-success">+Rp. <?php echo number_format($tj_lain, 0, ',', '.') ?></span>
 											<?php else : ?>
 												<span class="text-muted">Rp. 0</span>
 											<?php endif; ?>
 										</td>
-										<td class="text-center">Rp. <?php echo number_format($potongan_alpha, 0, ',', '.') ?></td>
-										<td class="text-center">
+										<td class="text-right align-middle">
+											<?php if ($potongan_alpha > 0) : ?>
+												<span class="text-danger">-Rp. <?php echo number_format($potongan_alpha, 0, ',', '.') ?></span>
+											<?php else : ?>
+												<span class="text-muted">Rp. 0</span>
+											<?php endif; ?>
+										</td>
+										<td class="text-right align-middle">
 											<?php if ($pot_lain > 0) : ?>
 												<span class="text-danger">-Rp. <?php echo number_format($pot_lain, 0, ',', '.') ?></span>
 											<?php else : ?>
 												<span class="text-muted">Rp. 0</span>
 											<?php endif; ?>
 										</td>
-										<td class="text-center font-weight-bold">Rp. <?php echo number_format($total_gaji, 0, ',', '.') ?></td>
-									</tr>
+										<td class="text-right align-middle font-weight-bold text-primary">Rp. <?php echo number_format($total_gaji, 0, ',', '.') ?></td>
 									</tr>
 								<?php endforeach; ?>
-							<?php endforeach; ?>
 						</tbody>
 					</table>
 				</div>

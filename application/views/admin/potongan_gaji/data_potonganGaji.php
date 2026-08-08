@@ -79,13 +79,18 @@ $(document).ready(function(){
 
 <script>
     $(document).ready(function(){
+        // Get CSRF Token
+        var csrfName = '<?php echo $this->security->get_csrf_token_name(); ?>';
+        var csrfHash = '<?php echo $this->security->get_csrf_hash(); ?>';
 
         $('.tambah').click(function(){
         var aksi = 'Tambah Potongan Gaji';
+        var dataPayload = {aksi:aksi};
+        dataPayload[csrfName] = csrfHash;
         $.ajax({
             url: '<?php echo base_url(); ?>admin/potongan_gaji/tambah_potonganGaji',
             method: 'post',
-            data: {aksi:aksi},
+            data: dataPayload,
             success:function(data){
                 $('#myModal').modal("show");
                 $('#tampil_modal').html(data);
@@ -98,10 +103,12 @@ $(document).ready(function(){
         $('.edit').click(function(){
 
             var potongan = $(this).attr("potongan");
+            var dataPayload = {potongan:potongan};
+            dataPayload[csrfName] = csrfHash;
             $.ajax({
                 url: '<?php echo base_url(); ?>admin/potongan_gaji/edit_potonganGaji',
                 method: 'post',
-                data: {potongan:potongan},
+                data: dataPayload,
                 success:function(data){
                     $('#myModal').modal("show");
                     $('#tampil_modal').html(data);
@@ -113,10 +120,12 @@ $(document).ready(function(){
         $('.hapus').click(function(){
 
             var potongan = $(this).attr("potongan");
+            var dataPayload = {potongan:potongan};
+            dataPayload[csrfName] = csrfHash;
             $.ajax({
                 url: '<?php echo base_url(); ?>admin/potongan_gaji/hapus_potonganGaji',
                 method: 'post',
-                data: {potongan:potongan},
+                data: dataPayload,
                 success:function(data){
                     $('#myModal').modal("show");
                     $('#tampil_modal').html(data);
