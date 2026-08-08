@@ -146,7 +146,7 @@ $(document).ready(function() {
       var s = String(now.getSeconds()).padStart(2, '0');
       var clockEl = document.getElementById('live-clock');
       if (clockEl) {
-          clockEl.innerHTML = '<i class="fas fa-clock text-info"></i> ' + h + ':' + m + ':' + s + ' WIB';
+          clockEl.innerHTML = '<i class="fas fa-clock text-info"></i> ' + h + ':' + m + ':' + s + ' WITA';
       }
   }
   setInterval(updateLiveClock, 1000);

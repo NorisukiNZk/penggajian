@@ -69,7 +69,7 @@ class Login extends CI_Controller {
 				$this->session->set_userdata('nik',$cek->nik);
                 
                 // Dynamic Time Greeting for SweetAlert Toast
-                date_default_timezone_set('Asia/Jakarta');
+                date_default_timezone_set('Asia/Kuala_Lumpur');
                 $jam = date('H');
                 if ($jam >= 5 && $jam < 11) $sapaan = "Selamat Pagi ☀️";
                 else if ($jam >= 11 && $jam < 15) $sapaan = "Selamat Siang 🌤️";
