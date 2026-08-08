@@ -61,7 +61,7 @@
             background-color: transparent !important;
         }
 
-        /* Tabel Data Akuntansi */
+        /* Tabel Data */
         table.data-table {
             width: 100%;
             border-collapse: collapse;
@@ -124,7 +124,7 @@
         <hr class="kop-line">
     </div>
 
-    <div class="report-title">Laporan Kehadiran Pegawai</div>
+    <div class="report-title">Laporan Cuti Pegawai (Disetujui)</div>
 
     <?php
         // Array nama bulan
@@ -136,7 +136,7 @@
             <tr>
                 <td>Bulan</td>
                 <td>:</td>
-                <td><strong><?php echo isset($bulanIndo[$bulan]) ? $bulanIndo[$bulan] : htmlspecialchars($bulan, ENT_QUOTES, 'UTF-8'); ?></strong></td>
+                <td><strong><?php echo isset($bulanIndo[$bulan]) ? $bulanIndo[$bulan] : $bulan; ?></strong></td>
             </tr>
             <tr>
                 <td>Tahun</td>
@@ -149,25 +149,38 @@
     <table class="data-table">
         <thead>
             <tr>
-                <th width="5%">No</th>
-                <th width="15%">NIK</th>
-                <th width="35%">Nama Pegawai</th>
-                <th width="15%">Hadir</th>
-                <th width="15%">Sakit</th>
-                <th width="15%">Alpha</th>
+                <th width="3%">No</th>
+                <th width="10%">NIK</th>
+                <th width="20%">Nama Pegawai</th>
+                <th width="15%">Jabatan</th>
+                <th width="10%">Jenis Cuti</th>
+                <th width="20%">Rentang Tanggal</th>
+                <th width="22%">Alasan</th>
             </tr>
         </thead>
         <tbody>
-        <?php $no=1; foreach($lap_kehadiran as $l) : ?>
+        <?php 
+        if (empty($laporan_cuti)) {
+            echo '<tr><td colspan="7" style="text-align:center;">Tidak ada data cuti yang disetujui pada periode ini.</td></tr>';
+        } else {
+            $no = 1; 
+            foreach ($laporan_cuti as $c) : 
+                $tgl_mulai = date('d-m-Y', strtotime($c->tanggal_mulai));
+                $tgl_akhir = date('d-m-Y', strtotime($c->tanggal_akhir));
+        ?>
             <tr>
                 <td style="text-align: center;"><?php echo $no++; ?></td>
-                <td style="text-align: center;"><?php echo htmlspecialchars($l->nik, ENT_QUOTES, 'UTF-8'); ?></td>
-                <td><?php echo htmlspecialchars($l->nama_pegawai, ENT_QUOTES, 'UTF-8'); ?></td>
-                <td style="text-align: center;"><?php echo htmlspecialchars($l->hadir, ENT_QUOTES, 'UTF-8'); ?></td>
-                <td style="text-align: center;"><?php echo htmlspecialchars($l->sakit, ENT_QUOTES, 'UTF-8'); ?></td>
-                <td style="text-align: center;"><?php echo htmlspecialchars($l->alpha, ENT_QUOTES, 'UTF-8'); ?></td>
+                <td style="text-align: center;"><?php echo htmlspecialchars($c->nik, ENT_QUOTES, 'UTF-8'); ?></td>
+                <td><?php echo htmlspecialchars($c->nama_pegawai, ENT_QUOTES, 'UTF-8'); ?></td>
+                <td><?php echo htmlspecialchars($c->jabatan, ENT_QUOTES, 'UTF-8'); ?></td>
+                <td style="text-align: center;"><?php echo htmlspecialchars($c->jenis_cuti, ENT_QUOTES, 'UTF-8'); ?></td>
+                <td style="text-align: center;"><?php echo $tgl_mulai; ?> s.d <?php echo $tgl_akhir; ?></td>
+                <td><?php echo htmlspecialchars($c->alasan, ENT_QUOTES, 'UTF-8'); ?></td>
             </tr>
-        <?php endforeach; ?>
+        <?php 
+            endforeach; 
+        }
+        ?>
         </tbody>
     </table>
 

@@ -29,9 +29,9 @@ class Laporan_Gaji extends CI_Controller {
 	public function cetak_laporan_gaji() {
 		$data['title'] = "Cetak Laporan Gaji Pegawai";
 	
-		// Mengambil bulan dan tahun dari POST
-		$bulan = $this->input->post('bulan');
-		$tahun = $this->input->post('tahun');
+		// Mengambil bulan dan tahun dari POST dengan filter XSS
+		$bulan = $this->input->post('bulan', TRUE);
+		$tahun = $this->input->post('tahun', TRUE);
 	
 		// Validasi input
 		if (!empty($bulan) && !empty($tahun)) {

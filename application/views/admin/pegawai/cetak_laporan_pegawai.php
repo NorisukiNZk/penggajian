@@ -61,7 +61,7 @@
             background-color: transparent !important;
         }
 
-        /* Tabel Data Akuntansi */
+        /* Tabel Data */
         table.data-table {
             width: 100%;
             border-collapse: collapse;
@@ -124,7 +124,7 @@
         <hr class="kop-line">
     </div>
 
-    <div class="report-title">Laporan Kehadiran Pegawai</div>
+    <div class="report-title">Laporan Data Pegawai</div>
 
     <?php
         // Array nama bulan
@@ -134,14 +134,14 @@
     <div class="info-filter">
         <table>
             <tr>
-                <td>Bulan</td>
+                <td>Jabatan Filter</td>
                 <td>:</td>
-                <td><strong><?php echo isset($bulanIndo[$bulan]) ? $bulanIndo[$bulan] : htmlspecialchars($bulan, ENT_QUOTES, 'UTF-8'); ?></strong></td>
+                <td><strong><?php echo htmlspecialchars($filter_jabatan, ENT_QUOTES, 'UTF-8'); ?></strong></td>
             </tr>
             <tr>
-                <td>Tahun</td>
+                <td>Tanggal Dicetak</td>
                 <td>:</td>
-                <td><strong><?php echo htmlspecialchars($tahun, ENT_QUOTES, 'UTF-8'); ?></strong></td>
+                <td><strong><?php echo date('d') . ' ' . $bulanIndo[date('m')] . ' ' . date('Y'); ?></strong></td>
             </tr>
         </table>
     </div>
@@ -151,21 +151,23 @@
             <tr>
                 <th width="5%">No</th>
                 <th width="15%">NIK</th>
-                <th width="35%">Nama Pegawai</th>
-                <th width="15%">Hadir</th>
-                <th width="15%">Sakit</th>
-                <th width="15%">Alpha</th>
+                <th width="25%">Nama Pegawai</th>
+                <th width="15%">Jenis Kelamin</th>
+                <th width="20%">Jabatan</th>
+                <th width="20%">Tanggal Masuk</th>
             </tr>
         </thead>
         <tbody>
-        <?php $no=1; foreach($lap_kehadiran as $l) : ?>
+        <?php $no = 1; foreach ($pegawai as $p) : 
+            $tgl_masuk = date('d-m-Y', strtotime($p->tanggal_masuk));
+        ?>
             <tr>
                 <td style="text-align: center;"><?php echo $no++; ?></td>
-                <td style="text-align: center;"><?php echo htmlspecialchars($l->nik, ENT_QUOTES, 'UTF-8'); ?></td>
-                <td><?php echo htmlspecialchars($l->nama_pegawai, ENT_QUOTES, 'UTF-8'); ?></td>
-                <td style="text-align: center;"><?php echo htmlspecialchars($l->hadir, ENT_QUOTES, 'UTF-8'); ?></td>
-                <td style="text-align: center;"><?php echo htmlspecialchars($l->sakit, ENT_QUOTES, 'UTF-8'); ?></td>
-                <td style="text-align: center;"><?php echo htmlspecialchars($l->alpha, ENT_QUOTES, 'UTF-8'); ?></td>
+                <td style="text-align: center;"><?php echo htmlspecialchars($p->nik, ENT_QUOTES, 'UTF-8'); ?></td>
+                <td><?php echo htmlspecialchars($p->nama_pegawai, ENT_QUOTES, 'UTF-8'); ?></td>
+                <td style="text-align: center;"><?php echo htmlspecialchars($p->jenis_kelamin, ENT_QUOTES, 'UTF-8'); ?></td>
+                <td><?php echo htmlspecialchars($p->jabatan, ENT_QUOTES, 'UTF-8'); ?></td>
+                <td style="text-align: center;"><?php echo $tgl_masuk; ?></td>
             </tr>
         <?php endforeach; ?>
         </tbody>

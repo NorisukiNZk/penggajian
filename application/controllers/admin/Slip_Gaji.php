@@ -31,9 +31,9 @@ class Slip_Gaji extends CI_Controller {
 
 	$data['title'] = "Cetak Laporan Absensi Pegawai";
 	$data['potongan'] = $this->ModelPenggajian->get_data('potongan_gaji')-> result();
-	$nama = $this->input->post('nama_pegawai');
-	$bulan = $this->input->post('bulan');
-	$tahun = $this->input->post('tahun');
+	$nama = $this->input->post('nama_pegawai', TRUE);
+	$bulan = $this->input->post('bulan', TRUE);
+	$tahun = $this->input->post('tahun', TRUE);
 	$bulantahun =$bulan.$tahun;
 
 	$data['print_slip'] = $this->db->query("SELECT data_pegawai.nik,data_pegawai.nama_pegawai,data_jabatan.nama_jabatan,data_jabatan.gaji_pokok,data_jabatan.tj_transport,data_jabatan.uang_makan,data_kehadiran.alpha,data_kehadiran.bulan FROM data_pegawai INNER JOIN data_kehadiran ON data_kehadiran.nik=data_pegawai.nik

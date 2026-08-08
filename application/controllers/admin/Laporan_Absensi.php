@@ -28,9 +28,9 @@ class Laporan_Absensi extends CI_Controller {
 	public function cetak_laporan_absensi() {
 		$data['title'] = "Cetak Laporan Absensi Pegawai";
 	
-		// Mengambil bulan dan tahun dari POST
-		$bulan = $this->input->post('bulan');
-		$tahun = $this->input->post('tahun');
+		// Mengambil bulan dan tahun dari POST dengan filter XSS
+		$bulan = $this->input->post('bulan', TRUE);
+		$tahun = $this->input->post('tahun', TRUE);
 	
 		// Validasi input
 		if (!empty($bulan) && !empty($tahun)) {

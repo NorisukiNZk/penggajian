@@ -1,146 +1,145 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="id">
 <head>
+    <meta charset="UTF-8">
     <title><?php echo $title; ?></title>
     <style type="text/css">
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Times New Roman', Times, serif;
             color: black;
             margin: 20px;
-            background-color: #f9f9f9; /* Warna latar belakang */
+            background-color: #ffffff;
         }
 
-        hr {
-            border: 0;
-            height: 2px;
-            background-color: black; /* Warna hitam untuk garis */
-            margin: 10px 0; /* Margin atas dan bawah */
-        }
-
-        @media print {
-            hr {
-                display: block; /* Ensure the line is displayed */
-                height: 2px; /* Maintain height */
-                background-color: black; /* Keep the color */
-                margin: 10px 0; /* Maintain margins */
-            }
-        }
-
-        h1, h2 {
-            margin: 0;
-            padding: 5px; /* Mengurangi padding untuk mengurangi celah */
-        }
-
-        h1 {
-            font-size: 28px;
-            color: black; /* Warna hitam */
-            font-weight: bold; /* Bold */
-            text-align: center; /* Rata tengah */
-        }
-
-        h2 {
-            font-size: 16px; /* Ukuran font lebih kecil untuk alamat */
-            color: black; /* Warna hitam */
-            font-weight: normal; /* Normal */
-            text-align: center; /* Rata tengah */
-        }
-
+        /* Tampilan Header Klinik */
         .header {
             text-align: center;
-            margin-bottom: 10px; /* Mengurangi margin bawah */
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 0;
+            letter-spacing: 2px;
+        }
+        .header h2 {
+            font-size: 14px;
+            font-weight: normal;
+            margin: 5px 0 0 0;
+        }
+        .kop-line {
+            border: 0;
+            border-top: 3px solid black;
+            border-bottom: 1px solid black;
+            height: 2px;
+            margin: 15px 0;
         }
 
+        /* Judul Laporan */
         .report-title {
-            text-align: center; /* Rata tengah */
-            font-weight: bold; /* Bold */
-            text-decoration: underline; /* Garis bawah */
-            margin-top: 20px; /* Margin atas */
-            font-size: 24px; /* Ukuran font */
+            text-align: center;
+            font-weight: bold;
+            font-size: 18px;
+            text-decoration: underline;
+            margin-bottom: 25px;
+            text-transform: uppercase;
         }
 
-        .date {
-            text-align: right; /* Rata kanan */
-            margin-bottom: 20px; /* Margin bawah */
+        /* Info Pegawai */
+        .info-table {
+            width: 100%;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+        .info-table td {
+            padding: 3px 5px;
+            vertical-align: top;
         }
 
-        table {
+        /* Tabel Data Akuntansi */
+        table.data-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
+            font-size: 14px;
+            margin-bottom: 30px;
         }
-
-        th, td {
-            border: 2px solid #000; /* Border hitam yang lebih tebal untuk tabel */
-            padding: 10px; /* Padding untuk sel */
-            text-align: left;
+        table.data-table th, table.data-table td {
+            border: 1px solid black;
+            padding: 8px 10px;
         }
-
-        th {
-            background-color: #007bff; /* Warna biru untuk header */
-            color: white;
+        table.data-table th {
+            background-color: #e9ecef !important;
+            font-weight: bold;
+            text-align: center;
+        }
+        table.data-table td.angka {
+            text-align: right;
+        }
+        .bg-pendapatan {
+            background-color: #d4edda !important;
+            font-weight: bold;
+        }
+        .bg-potongan {
+            background-color: #f8d7da !important;
             font-weight: bold;
         }
 
-        tr:nth-child(even) {
-            background-color: #f2f2f2; /* Warna abu-abu muda untuk baris genap */
-        }
-
+        /* Tanda Tangan */
         .signature-container {
-            display: flex; /* Menggunakan flexbox untuk layout */
-            justify-content: space-between; /* Menyebar konten ke kiri dan kanan */
-            margin-top: 40px; /* Margin atas untuk tanda tangan */
+            width: 100%;
+            margin-top: 50px;
+        }
+        .signature-box {
+            width: 40%;
+            text-align: center;
+            font-size: 14px;
+            float: right;
+        }
+        .signature-box.left {
+            float: left;
+        }
+        .signature-box p {
+            margin: 5px 0;
+        }
+        .signature-name {
+            font-weight: bold;
+            text-decoration: underline;
+            margin-top: 70px !important;
         }
 
-        .signature {
-            text-align: center; /* Rata tengah untuk tanda tangan */
-        }
-
-        .signature p {
-            margin: 0; /* Menghilangkan margin untuk p */
+        /* Aturan Print Khusus */
+        @media print {
+            body {
+                margin: 0;
+                background-color: white;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            .kop-line {
+                border-top: 3px solid black !important;
+                border-bottom: 1px solid black !important;
+            }
+            table.data-table th {
+                background-color: #e9ecef !important;
+            }
+            .bg-pendapatan { background-color: #d4edda !important; }
+            .bg-potongan { background-color: #f8d7da !important; }
         }
     </style>
 </head>
-
 <body>
     <div class="header">
-        <h1>KLINIK PRATAMA</h1>
-        <h1>dr. H.M.HIDAYATULLAH</h1>
+        <h1>KLINIK PRATAMA HIDAYATULLAH</h1>
         <h2>Jl A. Yani KM 23 RT 01 RW 02, Kel Landasan Ulin, Kec Liang Anggang Banjarbaru</h2>
-        <hr> <!-- Garis bawah header -->
+        <hr class="kop-line">
     </div>
 
-    <div class="report-title">SLIP GAJI</div>
-    <div class="date">
-        <strong>Tanggal: </strong>
-        <?php
-        // Array nama bulan dalam bahasa Indonesia
-        $bulanIndo = [
-            '01' => 'Januari',
-            '02' => 'Februari',
-            '03' => 'Maret',
-            '04' => 'April',
-            '05' => 'Mei',
-            '06' => 'Juni',
-            '07' => 'Juli',
-            '08' => 'Agustus',
-            '09' => 'September',
-            '10' => 'Oktober',
-            '11' => 'November',
-            '12' => 'Desember'
-        ];
+    <div class="report-title">SLIP GAJI PEGAWAI</div>
 
-        // Ambil tanggal, bulan, dan tahun
-        $tanggal = date('d');
-        $bulan = date('m');
-        $tahun = date('Y');
-
-        // Tampilkan tanggal dengan nama bulan dalam bahasa Indonesia
-        echo $tanggal . ' ' . $bulanIndo[$bulan] . ' ' . $tahun;
-        ?>
-    </div>
-
-    <?php 
+    <?php
+    // Array nama bulan
+    $bulanIndo = ['01' => 'Januari', '02' => 'Februari', '03' => 'Maret', '04' => 'April', '05' => 'Mei', '06' => 'Juni', '07' => 'Juli', '08' => 'Agustus', '09' => 'September', '10' => 'Oktober', '11' => 'November', '12' => 'Desember'];
+    
     $alpha_deduction = 0;
     foreach ($potongan as $p) {
         if (strtolower($p->potongan) == 'alpha') {
@@ -152,143 +151,113 @@
     <?php foreach ($print_slip as $ps) : ?>
         <?php 
         $potongan_gaji = $ps->alpha * $alpha_deduction;
-        // Komponen dinamis
         $tj_detail = isset($komponen_per_pegawai[$ps->nik]) ? $komponen_per_pegawai[$ps->nik]['tunjangan'] : array('total' => 0, 'detail' => array());
         $pot_detail = isset($komponen_per_pegawai[$ps->nik]) ? $komponen_per_pegawai[$ps->nik]['potongan'] : array('total' => 0, 'detail' => array());
         $total_gaji = $ps->gaji_pokok + $ps->tj_transport + $ps->uang_makan + $tj_detail['total'] - $potongan_gaji - $pot_detail['total'];
+        
+        $bulanAngka = substr($ps->bulan, 0, 2);
+        $tahunAngka = substr($ps->bulan, 2, 4);
         ?>
 
-        <table>
+        <table class="info-table">
             <tr>
-                <td width="20%">Nama Pegawai</td>
+                <td width="15%"><strong>Nama Pegawai</strong></td>
                 <td width="2%">:</td>
-                <td><?php echo $ps->nama_pegawai ?></td>
+                <td width="33%"><?php echo htmlspecialchars($ps->nama_pegawai, ENT_QUOTES, 'UTF-8'); ?></td>
+                <td width="15%"><strong>Bulan</strong></td>
+                <td width="2%">:</td>
+                <td width="33%"><?php echo isset($bulanIndo[$bulanAngka]) ? $bulanIndo[$bulanAngka] : $bulanAngka; ?></td>
             </tr>
             <tr>
-                <td>NIK</td>
+                <td><strong>NIK</strong></td>
                 <td>:</td>
-                <td><?php echo $ps->nik ?></td>
+                <td><?php echo htmlspecialchars($ps->nik, ENT_QUOTES, 'UTF-8'); ?></td>
+                <td><strong>Tahun</strong></td>
+                <td>:</td>
+                <td><?php echo htmlspecialchars($tahunAngka, ENT_QUOTES, 'UTF-8'); ?></td>
             </tr>
             <tr>
-                <td>Jabatan</td>
+                <td><strong>Jabatan</strong></td>
                 <td>:</td>
-                <td><?php echo $ps->nama_jabatan ?></td>
-            </tr>
-            <tr>
-                <td>Bulan</td>
-                <td>:</td>
-                <td>
-                    <?php
-                    // Array nama bulan dalam bahasa Indonesia
-                    $bulanIndo = [
-                        '01' => 'Januari',
-                        '02' => 'Februari',
-                        '03' => 'Maret',
-                        '04' => 'April',
-                        '05' => 'Mei',
-                        '06' => 'Juni',
-                        '07' => 'Juli',
-                        '08' => 'Agustus',
-                        '09' => 'September',
-                        '10' => 'Oktober',
-                        '11' => 'November',
-                        '12' => 'Desember'
-                    ];
-
-                    // Ambil bulan dari $ps->bulan
-                    $bulanAngka = substr($ps->bulan, 0, 2);
-                    echo $bulanIndo[$bulanAngka]; // Tampilkan nama bulan
-                    ?>
-                </td>
-            </tr>
-            <tr>
-                <td>Tahun</td>
-                <td>:</td>
-                <td><?php echo substr($ps->bulan, 2, 4); ?></td>
+                <td><?php echo htmlspecialchars($ps->nama_jabatan, ENT_QUOTES, 'UTF-8'); ?></td>
+                <td></td><td></td><td></td>
             </tr>
         </table>
 
-        <table>
-            <tr>
-                <th class="text-center" width="5%">No</th>
-                <th class="text-center">Keterangan</th>
-                <th class="text-center">Jumlah</th>
-            </tr>
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th width="5%">No</th>
+                    <th width="65%">Keterangan</th>
+                    <th width="30%">Jumlah</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Pendapatan -->
+                <tr>
+                    <td colspan="3" class="bg-pendapatan">PENDAPATAN</td>
+                </tr>
+                <?php $no = 1; ?>
+                <tr>
+                    <td style="text-align: center;"><?php echo $no++; ?></td>
+                    <td>Gaji Pokok</td>
+                    <td class="angka">Rp <?php echo number_format($ps->gaji_pokok, 0, ',', '.'); ?></td>
+                </tr>
+                <tr>
+                    <td style="text-align: center;"><?php echo $no++; ?></td>
+                    <td>Tunjangan Transportasi</td>
+                    <td class="angka">Rp <?php echo number_format($ps->tj_transport, 0, ',', '.'); ?></td>
+                </tr>
+                <tr>
+                    <td style="text-align: center;"><?php echo $no++; ?></td>
+                    <td>Uang Makan</td>
+                    <td class="angka">Rp <?php echo number_format($ps->uang_makan, 0, ',', '.'); ?></td>
+                </tr>
+                <?php foreach ($tj_detail['detail'] as $td) : ?>
+                <tr>
+                    <td style="text-align: center;"><?php echo $no++; ?></td>
+                    <td><?php echo htmlspecialchars($td['nama_komponen'], ENT_QUOTES, 'UTF-8'); ?> <?php echo $td['is_persentase'] ? '(' . $td['nominal'] . '%)' : '' ?></td>
+                    <td class="angka">Rp <?php echo number_format($td['nominal'], 0, ',', '.'); ?></td>
+                </tr>
+                <?php endforeach; ?>
 
-            <!-- Komponen Gaji Tetap -->
-            <tr>
-                <td colspan="3" style="background-color:#d4edda; font-weight:bold;">PENDAPATAN</td>
-            </tr>
-            <?php $no = 1; ?>
-            <tr>
-                <td><?php echo $no++ ?></td>
-                <td>Gaji Pokok</td>
-                <td>Rp. <?php echo number_format($ps->gaji_pokok, 0, ',', '.') ?></td>
-            </tr>
-
-            <tr>
-                <td><?php echo $no++ ?></td>
-                <td>Tunjangan Transportasi</td>
-                <td>Rp. <?php echo number_format($ps->tj_transport, 0, ',', '.') ?></td>
-            </tr>
-
-            <tr>
-                <td><?php echo $no++ ?></td>
-                <td>Uang Makan</td>
-                <td>Rp. <?php echo number_format($ps->uang_makan, 0, ',', '.') ?></td>
-            </tr>
-
-            <!-- Tunjangan Dinamis -->
-            <?php foreach ($tj_detail['detail'] as $td) : ?>
-            <tr>
-                <td><?php echo $no++ ?></td>
-                <td><?php echo $td['nama_komponen'] ?> <?php echo $td['is_persentase'] ? '(' . $td['nominal'] . '%)' : '' ?></td>
-                <td>Rp. <?php echo number_format($td['nominal'], 0, ',', '.') ?></td>
-            </tr>
-            <?php endforeach; ?>
-
-            <!-- Potongan -->
-            <tr>
-                <td colspan="3" style="background-color:#f8d7da; font-weight:bold;">POTONGAN</td>
-            </tr>
-            <?php $no_pot = 1; ?>
-            <tr>
-                <td><?php echo $no_pot++ ?></td>
-                <td>Potongan Alpha (<?php echo $ps->alpha ?> hari)</td>
-                <td>Rp. <?php echo number_format($potongan_gaji, 0, ',', '.') ?></td>
-            </tr>
-
-            <!-- Potongan Dinamis -->
-            <?php foreach ($pot_detail['detail'] as $pd) : ?>
-            <tr>
-                <td><?php echo $no_pot++ ?></td>
-                <td><?php echo $pd['nama_komponen'] ?></td>
-                <td>Rp. <?php echo number_format($pd['nominal'], 0, ',', '.') ?></td>
-            </tr>
-            <?php endforeach; ?>
-
-            <tr>
-                <th colspan="2" style="text-align: right;">Total Gaji : </th>
-                <th>Rp. <?php echo number_format($total_gaji, 0, ',', '.') ?></th>
-            </tr>
+                <!-- Potongan -->
+                <tr>
+                    <td colspan="3" class="bg-potongan">POTONGAN</td>
+                </tr>
+                <?php $no_pot = 1; ?>
+                <tr>
+                    <td style="text-align: center;"><?php echo $no_pot++; ?></td>
+                    <td>Potongan Alpha (<?php echo htmlspecialchars($ps->alpha, ENT_QUOTES, 'UTF-8'); ?> hari)</td>
+                    <td class="angka">Rp <?php echo number_format($potongan_gaji, 0, ',', '.'); ?></td>
+                </tr>
+                <?php foreach ($pot_detail['detail'] as $pd) : ?>
+                <tr>
+                    <td style="text-align: center;"><?php echo $no_pot++; ?></td>
+                    <td><?php echo htmlspecialchars($pd['nama_komponen'], ENT_QUOTES, 'UTF-8'); ?></td>
+                    <td class="angka">Rp <?php echo number_format($pd['nominal'], 0, ',', '.'); ?></td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th colspan="2" style="text-align: right; font-size: 16px;">Total Penerimaan Bersih :</th>
+                    <th class="angka" style="font-size: 16px;">Rp <?php echo number_format($total_gaji, 0, ',', '.'); ?></th>
+                </tr>
+            </tfoot>
         </table>
 
         <div class="signature-container">
-            <div class="signature">
-                <p>Pegawai</p>
-                <br><br>
-                <br>
-                <br>
-                <p class="font-weight-bold"><?php echo $ps->nama_pegawai ?></p>
+            <div class="signature-box left">
+                <p>Pegawai Yang Bersangkutan,</p>
+                <p class="signature-name" style="margin-top: 80px !important;"><?php echo htmlspecialchars($ps->nama_pegawai, ENT_QUOTES, 'UTF-8'); ?></p>
             </div>
-            <div class="signature">
-                <p>Mengetahui,</p>
-                <p>dr. H.M.HIDAYATULLAH</p>
-                <br><br>
-                <br>
-                <br>
-                <p>( Dr. H. Muhammad Hidayatullah )</p>
+            <div class="signature-box">
+                <p>Banjarbaru, <?php echo date('d') . ' ' . $bulanIndo[date('m')] . ' ' . date('Y'); ?></p>
+                <p>Mengetahui Pimpinan Klinik,</p>
+                <p class="signature-name" style="margin-top: 60px !important;">Dr. H. Muhammad Hidayatullah</p>
             </div>
+            <div style="clear: both;"></div>
         </div>
 
     <?php endforeach; ?>
@@ -297,5 +266,4 @@
         window.print();
     </script>
 </body>
-
 </html>

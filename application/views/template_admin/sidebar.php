@@ -105,8 +105,8 @@
           <div class="bg-white py-2 collapse-inner rounded">
             <a class="collapse-item" href="<?php echo base_url('admin/laporan_gaji') ?>">Laporan Gaji</a>
             <a class="collapse-item" href="<?php echo base_url('admin/laporan_absensi') ?>">Laporan Absensi</a>
-            <a class="collapse-item" href="<?php echo base_url('admin/data_pegawai/akumulasi') ?>">Laporan Pegawai</a>
-            <a class="collapse-item" href="<?php echo base_url('admin/data_pegawai/rekapitulasi') ?>">Rekapitulasi Libur</a>
+            <a class="collapse-item" href="<?php echo base_url('admin/laporan_pegawai') ?>">Laporan Pegawai</a>
+            <a class="collapse-item" href="<?php echo base_url('admin/laporan_cuti') ?>">Laporan Cuti Pegawai</a>
             <a class="collapse-item" href="<?php echo base_url('admin/slip_gaji') ?>">Slip Gaji</a>
           </div>
         </div>
