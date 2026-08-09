@@ -55,7 +55,18 @@ class Absensi extends CI_Controller {
 			return;
 		}
 
-		$this->ModelAbsensiHarian->absen_masuk($nik);
+		$proses = $this->ModelAbsensiHarian->absen_masuk($nik);
+
+		if (!$proses) {
+			$this->session->set_flashdata('pesan','<div class="alert alert-danger alert-dismissible fade show" role="alert">
+				<strong>Gagal!</strong> Belum saatnya Absen Masuk atau sudah melewati batas maksimal keterlambatan.
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+				</button>
+				</div>');
+			redirect('pegawai/absensi');
+			return;
+		}
 
 		$absensi = $this->ModelAbsensiHarian->get_absensi_hari_ini($nik);
 		$status_text = ($absensi->status == 'tepat_waktu') ? 'Tepat Waktu ✅' : 'Terlambat ⚠️';
@@ -101,7 +112,18 @@ class Absensi extends CI_Controller {
 			return;
 		}
 
-		$this->ModelAbsensiHarian->absen_pulang($nik);
+		$proses = $this->ModelAbsensiHarian->absen_pulang($nik);
+
+		if (!$proses) {
+			$this->session->set_flashdata('pesan','<div class="alert alert-danger alert-dismissible fade show" role="alert">
+				<strong>Gagal!</strong> Belum saatnya Absen Pulang.
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+				</button>
+				</div>');
+			redirect('pegawai/absensi');
+			return;
+		}
 
 		$this->session->set_flashdata('pesan','<div class="alert alert-success alert-dismissible fade show" role="alert">
 			<strong>Absen pulang berhasil!</strong> Jam: ' . date('H:i:s') . '

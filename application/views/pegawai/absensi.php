@@ -79,12 +79,22 @@
 						<?php endif; ?>
 
 						<!-- Tombol Absen Pulang -->
-						<?php if (!$absensi_hari_ini->jam_pulang) : ?>
-							<a href="<?php echo base_url('pegawai/absensi/absen_pulang') ?>" class="btn btn-info btn-lg btn-block"
-							   onclick="return confirm('Apakah Anda yakin ingin melakukan Absen Pulang sekarang?')">
-								<i class="fas fa-sign-out-alt fa-2x"></i><br>
-								<span style="font-size: 20px;">ABSEN PULANG</span>
-							</a>
+						<?php 
+						$jam_sekarang = date('H:i:s');
+						if (!$absensi_hari_ini->jam_pulang) : ?>
+							<?php if ($jam_sekarang >= $setting->mulai_absen_pulang) : ?>
+								<a href="<?php echo base_url('pegawai/absensi/absen_pulang') ?>" class="btn btn-info btn-lg btn-block"
+								   onclick="return confirm('Apakah Anda yakin ingin melakukan Absen Pulang sekarang?')">
+									<i class="fas fa-sign-out-alt fa-2x"></i><br>
+									<span style="font-size: 20px;">ABSEN PULANG</span>
+								</a>
+							<?php else : ?>
+								<button class="btn btn-secondary btn-lg btn-block text-white" disabled style="cursor: not-allowed; opacity: 0.7;">
+									<i class="fas fa-lock fa-2x mb-2"></i><br>
+									<span style="font-size: 20px; font-weight: bold;">BELUM WAKTUNYA PULANG</span><br>
+									<small>Gerbang dibuka jam <?php echo date('H:i', strtotime($setting->mulai_absen_pulang)) ?></small>
+								</button>
+							<?php endif; ?>
 						<?php else : ?>
 							<div class="alert alert-success text-center py-3 mb-0">
 								<i class="fas fa-check-circle fa-2x mb-2"></i><br>
@@ -97,11 +107,27 @@
 						<div class="text-center mb-3">
 							<p class="text-muted">Anda belum melakukan absen masuk hari ini.</p>
 						</div>
-						<a href="<?php echo base_url('pegawai/absensi/absen_masuk') ?>" class="btn btn-success btn-lg btn-block py-4"
-						   onclick="return confirm('Apakah Anda yakin ingin melakukan Absen Masuk sekarang?')">
-							<i class="fas fa-sign-in-alt fa-3x mb-2"></i><br>
-							<span style="font-size: 24px; font-weight: bold;">ABSEN MASUK</span>
-						</a>
+						<?php 
+						$jam_sekarang = date('H:i:s');
+						if ($jam_sekarang >= $setting->mulai_absen_masuk && $jam_sekarang <= $setting->batas_terlambat_berat) : ?>
+							<a href="<?php echo base_url('pegawai/absensi/absen_masuk') ?>" class="btn btn-success btn-lg btn-block py-4"
+							   onclick="return confirm('Apakah Anda yakin ingin melakukan Absen Masuk sekarang?')">
+								<i class="fas fa-sign-in-alt fa-3x mb-2"></i><br>
+								<span style="font-size: 24px; font-weight: bold;">ABSEN MASUK</span>
+							</a>
+						<?php elseif ($jam_sekarang < $setting->mulai_absen_masuk) : ?>
+							<button class="btn btn-secondary btn-lg btn-block py-4 text-white" disabled style="cursor: not-allowed; opacity: 0.7;">
+								<i class="fas fa-lock fa-3x mb-2"></i><br>
+								<span style="font-size: 24px; font-weight: bold;">BELUM WAKTUNYA MASUK</span><br>
+								<small>Gerbang absen masuk dibuka jam <?php echo date('H:i', strtotime($setting->mulai_absen_masuk)) ?></small>
+							</button>
+						<?php else : ?>
+							<button class="btn btn-danger btn-lg btn-block py-4 text-white" disabled style="cursor: not-allowed; opacity: 0.7;">
+								<i class="fas fa-times-circle fa-3x mb-2"></i><br>
+								<span style="font-size: 24px; font-weight: bold;">GERBANG ABSEN DITUTUP</span><br>
+								<small>Melewati batas maksimal keterlambatan (<?php echo date('H:i', strtotime($setting->batas_terlambat_berat)) ?>)</small>
+							</button>
+						<?php endif; ?>
 					<?php endif; ?>
 				</div>
 			</div>

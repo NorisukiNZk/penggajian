@@ -47,6 +47,11 @@ class ModelAbsensiHarian extends CI_Model
         $setting = $this->get_setting();
         $jam_sekarang = date('H:i:s');
 
+        // Proteksi Gerbang Waktu (Backend)
+        if ($jam_sekarang < $setting->mulai_absen_masuk || $jam_sekarang > $setting->batas_terlambat_berat) {
+            return false; // Di luar jam yang diizinkan
+        }
+
         // Tentukan status otomatis
         $jam_masuk_setting = $setting->jam_masuk;
         $toleransi = $setting->toleransi_menit;
@@ -88,6 +93,11 @@ class ModelAbsensiHarian extends CI_Model
     {
         $setting = $this->get_setting();
         $jam_sekarang = date('H:i:s');
+
+        // Proteksi Gerbang Waktu (Backend)
+        if ($jam_sekarang < $setting->mulai_absen_pulang) {
+            return false; // Belum waktunya pulang
+        }
 
         $data = array(
             'jam_pulang' => $jam_sekarang

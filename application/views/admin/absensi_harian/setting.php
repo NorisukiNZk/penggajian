@@ -16,6 +16,14 @@
 					<form method="POST" action="<?php echo base_url('admin/absensi_harian/update_setting') ?>">
 
 						<div class="form-group row">
+							<label class="col-sm-4 col-form-label font-weight-bold">Gerbang Absen Masuk Buka</label>
+							<div class="col-sm-8">
+								<input type="time" class="form-control" name="mulai_absen_masuk" value="<?php echo $setting->mulai_absen_masuk ?>">
+								<small class="text-muted">Jam paling awal pegawai bisa klik Absen Masuk (default: 06:00)</small>
+							</div>
+						</div>
+
+						<div class="form-group row">
 							<label class="col-sm-4 col-form-label font-weight-bold">Jam Masuk Resmi</label>
 							<div class="col-sm-8">
 								<input type="time" class="form-control" name="jam_masuk" value="<?php echo $setting->jam_masuk ?>">
@@ -33,6 +41,14 @@
 									</div>
 								</div>
 								<small class="text-muted">Grace period setelah jam masuk resmi. Dalam rentang ini masih dianggap "Tepat Waktu" (default: 15 menit)</small>
+							</div>
+						</div>
+
+						<div class="form-group row">
+							<label class="col-sm-4 col-form-label font-weight-bold">Gerbang Absen Pulang Buka</label>
+							<div class="col-sm-8">
+								<input type="time" class="form-control" name="mulai_absen_pulang" value="<?php echo $setting->mulai_absen_pulang ?>">
+								<small class="text-muted">Jam paling awal pegawai bisa klik Absen Pulang (default: 15:00)</small>
 							</div>
 						</div>
 
