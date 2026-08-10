@@ -1,83 +1,94 @@
 <div align="center">
   <img src="assets/img/kpmh.png" alt="Logo Klinik" width="150"/>
-  <h1>HRIS & Aplikasi Penggajian Karyawan</h1>
-  <p>Sistem Manajemen Sumber Daya Manusia Terpadu untuk Klinik Pratama Dr. H.M. Hidayatullah.</p>
+  <h1>Enterprise HRIS & Payroll Management System</h1>
+  <p>Sistem Informasi Manajemen Sumber Daya Manusia & Penggajian Terpadu <br> untuk Klinik Pratama Dr. H.M. Hidayatullah.</p>
 
   <!-- Badges -->
   <p>
     <img src="https://img.shields.io/badge/CodeIgniter-3.1.11-DD4814?style=for-the-badge&logo=codeigniter&logoColor=white" alt="CodeIgniter">
-    <img src="https://img.shields.io/badge/Bootstrap-4-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white" alt="Bootstrap">
+    <img src="https://img.shields.io/badge/PHP-7.4+-777BB4?style=for-the-badge&logo=php&logoColor=white" alt="PHP">
     <img src="https://img.shields.io/badge/MySQL-Database-4479A1?style=for-the-badge&logo=mysql&logoColor=white" alt="MySQL">
-    <img src="https://img.shields.io/badge/Status-Completed-success?style=for-the-badge" alt="Status">
+    <img src="https://img.shields.io/badge/Bootstrap-4-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white" alt="Bootstrap">
+    <img src="https://img.shields.io/badge/Status-Skripsi_Ready-success?style=for-the-badge" alt="Status">
   </p>
 </div>
 
 <br>
 
-## 🚀 Tentang Proyek Ini
-Aplikasi ini adalah **Sistem Informasi Kepegawaian (HRIS)** berbasis Web yang dibangun dengan *framework* CodeIgniter 3. Aplikasi ini dirancang tidak hanya untuk sekadar mencatat absensi dan gaji, tetapi didesain dengan standar **UI/UX tingkat tinggi (Enterprise Level)** untuk memberikan kenyamanan dan pengalaman interaktif yang modern bagi Admin (HRD) maupun Pegawai.
+## 🚀 Gambaran Umum (*Project Overview*)
+Aplikasi ini adalah **Sistem Informasi Kepegawaian (HRIS - Human Resource Information System)** berbasis Web yang dibangun menggunakan *framework* CodeIgniter 3. Secara khusus dirancang untuk memenuhi kelayakan standar skripsi dengan mengimplementasikan logika komputasi tingkat lanjut (*Advanced Computational Logic*), validasi silang otomatis (*Cross-Validation*), dan kualitas antarmuka sekelas perangkat lunak korporasi nyata (*Enterprise-grade UI/UX*).
 
 ---
 
-## ✨ Fitur Unggulan UI/UX (Frontend)
-Aplikasi ini dipersenjatai dengan modifikasi *Frontend* mutakhir untuk memastikan pengalaman pengguna yang sempurna:
-- 🌌 **Login Interaktif:** Desain layar terbelah (*split-screen*) modern dengan efek latar belakang konstelasi bintang responsif menggunakan **Particles.js**. Serta fitur *Show/Hide Password*.
-- 🌓 **Dark Mode Global:** Mode Gelap elegan dengan transisi warna mulus (*gapless*) yang preferensinya tersimpan secara permanen melalui `localStorage`.
-- 🔔 **Toast Notifications & Alert Center:** Menggunakan notifikasi **SweetAlert2** bertipe *Top-Down Colored Toast* yang meluncur elegan, dipadukan dengan **Pusat Notifikasi (Alert Center)** di *topbar* Admin untuk pantauan Cuti & Lembur secara *real-time*.
-- 🌀 **Full-screen Preloader:** Indikator *loading* memutar yang mencegah layar putih (*blank*) saat perpindahan halaman yang berat.
-- 💼 **UI/UX Data Master Kelas Enterprise:** Transformasi desain *form* Tambah/Edit menggunakan *Grid System*, *Card* bersudut membulat (*rounded*), injeksi *Input Icons* (FontAwesome), dan implementasi **Modern Bootstrap Modal** (khusus fitur Potongan Gaji) untuk pengalaman *CRUD* secepat kilat tanpa perpindahan halaman.
-- 📊 **Tabel Data Interaktif & Informatif:** Penggunaan *Badge* warna untuk membedakan status/hak akses, foto profil bulat (*rounded-circle*), dan perataan kanan (*right-aligned*) khusus angka/nominal uang agar standar akuntansi terpenuhi.
-- 🎨 **Modern Micro-interactions:** *Custom Scrollbar* elegan bergaya macOS, *Hover Effect* pada baris tabel, serta panel navigasi modern.
+## 🖨️ Modul Cetak Laporan Kelas Enterprise (*Smart Reporting*)
+Aplikasi ini telah memenuhi standar kelayakan industri dan akademis dengan menyertakan **9+ Modul Laporan Kustom** yang didesain secara dinamis dan profesional:
+
+1. **Laporan Rekapitulasi Gaji Tahunan (Annual Report):** Menggunakan logika *multi-looping* untuk mengkalkulasi kompilasi gaji, lembur, dan potongan seluruh pegawai selama setahun penuh.
+2. **Laporan Rekapitulasi Lembur Pegawai:** Sinkronisasi cerdas dengan modul absensi harian untuk menyeleksi *fraud* (kecurangan) durasi lembur.
+3. **Laporan Transaksi Potongan Gaji Bulanan:** Kalkulasi akumulatif denda Alpha dan potongan kustom lainnya.
+4. **Modul Laporan Master:** Mencakup Laporan Data Pegawai, Jabatan, Absensi, Cuti, dan Gaji Bulanan.
+
+**Fitur Canggih pada Hasil Cetakan (Print Out):**
+- 🛡️ **Validasi QR Code (*Digital Signature*):** Dilengkapi otentikasi digital berbasis *Base64 QR Code* pada blok tanda tangan (menghilangkan ketergantungan tanda tangan basah).
+- 💧 **Transparent Watermark:** Injeksi logo instansi secara transparan di pusat dokumen menggunakan CSS Print Media Query (Anti-Pemalsuan).
+- 🔢 **Auto-Generated Reference Number:** Penomoran surat yang di-*generate* secara dinamis dan (*Real-time*) (misal: `Nomor: 260810/HRD-KPMH/VIII/2026`) menggunakan algoritma konversi *Month-to-Roman*.
+- 🏛️ **Grid-based Kop Surat:** Susunan *Header* dokumen resmi berstruktur tabel untuk kompatibilitas cetak (*Print-safe Layout*) di berbagai ukuran kertas standar.
 
 ---
 
-## 🛠️ Fitur Utama (Backend)
-- 👥 **Manajemen Pegawai & Jabatan:** Pendataan lengkap karyawan, jabatan, dan struktur gaji pokok beserta tunjangannya.
-- ⏱️ **Sistem Absensi Cerdas & Akurat:** Perekaman jam masuk/pulang secara akurat berdasarkan zona waktu *real-time*. Dilengkapi **Smart Alpha Calculation** (Otomatis menghitung sisa ketidakhadiran harian dibandingkan dengan total hari wajib kerja).
-- 🌙 **Modul Lembur Anti-Kecurangan (Cross-Validation):** Pegawai dapat mengajukan lembur, namun sistem akan memvalidasi ulang (validasi silang) durasi yang disetujui dengan **Fakta Jam Pulang** di modul absensi. Jika pegawai pulang lebih awal, gaji lembur otomatis dipangkas/dihapus guna mencegah kecurangan (*Fraud Prevention*).
-- 🏝️ **Sistem Pengajuan Cuti/Izin:** Pegawai dapat mengajukan cuti, dan Admin/HRD dapat memberikan persetujuan (Setuju/Tolak) yang disertai dengan **Catatan/Pesan Feedback** langsung dari HRD.
-- 📅 **Sinkronisasi Hari Libur Nasional API:** Data tanggal merah dan cuti bersama ditarik secara otomatis *(Real-time Sync)* dari server statis **GitHub APIHariLibur_V2**, bebas dari konfigurasi manual.
-- 💰 **Kalkulasi & Laporan Penggajian:** Penghitungan gaji komprehensif (Kehadiran, Lembur, Alpha Pintar, dan Potongan lainnya), yang siap dicetak menjadi Laporan Gaji maupun Slip Gaji berstandar resmi.
+## ⚙️ Arsitektur Sistem & Backend (*Core Features*)
+- 👥 **Manajemen Data Master Terpusat:** Pengelolaan struktural untuk Pegawai, Jabatan, Hak Akses, serta pengaturan komponen Gaji Pokok & Tunjangan operasional.
+- ⏱️ **Smart Alpha & Attendance Logic:** Perekaman jam absensi dengan sistem kalkulasi ketidakhadiran (Alpha) otomatis, yang secara matematis menghitung sisa hari kerja valid seorang pegawai dalam sebulan.
+- 🌙 **Fraud-Prevention pada Modul Lembur:** Fitur *Cross-Validation* yang secara aktif membandingkan durasi pengajuan lembur yang diizinkan HRD dengan **Waktu Pulang Aktual** pada mesin absensi. Jika pegawai pulang lebih awal, sistem secara sepihak memangkas kompensasi lembur.
+- 🏝️ **Manajemen Cuti Terstruktur:** Siklus pengajuan cuti (*Request-Approve/Reject*) dua arah dengan fitur kolom catatan/pesan *feedback* langsung dari meja HRD.
+- 📅 **Integrasi API Hari Libur Nasional:** *Pulling* data kalender libur secara *real-time* dari Github API (*APIHariLibur_V2*), mengeliminasi kebutuhan input tanggal merah manual setiap tahunnya.
 
 ---
 
-## 🛡️ Standar Keamanan (Security Hardening)
-Aplikasi ini telah diperkeras perlindungannya dari serangan siber umum yang sering menjadi kelemahan sistem konvensional:
-- **BCRYPT Hashing & Password Protection:** Menggantikan MD5 usang dengan BCRYPT murni. Terdapat lapisan keamanan tambahan yang mencegah *hijacking* (*form* Edit Pegawai tidak akan mereset password secara diam-diam jika dibiarkan kosong, dan pengguna wajib memasukkan Password Lama saat merubah *password* pribadi).
-- **Anti CSRF (Cross-Site Request Forgery):** Token pelindung dinamis disuntikkan secara otomatis di seluruh *form* aplikasi, mencegah penyerang mengirimkan permintaan palsu dari luar domain.
-- **Global XSS Filtering:** Sistem pembersih otomatis (Sanitization) yang melucuti skrip jahat (*Javascript / HTML injection*) dari input pengguna maupun parameter URL (`$_GET`).
-- **SQL Injection Prevention:** Penerapan *Query Binding* (`?`) secara ketat di seluruh fitur Filter, Laporan, dan Pencarian untuk melindungi *database* dari ancaman peretasan *URL Spoofing* dan *Union-Based Injection*.
+## ✨ Rekayasa Antarmuka (*UI/UX Engineering*)
+- 🌌 **Split-Screen Interactive Login:** Antarmuka masuk bergaya korporat modern dengan partikel animasi (*Particles.js*) yang bergerak dinamis merespon kursor.
+- 🌓 **Persistent Dark Mode:** Pengalaman visual elegan yang aman bagi mata (*eye-strain free*), didukung memori penyimpanan status tema melalui `localStorage` (*Gapless Transition*).
+- 🔔 **Asynchronous Notification Center:** Menerapkan **SweetAlert2** bertipe *Toast* untuk umpan balik (*Feedback*) cepat, serta menu *Dropdown Alert Center* di navbar untuk pemantauan aktivitas cuti/lembur.
+- ⚡ **Seamless CRUD dengan Bootstrap Modal:** Fitur Tambah/Edit data menggunakan arsitektur Modal yang mencegah pemuatan ulang halaman utuh (*Full Page Reload*), meningkatkan persepsi kecepatan (*Perceived Performance*).
 
 ---
 
-## 💻 Panduan Instalasi
-Untuk menjalankan aplikasi ini secara lokal (*localhost*):
+## 🛡️ Lapisan Keamanan (*Security Hardening*)
+- 🔒 **Algoritma BCRYPT:** Migrasi total dari MD5 menuju *hashing* sandi BCRYPT (standar industri kriptografi modern).
+- 🛡️ **Anti-CSRF (Cross-Site Request Forgery):** Injeksi *Security Token* pada semua lalu lintas formulir data (*POST method*).
+- 🧹 **Global XSS Filtering:** Pembersihan skrip intrusif (*Sanitization*) pada setiap input untuk menangkal injeksi *Javascript/HTML*.
+- 🛡️ **Prepared Statements (Query Binding):** Isolasi variabel terhadap *Query Database* demi mencegah eksploitasi peretasan *SQL Injection*.
 
-1. **Clone Repositori ini:**
+---
+
+## 💻 Panduan Instalasi (Environment Setup)
+Ikuti instruksi teknis berikut untuk menjalankan sistem secara lokal:
+
+1. **Kloning Repositori:**
    ```bash
    git clone https://github.com/NorisukiNZk/penggajian.git
    ```
-2. **Siapkan Database:**
-   - Buka XAMPP / Laragon, jalankan Apache dan MySQL.
-   - Buka phpMyAdmin, buat *database* baru (misal: `penggajian`).
-   - Import file SQL yang tersedia di folder proyek (jika ada, biasanya `penggajian.sql`) ke dalam database tersebut.
-3. **Konfigurasi Database CodeIgniter:**
-   - Buka file `application/config/database.php`.
-   - Sesuaikan *username*, *password*, dan *nama database*.
-4. **Jalankan Aplikasi:**
-   - Buka browser dan ketik: `http://localhost/penggajian/`
-   - *Login* sebagai Admin atau Pegawai untuk mulai menjelajah.
+2. **Inisialisasi Database:**
+   - Aktifkan modul Apache & MySQL pada XAMPP/Laragon.
+   - Buat basis data kosong dengan nama `penggajian` melalui antarmuka phpMyAdmin.
+   - Lakukan proses impor (*Import*) pada berkas SQL primer yang disediakan dalam repositori.
+3. **Konfigurasi Lingkungan (*Environment*):**
+   - Modifikasi berkas `application/config/database.php`.
+   - Sesuaikan parameter kredensial `hostname`, `username`, `password`, dan `database` sesuai lingkungan sistem lokal Anda.
+4. **Eksekusi Aplikasi:**
+   - Akses via browser: `http://localhost/penggajian/`
+   - Gunakan kredensial *default* (terlampir pada data SQL) untuk mencoba hak akses *Admin* atau *Pegawai*.
 
 ---
 
-## 📸 Cuplikan Layar (Screenshots)
-*(Tambahkan gambar cuplikan layar aplikasi di sini agar HRD bisa langsung melihat visual aplikasi tanpa harus meng-install-nya)*
+## 📸 Dokumentasi Antarmuka (System Screenshots)
 
-- **Halaman Login:** <img src="assets/img/dashboard.jpeg" width="800">
-- **Dashboard Admin:** <img src="assets/img/login.jpeg" width="800">
-- **Notifikasi Toast:** <img src="assets/img/dashboardgaji.jpeg" width="800">
+- **Antarmuka Otentikasi (Login):** <img src="assets/img/login.jpeg" width="800">
+- **Dasbor Utama (Admin Dashboard):** <img src="assets/img/dashboard.jpeg" width="800">
+- **Modul Penggajian (Payroll):** <img src="assets/img/dashboardgaji.jpeg" width="800">
+
 ---
 <div align="center">
-  Dibuat untuk Portofolio & Tugas Akhir. <br>
-  <strong>NorisukiNZK</strong>
+  Didedikasikan untuk Tugas Akhir & Standardisasi Skripsi IT. <br>
+  <strong>&copy; 2026 NorisukiNZK</strong>
 </div>
