@@ -23,20 +23,21 @@ Aplikasi ini adalah **Sistem Informasi Kepegawaian (HRIS)** berbasis Web yang di
 Aplikasi ini dipersenjatai dengan modifikasi *Frontend* mutakhir untuk memastikan pengalaman pengguna yang sempurna:
 - 🌌 **Login Interaktif:** Desain layar terbelah (*split-screen*) modern dengan efek latar belakang konstelasi bintang responsif menggunakan **Particles.js**. Serta fitur *Show/Hide Password*.
 - 🌓 **Dark Mode Global:** Mode Gelap elegan dengan transisi warna mulus (*gapless*) yang preferensinya tersimpan secara permanen melalui `localStorage`.
-- 🔔 **Toast Notifications:** Meninggalkan *pop-up* kaku konvensional, aplikasi ini menggunakan notifikasi **SweetAlert2** bertipe *Top-Down Colored Toast* yang meluncur elegan dari atas layar.
+- 🔔 **Toast Notifications & Alert Center:** Menggunakan notifikasi **SweetAlert2** bertipe *Top-Down Colored Toast* yang meluncur elegan, dipadukan dengan **Pusat Notifikasi (Alert Center)** di *topbar* Admin untuk pantauan Cuti & Lembur secara *real-time*.
 - 🌀 **Full-screen Preloader:** Indikator *loading* memutar yang mencegah layar putih (*blank*) saat perpindahan halaman yang berat.
-- 💼 **UI/UX Data Master Kelas Enterprise:** Transformasi desain *form* Tambah/Edit (Pegawai & Jabatan) menggunakan *Grid System 2 Kolom*, *Card* bersudut membulat (*rounded*), dan injeksi *Input Icons* (FontAwesome).
-- 📊 **Tabel Data Interaktif & Informatif:** Penggunaan *Badge* warna untuk membedakan status/hak akses, foto profil bulat (*rounded-circle*), dan perataan kanan (*right-aligned*) khusus untuk angka/nominal uang agar standar akuntansi terpenuhi.
-- 🎨 **Modern Micro-interactions:** *Custom Scrollbar* elegan bergaya macOS, *Hover Effect* pada baris tabel dan kartu, serta panel navigasi modern yang menyatu.
+- 💼 **UI/UX Data Master Kelas Enterprise:** Transformasi desain *form* Tambah/Edit menggunakan *Grid System*, *Card* bersudut membulat (*rounded*), injeksi *Input Icons* (FontAwesome), dan implementasi **Modern Bootstrap Modal** (khusus fitur Potongan Gaji) untuk pengalaman *CRUD* secepat kilat tanpa perpindahan halaman.
+- 📊 **Tabel Data Interaktif & Informatif:** Penggunaan *Badge* warna untuk membedakan status/hak akses, foto profil bulat (*rounded-circle*), dan perataan kanan (*right-aligned*) khusus angka/nominal uang agar standar akuntansi terpenuhi.
+- 🎨 **Modern Micro-interactions:** *Custom Scrollbar* elegan bergaya macOS, *Hover Effect* pada baris tabel, serta panel navigasi modern.
 
 ---
 
 ## 🛠️ Fitur Utama (Backend)
 - 👥 **Manajemen Pegawai & Jabatan:** Pendataan lengkap karyawan, jabatan, dan struktur gaji pokok beserta tunjangannya.
-- ⏱️ **Sistem Absensi Cerdas:** Perekaman jam masuk/pulang secara akurat berdasarkan zona waktu *real-time* (`Asia/Jakarta`).
+- ⏱️ **Sistem Absensi Cerdas & Akurat:** Perekaman jam masuk/pulang secara akurat berdasarkan zona waktu *real-time*. Dilengkapi **Smart Alpha Calculation** (Otomatis menghitung sisa ketidakhadiran harian dibandingkan dengan total hari wajib kerja).
+- 🌙 **Modul Lembur Anti-Kecurangan (Cross-Validation):** Pegawai dapat mengajukan lembur, namun sistem akan memvalidasi ulang (validasi silang) durasi yang disetujui dengan **Fakta Jam Pulang** di modul absensi. Jika pegawai pulang lebih awal, gaji lembur otomatis dipangkas/dihapus guna mencegah kecurangan (*Fraud Prevention*).
 - 🏝️ **Sistem Pengajuan Cuti/Izin:** Pegawai dapat mengajukan cuti, dan Admin/HRD dapat memberikan persetujuan (Setuju/Tolak) yang disertai dengan **Catatan/Pesan Feedback** langsung dari HRD.
 - 📅 **Sinkronisasi Hari Libur Nasional API:** Data tanggal merah dan cuti bersama ditarik secara otomatis *(Real-time Sync)* dari server statis **GitHub APIHariLibur_V2**, bebas dari konfigurasi manual.
-- 💰 **Kalkulasi & Laporan Penggajian:** Penghitungan gaji otomatis berdasarkan kehadiran, keterlambatan, dan potongan Alpha, yang siap dicetak ke dalam Slip Gaji resmi.
+- 💰 **Kalkulasi & Laporan Penggajian:** Penghitungan gaji komprehensif (Kehadiran, Lembur, Alpha Pintar, dan Potongan lainnya), yang siap dicetak menjadi Laporan Gaji maupun Slip Gaji berstandar resmi.
 
 ---
 
