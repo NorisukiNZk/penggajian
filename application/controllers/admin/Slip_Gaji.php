@@ -45,9 +45,15 @@ class Slip_Gaji extends CI_Controller {
 	foreach ($data['print_slip'] as $ps) {
 		$tunjangan = $this->ModelKomponen->hitung_total_tunjangan($ps->nik, $bulantahun, $ps->gaji_pokok);
 		$potongan_dinamis = $this->ModelKomponen->hitung_total_potongan($ps->nik, $bulantahun, $ps->gaji_pokok);
+		
+		// Hitung Lembur
+		$lembur = $this->ModelPenggajian->hitung_uang_lembur($ps->nik, $bulan, $tahun);
+
 		$data['komponen_per_pegawai'][$ps->nik] = array(
-			'tunjangan' => $tunjangan,
-			'potongan'  => $potongan_dinamis
+			'tunjangan'   => $tunjangan,
+			'potongan'    => $potongan_dinamis,
+			'uang_lembur' => $lembur['uang_lembur'],
+			'jam_lembur'  => $lembur['total_jam']
 		);
 	}
 

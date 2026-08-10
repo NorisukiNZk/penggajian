@@ -151,9 +151,10 @@
     <?php foreach ($print_slip as $ps) : ?>
         <?php 
         $potongan_gaji = $ps->alpha * $alpha_deduction;
+        $uang_lembur = isset($komponen_per_pegawai[$ps->nik]) ? $komponen_per_pegawai[$ps->nik]['uang_lembur'] : 0;
         $tj_detail = isset($komponen_per_pegawai[$ps->nik]) ? $komponen_per_pegawai[$ps->nik]['tunjangan'] : array('total' => 0, 'detail' => array());
         $pot_detail = isset($komponen_per_pegawai[$ps->nik]) ? $komponen_per_pegawai[$ps->nik]['potongan'] : array('total' => 0, 'detail' => array());
-        $total_gaji = $ps->gaji_pokok + $ps->tj_transport + $ps->uang_makan + $tj_detail['total'] - $potongan_gaji - $pot_detail['total'];
+        $total_gaji = $ps->gaji_pokok + $ps->tj_transport + $ps->uang_makan + $uang_lembur + $tj_detail['total'] - $potongan_gaji - $pot_detail['total'];
         
         $bulanAngka = substr($ps->bulan, 0, 2);
         $tahunAngka = substr($ps->bulan, 2, 4);
@@ -213,6 +214,16 @@
                     <td>Uang Makan</td>
                     <td class="angka">Rp <?php echo number_format($ps->uang_makan, 0, ',', '.'); ?></td>
                 </tr>
+                <?php 
+                if ($uang_lembur > 0) : 
+                    $jam_lembur = isset($komponen_per_pegawai[$ps->nik]) ? $komponen_per_pegawai[$ps->nik]['jam_lembur'] : 0;
+                ?>
+                <tr>
+                    <td style="text-align: center;"><?php echo $no++; ?></td>
+                    <td>Uang Lembur (<?php echo $jam_lembur; ?> Jam)</td>
+                    <td class="angka">Rp <?php echo number_format($uang_lembur, 0, ',', '.'); ?></td>
+                </tr>
+                <?php endif; ?>
                 <?php foreach ($tj_detail['detail'] as $td) : ?>
                 <tr>
                     <td style="text-align: center;"><?php echo $no++; ?></td>

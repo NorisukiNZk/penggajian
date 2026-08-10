@@ -66,6 +66,12 @@
       </li>
 
       <li class="nav-item">
+        <a class="nav-link" href="<?php echo base_url('pegawai/lembur') ?>">
+          <i class="fas fa-fw fa-clock"></i>
+          <span>Pengajuan Lembur</span></a>
+      </li>
+
+      <li class="nav-item">
         <a class="nav-link" href="<?php echo base_url('pegawai/absensi/riwayat') ?>">
           <i class="fas fa-fw fa-calendar-check"></i>
           <span>Riwayat Absensi</span></a>

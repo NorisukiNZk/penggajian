@@ -80,7 +80,8 @@ class Absensi_Harian extends CI_Controller {
 			'mulai_absen_pulang'        => $this->input->post('mulai_absen_pulang'),
 			'jam_pulang'                => $this->input->post('jam_pulang'),
 			'batas_terlambat_berat'     => $this->input->post('batas_terlambat_berat'),
-			'maks_terlambat_jadi_alpha' => $this->input->post('maks_terlambat_jadi_alpha')
+			'maks_terlambat_jadi_alpha' => $this->input->post('maks_terlambat_jadi_alpha'),
+			'tarif_lembur_per_jam'      => $this->input->post('tarif_lembur_per_jam')
 		);
 
 		$this->ModelAbsensiHarian->update_setting($data);

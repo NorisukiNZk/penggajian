@@ -81,6 +81,19 @@
 							</div>
 						</div>
 
+						<div class="form-group row">
+							<label class="col-sm-4 col-form-label font-weight-bold">Tarif Lembur per Jam</label>
+							<div class="col-sm-8">
+								<div class="input-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text">Rp</span>
+									</div>
+									<input type="number" class="form-control" name="tarif_lembur_per_jam" value="<?php echo $setting->tarif_lembur_per_jam ?>">
+								</div>
+								<small class="text-muted">Tarif yang akan dikalikan dengan total jam lembur yang disetujui (default: 20000)</small>
+							</div>
+						</div>
+
 						<hr>
 						<button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Simpan Setting</button>
 						<a href="<?php echo base_url('admin/absensi_harian') ?>" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Kembali</a>

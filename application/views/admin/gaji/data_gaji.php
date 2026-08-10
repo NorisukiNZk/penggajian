@@ -100,6 +100,7 @@ if ($jml_data > 0) { ?>
 								<th class="text-center">GajI Pokok</th>
 								<th class="text-center">Tj. Transport</th>
 								<th class="text-center">Uang Makan</th>
+								<th class="text-center">Uang Lembur</th>
 								<th class="text-center">Tunjangan Lain</th>
 								<th class="text-center">Potongan (Alpha)</th>
 								<th class="text-center">Potongan Lain</th>
@@ -120,9 +121,10 @@ if ($jml_data > 0) { ?>
 								foreach ($gaji as $g) : 
 									$potongan_alpha = $g->alpha * $alpha;
 									// Komponen dinamis
+									$uang_lembur = isset($komponen_per_pegawai[$g->nik]) ? $komponen_per_pegawai[$g->nik]['uang_lembur'] : 0;
 									$tj_lain = isset($komponen_per_pegawai[$g->nik]) ? $komponen_per_pegawai[$g->nik]['tunjangan']['total'] : 0;
 									$pot_lain = isset($komponen_per_pegawai[$g->nik]) ? $komponen_per_pegawai[$g->nik]['potongan']['total'] : 0;
-									$total_gaji = $g->gaji_pokok + $g->tj_transport + $g->uang_makan + $tj_lain - $potongan_alpha - $pot_lain;
+									$total_gaji = $g->gaji_pokok + $g->tj_transport + $g->uang_makan + $uang_lembur + $tj_lain - $potongan_alpha - $pot_lain;
 							?>
 									<tr>
 										<td class="text-center align-middle"><?php echo $no++ ?></td>
@@ -133,6 +135,13 @@ if ($jml_data > 0) { ?>
 										<td class="text-right align-middle">Rp. <?php echo number_format($g->gaji_pokok, 0, ',', '.') ?></td>
 										<td class="text-right align-middle">Rp. <?php echo number_format($g->tj_transport, 0, ',', '.') ?></td>
 										<td class="text-right align-middle">Rp. <?php echo number_format($g->uang_makan, 0, ',', '.') ?></td>
+										<td class="text-right align-middle">
+											<?php if ($uang_lembur > 0) : ?>
+												<span class="text-success">+Rp. <?php echo number_format($uang_lembur, 0, ',', '.') ?></span>
+											<?php else : ?>
+												<span class="text-muted">Rp. 0</span>
+											<?php endif; ?>
+										</td>
 										<td class="text-right align-middle">
 											<?php if ($tj_lain > 0) : ?>
 												<span class="text-success">+Rp. <?php echo number_format($tj_lain, 0, ',', '.') ?></span>

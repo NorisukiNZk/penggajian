@@ -87,6 +87,7 @@
             <a class="collapse-item" href="<?php echo base_url('admin/absensi_harian/rekap') ?>">Rekap Absensi</a>
             <a class="collapse-item" href="<?php echo base_url('admin/absensi_harian/setting') ?>">Setting Absensi</a>
             <a class="collapse-item" href="<?php echo base_url('admin/data_absensi') ?>">Data Absensi (Lama)</a>
+            <a class="collapse-item" href="<?php echo base_url('admin/data_lembur') ?>">Data Lembur</a>
             <h6 class="collapse-header">Gaji:</h6>
             <a class="collapse-item" href="<?php echo base_url('admin/potongan_gaji') ?>">Setting Potongan Gaji</a>
             <a class="collapse-item" href="<?php echo base_url('admin/komponen_gaji') ?>">Komponen Gaji</a>
@@ -151,28 +152,30 @@
 
             <!-- Nav Item - Alerts -->
             <?php 
-              // Query untuk mengambil jumlah cuti yang menunggu persetujuan
+              // Query untuk mengambil jumlah cuti & lembur yang menunggu persetujuan
               $notif_cuti = $this->db->query("SELECT * FROM data_cuti WHERE status_cuti='Menunggu'")->num_rows();
+              $notif_lembur = $this->db->query("SELECT * FROM data_lembur WHERE status='Pending'")->num_rows();
+              $total_notif = $notif_cuti + $notif_lembur;
             ?>
             <li class="nav-item dropdown no-arrow mx-1">
               <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i class="fas fa-bell fa-fw"></i>
                 <!-- Counter - Alerts -->
-                <?php if($notif_cuti > 0) { ?>
-                  <span class="badge badge-danger badge-counter"><?php echo $notif_cuti ?></span>
+                <?php if($total_notif > 0) { ?>
+                  <span class="badge badge-danger badge-counter"><?php echo $total_notif ?></span>
                 <?php } ?>
               </a>
               <!-- Dropdown - Alerts -->
               <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in p-0 border-0" aria-labelledby="alertsDropdown" style="border-radius: 12px; overflow: hidden; min-width: 320px;">
                 <div class="dropdown-header bg-modern-blue text-white d-flex align-items-center justify-content-between" style="padding: 1rem; font-size: 0.9rem; letter-spacing: 1px;">
                   <span><i class="fas fa-bell mr-2"></i> PUSAT NOTIFIKASI</span>
-                  <?php if($notif_cuti > 0) { ?>
-                      <span class="badge badge-danger badge-pill shadow-sm"><?php echo $notif_cuti ?> Baru</span>
+                  <?php if($total_notif > 0) { ?>
+                      <span class="badge badge-danger badge-pill shadow-sm"><?php echo $total_notif ?> Baru</span>
                   <?php } ?>
                 </div>
                 <div class="p-2">
                   <?php if($notif_cuti > 0) { ?>
-                    <a class="dropdown-item d-flex align-items-center py-3 rounded" href="<?php echo base_url('admin/data_cuti') ?>" style="transition: all 0.2s; background-color: #f8f9fc;">
+                    <a class="dropdown-item d-flex align-items-center py-3 rounded mb-1" href="<?php echo base_url('admin/data_cuti') ?>" style="transition: all 0.2s; background-color: #f8f9fc;">
                       <div class="mr-3">
                         <div class="icon-circle bg-warning-light">
                           <i class="fas fa-file-signature text-warning"></i>
@@ -184,7 +187,24 @@
                         <span class="small text-muted"><?php echo $notif_cuti ?> pengajuan menunggu persetujuan Anda.</span>
                       </div>
                     </a>
-                  <?php } else { ?>
+                  <?php } ?>
+
+                  <?php if($notif_lembur > 0) { ?>
+                    <a class="dropdown-item d-flex align-items-center py-3 rounded mb-1" href="<?php echo base_url('admin/data_lembur') ?>" style="transition: all 0.2s; background-color: #f8f9fc;">
+                      <div class="mr-3">
+                        <div class="icon-circle bg-info-light" style="background-color: rgba(54, 185, 204, 0.1); width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
+                          <i class="fas fa-clock text-info"></i>
+                        </div>
+                      </div>
+                      <div>
+                        <div class="small text-primary font-weight-bold mb-1"><i class="fas fa-calendar-day mr-1"></i> <?php echo date('d M Y') ?></div>
+                        <span class="font-weight-bold text-gray-800 d-block" style="font-size: 0.95rem;">Pengajuan Lembur</span>
+                        <span class="small text-muted"><?php echo $notif_lembur ?> pengajuan lembur menunggu di-approve.</span>
+                      </div>
+                    </a>
+                  <?php } ?>
+
+                  <?php if($total_notif == 0) { ?>
                     <div class="text-center py-4">
                       <div class="icon-circle bg-light mx-auto mb-3" style="width: 60px; height: 60px;">
                         <i class="fas fa-check-circle text-success" style="font-size: 2rem;"></i>
@@ -195,7 +215,7 @@
                   <?php } ?>
                 </div>
                 <div class="dropdown-divider my-0"></div>
-                <a class="dropdown-item text-center small text-primary font-weight-bold py-3 bg-light" href="<?php echo base_url('admin/data_cuti') ?>" style="border-radius: 0 0 12px 12px;">Tampilkan Semua <i class="fas fa-arrow-right ml-1"></i></a>
+                <a class="dropdown-item text-center small text-primary font-weight-bold py-3 bg-light" href="<?php echo base_url('admin/dashboard') ?>" style="border-radius: 0 0 12px 12px;">Tutup Panel <i class="fas fa-times ml-1"></i></a>
               </div>
             </li>
 

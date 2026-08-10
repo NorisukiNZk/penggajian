@@ -163,6 +163,7 @@
                 <th width="10%">Gaji Pokok</th>
                 <th width="9%">Tj. Transport</th>
                 <th width="9%">Uang Makan</th>
+                <th width="9%">Uang Lembur</th>
                 <th width="9%">Tj. Lain</th>
                 <th width="8%">Pot. Alpha</th>
                 <th width="8%">Pot. Lain</th>
@@ -181,9 +182,10 @@
 
         foreach ($cetak_gaji as $g): 
             $potongan_alpha = $g->alpha * $alpha;
+            $uang_lembur = isset($komponen_per_pegawai[$g->nik]) ? $komponen_per_pegawai[$g->nik]['uang_lembur'] : 0;
             $tj_lain = isset($komponen_per_pegawai[$g->nik]) ? $komponen_per_pegawai[$g->nik]['tunjangan']['total'] : 0;
             $pot_lain = isset($komponen_per_pegawai[$g->nik]) ? $komponen_per_pegawai[$g->nik]['potongan']['total'] : 0;
-            $total_gaji = $g->gaji_pokok + $g->tj_transport + $g->uang_makan + $tj_lain - $potongan_alpha - $pot_lain;
+            $total_gaji = $g->gaji_pokok + $g->tj_transport + $g->uang_makan + $uang_lembur + $tj_lain - $potongan_alpha - $pot_lain;
         ?>
             <tr>
                 <td style="text-align: center;"><?php echo $no++; ?></td>
@@ -193,6 +195,7 @@
                 <td class="angka">Rp <?php echo number_format($g->gaji_pokok, 0, ',', '.'); ?></td>
                 <td class="angka">Rp <?php echo number_format($g->tj_transport, 0, ',', '.'); ?></td>
                 <td class="angka">Rp <?php echo number_format($g->uang_makan, 0, ',', '.'); ?></td>
+                <td class="angka">Rp <?php echo number_format($uang_lembur, 0, ',', '.'); ?></td>
                 <td class="angka">Rp <?php echo number_format($tj_lain, 0, ',', '.'); ?></td>
                 <td class="angka" style="color: red;">-Rp <?php echo number_format($potongan_alpha, 0, ',', '.'); ?></td>
                 <td class="angka" style="color: red;">-Rp <?php echo number_format($pot_lain, 0, ',', '.'); ?></td>

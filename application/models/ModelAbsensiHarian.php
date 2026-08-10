@@ -314,11 +314,9 @@ class ModelAbsensiHarian extends CI_Model
         $bulan = date('m');
         $tahun = date('Y');
 
-        $this->db->where('nik', $nik);
-        $this->db->where('MONTH(tanggal)', $bulan);
-        $this->db->where('YEAR(tanggal)', $tahun);
-        $data = $this->db->get('absensi_harian')->result();
-
+        // Gunakan fungsi rekap bulanan yang sudah pintar (menghitung alpha secara matematis)
+        $semua_rekap = $this->get_rekap_bulanan($bulan, $tahun);
+        
         $ringkasan = array(
             'hadir'     => 0,
             'terlambat' => 0,
@@ -327,24 +325,15 @@ class ModelAbsensiHarian extends CI_Model
             'izin'      => 0
         );
 
-        foreach ($data as $d) {
-            switch ($d->status) {
-                case 'tepat_waktu':
-                    $ringkasan['hadir']++;
-                    break;
-                case 'terlambat':
-                    $ringkasan['hadir']++;
-                    $ringkasan['terlambat']++;
-                    break;
-                case 'sakit':
-                    $ringkasan['sakit']++;
-                    break;
-                case 'alpha':
-                    $ringkasan['alpha']++;
-                    break;
-                case 'izin':
-                    $ringkasan['izin']++;
-                    break;
+        // Cari data pegawai yang bersangkutan
+        foreach ($semua_rekap as $rekap) {
+            if ($rekap['nik'] == $nik) {
+                $ringkasan['hadir']     = $rekap['hadir'];
+                $ringkasan['terlambat'] = $rekap['terlambat'];
+                $ringkasan['sakit']     = $rekap['sakit'];
+                $ringkasan['alpha']     = $rekap['total_alpha'];
+                $ringkasan['izin']      = $rekap['izin'];
+                break;
             }
         }
 

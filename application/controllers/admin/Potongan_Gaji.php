@@ -1,80 +1,107 @@
 <?php
 class Potongan_Gaji extends CI_Controller {
 
-	function __construct()
-    {
-        parent::__construct();
-        $this->load->model('ModelPotongan_Gaji');
+	public function __construct(){
+		parent::__construct();
 
-        if($this->session->userdata('hak_akses') != '1'){
-            $this->session->set_flashdata('pesan','<div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <strong>Anda Belum Login!</strong>
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-                </button>
-                </div>');
-                redirect('login');
-        }
-    }
+		if($this->session->userdata('hak_akses') != '1'){
+			$this->session->set_flashdata('pesan','<div class="alert alert-danger alert-dismissible fade show" role="alert">
+				<strong>Anda Belum Login!</strong>
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+				</button>
+				</div>');
+				redirect('login');
+		}
+	}
 
-	function index()
+	public function index() 
 	{
-        $data['title'] = "Setting Potongan Gaji";
+		$data['title'] = "Setting Potongan Gaji";
+		$data['pot_gaji'] = $this->ModelPenggajian->get_data('potongan_gaji')->result();
 
-        $this->load->view('template_admin/header');
-        $this->load->view('template_admin/sidebar');
-        $this->load->view('admin/potongan_gaji/list_potonganGaji', $data);
-        $this->load->view('template_admin/footer');
-    }
+		$this->load->view('template_admin/header', $data);
+		$this->load->view('template_admin/sidebar');
+		$this->load->view('admin/potongan_gaji/data_potonganGaji', $data);
+		$this->load->view('template_admin/footer');
+	}
 
-    function TampilPotongan()
-    {
-        $data['hasil']=$this->ModelPotongan_Gaji->TampilPotongan();
-        $this->load->view('admin/potongan_gaji/data_potonganGaji',$data);
-    }
+	public function tambah_data_aksi() {
+		$potongan		= $this->input->post('potongan');
+		$jml_potongan	= $this->input->post('jml_potongan');
 
-    function tambah_potonganGaji()
-    {
-        $aksi=$this->input->post('aksi');
-        $this->load->view('admin/potongan_gaji/tambah_potonganGaji',$aksi);
-    }
+		if(empty($potongan) || empty($jml_potongan)) {
+			$this->session->set_flashdata('pesan','<div class="alert alert-danger alert-dismissible fade show" role="alert">
+				<strong>Gagal!</strong> Nama Potongan dan Jumlah wajib diisi.
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+				</button>
+				</div>');
+		} else {
+			$data = array(
+				'potongan' 		=> $potongan,
+				'jml_potongan' 	=> $jml_potongan,
+			);
+			$this->ModelPenggajian->insert_data($data, 'potongan_gaji');
+			$this->session->set_flashdata('pesan','<div class="alert alert-success alert-dismissible fade show" role="alert">
+				<strong>Sukses!</strong> Data potongan berhasil ditambahkan.
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+				</button>
+				</div>');
+		}
+		redirect('admin/potongan_gaji');
+	}
 
-    function edit_potonganGaji()
-    {
-        $potongan=$this->input->post('potongan');
-        $data['hasil']=$this->ModelPotongan_Gaji->Getpotongan($potongan);
-        $this->load->view('admin/potongan_gaji/edit_potonganGaji',$data);
-    }
-    function hapus_potonganGaji()
-    {
-        $potongan=$this->input->post('potongan');
-        $data['hasil']=$this->ModelPotongan_Gaji->Getpotongan($potongan);
-        $this->load->view('admin/potongan_gaji/hapus_potonganGaji',$data);
-    }
+	public function update_data_aksi() {
+		$id				= $this->input->post('id');
+		$potongan		= $this->input->post('potongan');
+		$jml_potongan	= $this->input->post('jml_potongan');
 
-    function simpanPotongan()
-    {
-        $data = array(
-            'potongan'=>$this->input->post('potongan'),
-            'jml_potongan'=>$this->input->post('jml_potongan')
-            );
-            $this->db->insert('potongan_gaji',$data);
-    }
+		if(empty($potongan) || empty($jml_potongan)) {
+			$this->session->set_flashdata('pesan','<div class="alert alert-danger alert-dismissible fade show" role="alert">
+				<strong>Gagal!</strong> Nama Potongan dan Jumlah wajib diisi.
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+				</button>
+				</div>');
+		} else {
+			$data = array(
+				'potongan' 		=> $potongan,
+				'jml_potongan' 	=> $jml_potongan,
+			);
 
-    function editPotongan()
-    {
-        $data = array(
-            'potongan'=>$this->input->post('potongan_baru'),
-            'jml_potongan'=>$this->input->post('jml_potongan')
-		);
-        $potongan = $this->input->post('potongan_lama');
-        $this->db->where('potongan', $potongan);
-        $this->db->update('potongan_gaji',$data);
-    }
-    function hapusPotongan()
-    {
-        $potongan=$this->input->post('potongan');
-        $this->db->delete('potongan_gaji',array('potongan' => $potongan));
-    }
+			$where = array(
+				'id' => $id
+			);
+
+			$this->ModelPenggajian->update_data('potongan_gaji', $data, $where);
+			$this->session->set_flashdata('pesan','<div class="alert alert-success alert-dismissible fade show" role="alert">
+				<strong>Sukses!</strong> Data potongan berhasil diupdate.
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+				</button>
+				</div>');
+		}
+		redirect('admin/potongan_gaji');
+	}
+
+	public function _rules() {
+		$this->form_validation->set_rules('potongan','Nama Potongan','required');
+		$this->form_validation->set_rules('jml_potongan','Jumlah Potongan','required');
+	}
+
+	public function delete_data($id) {
+		$where = array('id' => $id);
+		$this->ModelPenggajian->delete_data($where, 'potongan_gaji');
+		$this->session->set_flashdata('pesan','<div class="alert alert-danger alert-dismissible fade show" role="alert">
+				<strong>Data berhasil dihapus!</strong>
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+				</button>
+				</div>');
+			redirect('admin/potongan_gaji');
+	}
+
 }
 ?>
