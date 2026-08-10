@@ -115,14 +115,95 @@
                 background-color: #e9ecef !important;
             }
         }
+    
+        /* Tampilan Header Klinik Baru */
+        table.kop-surat {
+            width: 100%;
+            border-bottom: 3px solid black;
+            padding-bottom: 10px;
+            margin-bottom: 5px;
+        }
+        table.kop-surat img {
+            width: 110px;
+            height: auto;
+        }
+        table.kop-surat h1 {
+            font-size: 26px;
+            font-weight: bold;
+            margin: 0;
+            letter-spacing: 2px;
+            color: #000;
+        }
+        table.kop-surat h2 {
+            font-size: 14px;
+            font-weight: normal;
+            margin: 5px 0 0 0;
+            color: #333;
+        }
+        table.kop-surat p {
+            font-size: 13px;
+            margin: 5px 0 0 0;
+        }
+        .kop-line-2 {
+            border: 0;
+            border-top: 1px solid black;
+            height: 1px;
+            margin: 0 0 20px 0;
+        }
+    
+        /* Watermark */
+        .watermark {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0.1;
+            z-index: -1;
+            width: 400px;
+            height: auto;
+        }
+        /* Nomor Surat */
+        .nomor-surat {
+            text-align: left;
+            font-size: 13px;
+            margin-top: -10px;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+        /* QR Code */
+        .qr-code {
+            width: 70px;
+            height: 70px;
+            margin: 10px auto;
+            display: block;
+        }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>KLINIK PRATAMA HIDAYATULLAH</h1>
-        <h2>Jl A. Yani KM 23 RT 01 RW 02, Kel Landasan Ulin, Kec Liang Anggang Banjarbaru</h2>
-        <hr class="kop-line">
-    </div>
+    <img src="<?php echo base_url('assets/img/kpmh.png') ?>" class="watermark">
+
+        <table class="kop-surat">
+        <tr>
+            <td width="15%" style="text-align: center;">
+                <img src="<?php echo base_url('assets/img/kpmh.png') ?>" alt="Logo Klinik">
+            </td>
+            <td width="70%" style="text-align: center;">
+                <h1>KLINIK PRATAMA HIDAYATULLAH</h1>
+                <h2>Jl. A. Yani KM 23 RT 01 RW 02, Kel. Landasan Ulin, Kec. Liang Anggang Banjarbaru</h2>
+                <p><strong>Telp:</strong> (0511) XXXXXXX | <strong>Email:</strong> klinik.kpmh@gmail.com</p>
+            </td>
+            <td width="15%" style="text-align: center;">
+                <!-- Ruang kosong atau logo kedua jika ada -->
+            </td>
+        </tr>
+    </table>
+    <hr class="kop-line-2">
+    <?php
+    $bulanRomawi = array(1=>"I","II","III", "IV", "V","VI","VII","VIII","IX","X", "XI","XII");
+    $noSurat = "Nomor : " . date('ymd') . "/HRD-KPMH/" . $bulanRomawi[date('n')] . "/" . date('Y');
+    ?>
+    <div class="nomor-surat"><?php echo $noSurat; ?></div>
+
 
     <div class="report-title">Laporan Data Pegawai</div>
 
@@ -177,6 +258,10 @@
         <div class="signature-box">
             <p>Banjarbaru, <?php echo date('d') . ' ' . $bulanIndo[date('m')] . ' ' . date('Y'); ?></p>
             <p>Mengetahui,</p>
+
+            <img src="<?php echo base_url('assets/img/qr-dummy.png') ?>" class="qr-code" alt="Validasi Digital">
+            <p style="font-size:10px; margin-top:-5px; font-style:italic;">Validasi Digital</p>
+
             <p>Pimpinan Klinik</p>
             <p class="signature-name">Dr. H. Muhammad Hidayatullah</p>
         </div>

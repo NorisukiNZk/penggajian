@@ -62,9 +62,15 @@ class Laporan_Gaji extends CI_Controller {
 		foreach ($data['cetak_gaji'] as $g) {
 			$tunjangan = $this->ModelKomponen->hitung_total_tunjangan($g->nik, $bulantahun, $g->gaji_pokok);
 			$potongan_dinamis = $this->ModelKomponen->hitung_total_potongan($g->nik, $bulantahun, $g->gaji_pokok);
+            
+            // Hitung Lembur
+			$lembur = $this->ModelPenggajian->hitung_uang_lembur($g->nik, $bulan, $tahun);
+            
 			$data['komponen_per_pegawai'][$g->nik] = array(
-				'tunjangan' => $tunjangan,
-				'potongan'  => $potongan_dinamis
+				'tunjangan'   => $tunjangan,
+				'potongan'    => $potongan_dinamis,
+                'uang_lembur' => $lembur['uang_lembur'],
+                'jam_lembur'  => $lembur['total_jam']
 			);
 		}
 	

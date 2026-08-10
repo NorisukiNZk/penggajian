@@ -10,8 +10,6 @@
             margin: 20px;
             background-color: #ffffff;
         }
-
-        /* Tampilan Header Klinik */
         .header {
             text-align: center;
             margin-bottom: 20px;
@@ -34,61 +32,46 @@
             height: 2px;
             margin: 15px 0;
         }
-
-        /* Judul Laporan */
         .report-title {
             text-align: center;
             font-weight: bold;
             font-size: 18px;
             text-decoration: underline;
-            margin-bottom: 15px;
+            margin-bottom: 5px;
             text-transform: uppercase;
         }
-
-        /* Info Filter */
-        .info-filter {
-            margin-bottom: 15px;
+        .report-subtitle {
+            text-align: center;
             font-size: 14px;
+            margin-bottom: 25px;
         }
-        .info-filter table {
-            width: auto;
-            border: none;
-            margin: 0;
-        }
-        .info-filter td {
-            border: none;
-            padding: 3px 5px;
-            background-color: transparent !important;
-        }
-
-        /* Tabel Data */
         table.data-table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 12px;
+            font-size: 14px;
             margin-bottom: 30px;
         }
         table.data-table th, table.data-table td {
             border: 1px solid black;
-            padding: 8px 5px;
+            padding: 8px 10px;
         }
         table.data-table th {
             background-color: #e9ecef !important;
             font-weight: bold;
             text-align: center;
-            vertical-align: middle;
         }
-
-        /* Tanda Tangan */
+        table.data-table td.angka {
+            text-align: right;
+        }
         .signature-container {
             width: 100%;
             margin-top: 50px;
         }
         .signature-box {
-            float: right;
-            width: 300px;
+            width: 30%;
             text-align: center;
             font-size: 14px;
+            float: right;
         }
         .signature-box p {
             margin: 5px 0;
@@ -96,24 +79,12 @@
         .signature-name {
             font-weight: bold;
             text-decoration: underline;
-            margin-top: 60px !important;
+            margin-top: 70px !important;
         }
-
-        /* Aturan Print Khusus */
         @media print {
-            body {
-                margin: 0;
-                background-color: white;
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-            }
-            .kop-line {
-                border-top: 3px solid black !important;
-                border-bottom: 1px solid black !important;
-            }
-            table.data-table th {
-                background-color: #e9ecef !important;
-            }
+            body { margin: 0; background-color: white; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .kop-line { border-top: 3px solid black !important; border-bottom: 1px solid black !important; }
+            table.data-table th { background-color: #e9ecef !important; }
         }
     
         /* Tampilan Header Klinik Baru */
@@ -205,75 +176,80 @@
     <div class="nomor-surat"><?php echo $noSurat; ?></div>
 
 
-    <div class="report-title">Laporan Cuti Pegawai (Disetujui)</div>
-
     <?php
-        // Array nama bulan
-        $bulanIndo = ['01' => 'Januari', '02' => 'Februari', '03' => 'Maret', '04' => 'April', '05' => 'Mei', '06' => 'Juni', '07' => 'Juli', '08' => 'Agustus', '09' => 'September', '10' => 'Oktober', '11' => 'November', '12' => 'Desember'];
+    $bulanIndo = ['01' => 'Januari', '02' => 'Februari', '03' => 'Maret', '04' => 'April', '05' => 'Mei', '06' => 'Juni', '07' => 'Juli', '08' => 'Agustus', '09' => 'September', '10' => 'Oktober', '11' => 'November', '12' => 'Desember'];
     ?>
 
-    <div class="info-filter">
-        <table>
-            <tr>
-                <td>Bulan</td>
-                <td>:</td>
-                <td><strong><?php echo isset($bulanIndo[$bulan]) ? $bulanIndo[$bulan] : $bulan; ?></strong></td>
-            </tr>
-            <tr>
-                <td>Tahun</td>
-                <td>:</td>
-                <td><strong><?php echo htmlspecialchars($tahun, ENT_QUOTES, 'UTF-8'); ?></strong></td>
-            </tr>
-        </table>
-    </div>
+    <div class="report-title">LAPORAN REKAPITULASI GAJI TAHUNAN</div>
+    <div class="report-subtitle">Periode Tahun: <?php echo $tahun; ?></div>
 
     <table class="data-table">
         <thead>
             <tr>
-                <th width="3%">No</th>
-                <th width="10%">NIK</th>
+                <th width="5%">No</th>
                 <th width="20%">Nama Pegawai</th>
                 <th width="15%">Jabatan</th>
-                <th width="10%">Jenis Cuti</th>
-                <th width="20%">Rentang Tanggal</th>
-                <th width="22%">Alasan</th>
+                <th width="15%">Total Pendapatan (Gaji & Tunjangan)</th>
+                <th width="15%">Total Lembur</th>
+                <th width="15%">Total Potongan</th>
+                <th width="15%">Gaji Bersih Diterima (Netto)</th>
             </tr>
         </thead>
         <tbody>
-        <?php 
-        if (empty($laporan_cuti)) {
-            echo '<tr><td colspan="7" style="text-align:center;">Tidak ada data cuti yang disetujui pada periode ini.</td></tr>';
-        } else {
-            $no = 1; 
-            foreach ($laporan_cuti as $c) : 
-                $tgl_mulai = date('d-m-Y', strtotime($c->tanggal_mulai));
-                $tgl_akhir = date('d-m-Y', strtotime($c->tanggal_akhir));
-        ?>
+            <?php 
+            $no = 1;
+            $g_pendapatan = 0;
+            $g_lembur = 0;
+            $g_potongan = 0;
+            $g_bersih = 0;
+
+            if(!empty($rekap)) :
+                foreach($rekap as $r) : 
+                    $g_pendapatan += $r['gaji_tunjangan'];
+                    $g_lembur += $r['uang_lembur'];
+                    $g_potongan += $r['potongan'];
+                    $g_bersih += $r['gaji_bersih'];
+            ?>
             <tr>
                 <td style="text-align: center;"><?php echo $no++; ?></td>
-                <td style="text-align: center;"><?php echo htmlspecialchars($c->nik, ENT_QUOTES, 'UTF-8'); ?></td>
-                <td><?php echo htmlspecialchars($c->nama_pegawai, ENT_QUOTES, 'UTF-8'); ?></td>
-                <td><?php echo htmlspecialchars($c->jabatan, ENT_QUOTES, 'UTF-8'); ?></td>
-                <td style="text-align: center;"><?php echo htmlspecialchars($c->jenis_cuti, ENT_QUOTES, 'UTF-8'); ?></td>
-                <td style="text-align: center;"><?php echo $tgl_mulai; ?> s.d <?php echo $tgl_akhir; ?></td>
-                <td><?php echo htmlspecialchars($c->alasan, ENT_QUOTES, 'UTF-8'); ?></td>
+                <td><?php echo htmlspecialchars($r['nama_pegawai'], ENT_QUOTES, 'UTF-8'); ?></td>
+                <td style="text-align: center;"><?php echo htmlspecialchars($r['jabatan'], ENT_QUOTES, 'UTF-8'); ?></td>
+                <td class="angka">Rp <?php echo number_format($r['gaji_tunjangan'], 0, ',', '.'); ?></td>
+                <td class="angka">Rp <?php echo number_format($r['uang_lembur'], 0, ',', '.'); ?></td>
+                <td class="angka">Rp <?php echo number_format($r['potongan'], 0, ',', '.'); ?></td>
+                <td class="angka" style="font-weight: bold;">Rp <?php echo number_format($r['gaji_bersih'], 0, ',', '.'); ?></td>
             </tr>
-        <?php 
-            endforeach; 
-        }
-        ?>
+            <?php 
+                endforeach; 
+            else :
+            ?>
+            <tr>
+                <td colspan="7" style="text-align: center; font-style: italic;">Tidak ada data penggajian pada tahun ini.</td>
+            </tr>
+            <?php endif; ?>
         </tbody>
+        <?php if(!empty($rekap)) : ?>
+        <tfoot>
+            <tr>
+                <th colspan="3" style="text-align: right; font-size: 15px;">Grand Total :</th>
+                <th class="angka" style="font-size: 15px;">Rp <?php echo number_format($g_pendapatan, 0, ',', '.'); ?></th>
+                <th class="angka" style="font-size: 15px;">Rp <?php echo number_format($g_lembur, 0, ',', '.'); ?></th>
+                <th class="angka" style="font-size: 15px;">Rp <?php echo number_format($g_potongan, 0, ',', '.'); ?></th>
+                <th class="angka" style="font-size: 15px; background-color: #d4edda !important;">Rp <?php echo number_format($g_bersih, 0, ',', '.'); ?></th>
+            </tr>
+        </tfoot>
+        <?php endif; ?>
     </table>
 
     <div class="signature-container">
         <div class="signature-box">
             <p>Banjarbaru, <?php echo date('d') . ' ' . $bulanIndo[date('m')] . ' ' . date('Y'); ?></p>
             <p>Mengetahui,</p>
+            <p style="margin-bottom: 5px;">Pimpinan Klinik</p>
 
             <img src="<?php echo base_url('assets/img/qr-dummy.png') ?>" class="qr-code" alt="Validasi Digital">
             <p style="font-size:10px; margin-top:-5px; font-style:italic;">Validasi Digital</p>
 
-            <p>Pimpinan Klinik</p>
             <p class="signature-name">Dr. H. Muhammad Hidayatullah</p>
         </div>
         <div style="clear: both;"></div>

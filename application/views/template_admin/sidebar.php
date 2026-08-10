@@ -104,11 +104,18 @@
         </a>
         <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
-            <a class="collapse-item" href="<?php echo base_url('admin/laporan_gaji') ?>">Laporan Gaji</a>
+            <h6 class="collapse-header">Laporan Transaksi:</h6>
+            <a class="collapse-item" href="<?php echo base_url('admin/laporan_gaji') ?>">Laporan Gaji Bulanan</a>
             <a class="collapse-item" href="<?php echo base_url('admin/laporan_absensi') ?>">Laporan Absensi</a>
-            <a class="collapse-item" href="<?php echo base_url('admin/laporan_pegawai') ?>">Laporan Pegawai</a>
             <a class="collapse-item" href="<?php echo base_url('admin/laporan_cuti') ?>">Laporan Cuti Pegawai</a>
-            <a class="collapse-item" href="<?php echo base_url('admin/slip_gaji') ?>">Slip Gaji</a>
+            <a class="collapse-item" href="<?php echo base_url('admin/laporan_lembur') ?>">Laporan Lembur</a>
+            <a class="collapse-item" href="<?php echo base_url('admin/laporan_potongan') ?>">Laporan Potongan Gaji</a>
+            
+            <h6 class="collapse-header">Laporan Master & Cetak:</h6>
+            <a class="collapse-item" href="<?php echo base_url('admin/laporan_tahunan') ?>">Laporan Gaji Tahunan</a>
+            <a class="collapse-item" href="<?php echo base_url('admin/laporan_pegawai') ?>">Data Master Pegawai</a>
+            <a class="collapse-item" target="_blank" href="<?php echo base_url('admin/data_jabatan/cetak_data_jabatan') ?>">Data Master Jabatan</a>
+            <a class="collapse-item" href="<?php echo base_url('admin/slip_gaji') ?>">Cetak Slip Gaji</a>
           </div>
         </div>
       </li>

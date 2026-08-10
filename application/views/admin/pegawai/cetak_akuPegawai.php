@@ -75,9 +75,38 @@
             background-color: black; /* Warna hitam untuk garis */
             margin: 10px 0; /* Margin atas dan bawah */
         }
+    
+        /* Watermark */
+        .watermark {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0.1;
+            z-index: -1;
+            width: 400px;
+            height: auto;
+        }
+        /* Nomor Surat */
+        .nomor-surat {
+            text-align: left;
+            font-size: 13px;
+            margin-top: -10px;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+        /* QR Code */
+        .qr-code {
+            width: 70px;
+            height: 70px;
+            margin: 10px auto;
+            display: block;
+        }
     </style>
 </head>
 <body>
+    <img src="<?php echo base_url('assets/img/kpmh.png') ?>" class="watermark">
+
     <div class="header">
         <h1>KLINIK PRATAMA</h1>
         <h1>dr. H.M.HIDAYATULLAH</h1>
