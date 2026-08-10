@@ -73,10 +73,9 @@ Untuk menjalankan aplikasi ini secara lokal (*localhost*):
 ## 📸 Cuplikan Layar (Screenshots)
 *(Tambahkan gambar cuplikan layar aplikasi di sini agar HRD bisa langsung melihat visual aplikasi tanpa harus meng-install-nya)*
 
-- **Halaman Login:** `![Login](link-gambar-login.jpg)`
-- **Dashboard Admin:** `![Dashboard](link-gambar-dashboard.jpg)`
-- **Notifikasi Toast:** `![Toast](link-gambar-toast.jpg)`
-
+- **Halaman Login:** <img src="assets/img/dashboard.jpeg" width="800">
+- **Dashboard Admin:** <img src="assets/img/login.jpeg" width="800">
+- **Notifikasi Toast:** <img src="assets/img/dashboardgaji.jpeg" width="800">
 ---
 <div align="center">
   Dibuat untuk Portofolio & Tugas Akhir. <br>
