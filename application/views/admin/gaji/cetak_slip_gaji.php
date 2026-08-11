@@ -330,6 +330,21 @@
                     <td class="angka">Rp <?php echo number_format($pd['nominal'], 0, ',', '.'); ?></td>
                 </tr>
                 <?php endforeach; ?>
+
+                <?php 
+                $pinjaman = isset($komponen_per_pegawai[$ps->nik]['pinjaman']) ? $komponen_per_pegawai[$ps->nik]['pinjaman'] : array('total' => 0, 'detail' => []);
+                if ($pinjaman['total'] > 0) : 
+                    foreach ($pinjaman['detail'] as $pj) :
+                ?>
+                <tr>
+                    <td style="text-align: center;"><?php echo $no_pot++; ?></td>
+                    <td style="color: #d9534f;"><strong><?php echo $pj['keterangan']; ?></strong></td>
+                    <td class="angka" style="color: #d9534f;">Rp <?php echo number_format($pj['nominal'], 0, ',', '.'); ?></td>
+                </tr>
+                <?php 
+                    endforeach;
+                endif; 
+                ?>
             </tbody>
             <tfoot>
                 <tr>

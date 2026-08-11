@@ -91,6 +91,7 @@
             <h6 class="collapse-header">Gaji:</h6>
             <a class="collapse-item" href="<?php echo base_url('admin/potongan_gaji') ?>">Setting Potongan Gaji</a>
             <a class="collapse-item" href="<?php echo base_url('admin/komponen_gaji') ?>">Komponen Gaji</a>
+            <a class="collapse-item" href="<?php echo base_url('admin/pinjaman') ?>">Pinjaman Karyawan</a>
             <a class="collapse-item" href="<?php echo base_url('admin/data_penggajian') ?>">Data Gaji</a>
           </div>
         </div>

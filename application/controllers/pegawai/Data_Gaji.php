@@ -34,9 +34,15 @@ class Data_Gaji extends CI_Controller {
 		foreach ($data['gaji'] as $g) {
 			$tunjangan = $this->ModelKomponen->hitung_total_tunjangan($g->nik, $g->bulan, $g->gaji_pokok);
 			$potongan_dinamis = $this->ModelKomponen->hitung_total_potongan($g->nik, $g->bulan, $g->gaji_pokok);
+            
+            $bulan = substr($g->bulan, 0, 2);
+            $tahun = substr($g->bulan, 2, 4);
+            $pinjaman = $this->ModelPenggajian->hitung_potongan_pinjaman($g->nik, $bulan, $tahun);
+
 			$data['komponen_per_bulan'][$g->bulan] = array(
 				'tunjangan' => $tunjangan,
-				'potongan'  => $potongan_dinamis
+				'potongan'  => $potongan_dinamis,
+                'pinjaman'  => $pinjaman
 			);
 		}
 
@@ -62,9 +68,16 @@ class Data_Gaji extends CI_Controller {
 		foreach ($data['print_slip'] as $ps) {
 			$tunjangan = $this->ModelKomponen->hitung_total_tunjangan($ps->nik, $ps->bulan, $ps->gaji_pokok);
 			$potongan_dinamis = $this->ModelKomponen->hitung_total_potongan($ps->nik, $ps->bulan, $ps->gaji_pokok);
+            
+            // Extract month and year from $ps->bulan (format mmYYYY)
+            $bulan = substr($ps->bulan, 0, 2);
+            $tahun = substr($ps->bulan, 2, 4);
+            $pinjaman = $this->ModelPenggajian->hitung_potongan_pinjaman($ps->nik, $bulan, $tahun);
+
 			$data['komponen_per_pegawai'][$ps->nik] = array(
 				'tunjangan' => $tunjangan,
-				'potongan'  => $potongan_dinamis
+				'potongan'  => $potongan_dinamis,
+                'pinjaman'  => $pinjaman
 			);
 		}
 

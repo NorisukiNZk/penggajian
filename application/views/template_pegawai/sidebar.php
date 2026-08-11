@@ -89,6 +89,12 @@
           <span>Data Gaji</span></a>
       </li>
 
+      <li class="nav-item">
+        <a class="nav-link" href="<?php echo base_url('pegawai/pinjaman') ?>">
+          <i class="fas fa-fw fa-hand-holding-usd"></i>
+          <span>Pinjaman (Kasbon)</span></a>
+      </li>
+
       <!-- Nav Item - Charts -->
       <!-- Sidebar Toggler (Sidebar) -->
       <div class="text-center d-none d-md-inline">

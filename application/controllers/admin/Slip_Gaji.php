@@ -49,11 +49,15 @@ class Slip_Gaji extends CI_Controller {
 		// Hitung Lembur
 		$lembur = $this->ModelPenggajian->hitung_uang_lembur($ps->nik, $bulan, $tahun);
 
+        // Hitung Pinjaman
+        $pinjaman = $this->ModelPenggajian->hitung_potongan_pinjaman($ps->nik, $bulan, $tahun);
+
 		$data['komponen_per_pegawai'][$ps->nik] = array(
 			'tunjangan'   => $tunjangan,
 			'potongan'    => $potongan_dinamis,
 			'uang_lembur' => $lembur['uang_lembur'],
-			'jam_lembur'  => $lembur['total_jam']
+			'jam_lembur'  => $lembur['total_jam'],
+            'pinjaman'    => $pinjaman
 		);
 	}
 

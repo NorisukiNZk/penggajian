@@ -94,6 +94,45 @@ class ModelPenggajian extends CI_model{
 			'tarif' => $tarif_lembur
 		);
 	}
-}
 
+	public function hitung_potongan_pinjaman($nik, $bulan, $tahun) {
+		// Cari pinjaman yang disetujui untuk NIK ini
+		$this->db->where('nik', $nik);
+		$this->db->where('status', 'Disetujui');
+		$pinjaman = $this->db->get('data_pinjaman')->result();
+
+		$total_potongan = 0;
+		$detail_cicilan = [];
+
+		$payroll_date = date_create("$tahun-$bulan-01");
+
+		foreach ($pinjaman as $p) {
+			$tgl_disetujui = date_create($p->tgl_disetujui);
+			// Kita anggap cicilan 1 dimulai pada bulan setelah disetujui, atau pada bulan yang sama jika disetujui awal bulan.
+			// Untuk simpelnya, kita asumsikan cicilan dimulai pada bulan saat disetujui.
+			$start_date = date_create(date_format($tgl_disetujui, 'Y-m-01'));
+			
+			// Hitung selisih bulan
+			$diff = date_diff($start_date, $payroll_date);
+			$months_passed = ($diff->y * 12) + $diff->m;
+
+			// Jika payroll_date lebih kecil dari start_date, invert akan bernilai 1 (berarti belum mulai)
+			if ($diff->invert == 0 && $months_passed >= 0 && $months_passed < $p->tenor_bulan) {
+				$cicilan_ke = $months_passed + 1;
+				$nominal_cicilan = ceil($p->jumlah_pinjaman / $p->tenor_bulan);
+				
+				$total_potongan += $nominal_cicilan;
+				$detail_cicilan[] = array(
+					'keterangan' => 'Potongan Pinjaman (Cicilan '.$cicilan_ke.'/'.$p->tenor_bulan.')',
+					'nominal' => $nominal_cicilan
+				);
+			}
+		}
+
+		return array(
+			'total' => $total_potongan,
+			'detail' => $detail_cicilan
+		);
+	}
+}
 ?>

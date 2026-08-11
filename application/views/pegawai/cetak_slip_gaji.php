@@ -230,13 +230,15 @@
     ?>
 
     <?php foreach ($print_slip as $ps) : ?>
-        <?php 
-        $potongan_gaji = $ps->alpha * $alpha_deduction;
-        // Komponen dinamis
-        $tj_detail = isset($komponen_per_pegawai[$ps->nik]) ? $komponen_per_pegawai[$ps->nik]['tunjangan'] : array('total' => 0, 'detail' => array());
-        $pot_detail = isset($komponen_per_pegawai[$ps->nik]) ? $komponen_per_pegawai[$ps->nik]['potongan'] : array('total' => 0, 'detail' => array());
-        $total_gaji = $ps->gaji_pokok + $ps->tj_transport + $ps->uang_makan + $tj_detail['total'] - $potongan_gaji - $pot_detail['total'];
-        ?>
+          <?php 
+          $potongan_gaji = $ps->alpha * $alpha_deduction;
+          // Komponen dinamis
+          $tj_detail = isset($komponen_per_pegawai[$ps->nik]) ? $komponen_per_pegawai[$ps->nik]['tunjangan'] : array('total' => 0, 'detail' => array());
+          $pot_detail = isset($komponen_per_pegawai[$ps->nik]) ? $komponen_per_pegawai[$ps->nik]['potongan'] : array('total' => 0, 'detail' => array());
+          $pinjaman = isset($komponen_per_pegawai[$ps->nik]['pinjaman']) ? $komponen_per_pegawai[$ps->nik]['pinjaman'] : array('total' => 0, 'detail' => array());
+
+          $total_gaji = $ps->gaji_pokok + $ps->tj_transport + $ps->uang_makan + $tj_detail['total'] - $potongan_gaji - $pot_detail['total'] - $pinjaman['total'];
+          ?>
 
         <table>
             <tr>
@@ -346,6 +348,19 @@
                 <td>Rp. <?php echo number_format($pd['nominal'], 0, ',', '.') ?></td>
             </tr>
             <?php endforeach; ?>
+
+            <?php if ($pinjaman['total'] > 0) : 
+                foreach ($pinjaman['detail'] as $pj) :
+            ?>
+            <tr>
+                <td><?php echo $no_pot++ ?></td>
+                <td style="color: red;"><?php echo $pj['keterangan'] ?></td>
+                <td style="color: red;">Rp. <?php echo number_format($pj['nominal'], 0, ',', '.') ?></td>
+            </tr>
+            <?php 
+                endforeach;
+            endif; 
+            ?>
 
             <tr>
                 <th colspan="2" style="text-align: right;">Total Gaji : </th>
