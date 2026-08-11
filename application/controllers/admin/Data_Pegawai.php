@@ -95,7 +95,7 @@ class Data_Pegawai extends CI_Controller {
 	public function update_data($id) 
 	{
 		$where = array('id_pegawai' => $id);
-		$data['title'] = "update Data Pegawai";
+		$data['title'] = "Update Data Pegawai";
 		$data['jabatan'] = $this->ModelPenggajian->get_data('data_jabatan')->result();
 		$data['pegawai'] = $this->db->get_where('data_pegawai', $where)->result();
 		
@@ -160,6 +160,17 @@ class Data_Pegawai extends CI_Controller {
 			);
 
 			$this->ModelPenggajian->update_data('data_pegawai', $data, $where);
+			
+			// Jika admin mengubah datanya sendiri, update session secara real-time
+			if ($this->session->userdata('id_pegawai') == $id) {
+				$this->session->set_userdata('hak_akses', $hak_akses);
+				$this->session->set_userdata('nama_pegawai', $nama_pegawai);
+				$this->session->set_userdata('nik', $nik);
+				if (!empty($photo)) {
+					$this->session->set_userdata('photo', $photo);
+				}
+			}
+
 			$this->session->set_flashdata('pesan','<div class="alert alert-success alert-dismissible fade show" role="alert">
 				<strong>Data berhasil diupdate!</strong>
 				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -171,12 +182,38 @@ class Data_Pegawai extends CI_Controller {
 	}
 
 	public function _rules() {
-		$this->form_validation->set_rules('nik','NIK','required');
+		$id_pegawai = $this->input->post('id_pegawai');
+		if (empty($id_pegawai)) {
+			// Jika tambah data
+			$this->form_validation->set_rules('nik','NIK','required|is_unique[data_pegawai.nik]', array('is_unique' => '%s sudah terdaftar!'));
+		} else {
+			// Jika update data
+			$this->form_validation->set_rules('nik','NIK','required|callback_check_nik_update');
+		}
+
 		$this->form_validation->set_rules('nama_pegawai','Nama Pegawai','required');
 		$this->form_validation->set_rules('jenis_kelamin','Jenis Kelamin','required');
-		$this->form_validation->set_rules('tanggal_masuk','Tanggal Masuk','required');
+		$this->form_validation->set_rules('tanggal_masuk','Tanggal Masuk','required|callback_check_tanggal_masuk');
 		$this->form_validation->set_rules('jabatan','Jabatan','required');
 		$this->form_validation->set_rules('status','Status','required');
+	}
+
+	public function check_nik_update($nik) {
+		$id_pegawai = $this->input->post('id_pegawai');
+		$query = $this->db->query("SELECT * FROM data_pegawai WHERE nik = ? AND id_pegawai != ?", array($nik, $id_pegawai));
+		if ($query->num_rows() > 0) {
+			$this->form_validation->set_message('check_nik_update', '{field} sudah terdaftar!');
+			return FALSE;
+		}
+		return TRUE;
+	}
+
+	public function check_tanggal_masuk($date) {
+		if (strtotime($date) > time()) {
+			$this->form_validation->set_message('check_tanggal_masuk', '{field} tidak boleh melebihi hari ini.');
+			return FALSE;
+		}
+		return TRUE;
 	}
 
 	public function delete_data($id) {

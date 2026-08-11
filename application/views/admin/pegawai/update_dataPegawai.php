@@ -76,9 +76,8 @@
 						<div class="form-group">
 							<label class="font-weight-bold text-dark">Jenis Kelamin</label>
 							<select name="jenis_kelamin" class="form-control">
-								<option value="<?php echo $p->jenis_kelamin ?>"><?php echo $p->jenis_kelamin ?></option>
-								<option value="Laki-Laki">Laki-Laki</option>
-								<option value="Perempuan">Perempuan</option>
+								<option value="Laki-Laki" <?php if($p->jenis_kelamin == 'Laki-Laki') echo 'selected'; ?>>Laki-Laki</option>
+								<option value="Perempuan" <?php if($p->jenis_kelamin == 'Perempuan') echo 'selected'; ?>>Perempuan</option>
 							</select>
 							<?php echo form_error('jenis_kelamin', '<div class="text-small text-danger mt-1"> </div>')?>
 						</div>
@@ -87,9 +86,8 @@
 						<div class="form-group">
 							<label class="font-weight-bold text-dark">Jabatan</label>
 							<select name="jabatan" class="form-control">
-								<option value="<?php echo $p->jabatan ?>"><?php echo $p->jabatan ?></option>
 								<?php foreach($jabatan as $j) :?>
-								<option value="<?php echo $j->nama_jabatan ?>"><?php echo $j->nama_jabatan ?></option>
+								<option value="<?php echo $j->nama_jabatan ?>" <?php if($j->nama_jabatan == $p->jabatan) echo 'selected'; ?>><?php echo $j->nama_jabatan ?></option>
 								<?php endforeach; ?>
 							</select>
 							<?php echo form_error('jabatan', '<div class="text-small text-danger mt-1"> </div>')?>
@@ -109,9 +107,8 @@
 						<div class="form-group">
 							<label class="font-weight-bold text-dark">Status Pekerjaan</label>
 							<select name="status" class="form-control">
-								<option value="<?php echo $p->status ?>"><?php echo $p->status ?></option>
-								<option value="Karyawan Tetap">Karyawan Tetap</option>
-								<option value="Karyawan Tidak Tetap">Karyawan Tidak Tetap</option>
+								<option value="Karyawan Tetap" <?php if($p->status == 'Karyawan Tetap') echo 'selected'; ?>>Karyawan Tetap</option>
+								<option value="Karyawan Tidak Tetap" <?php if($p->status == 'Karyawan Tidak Tetap') echo 'selected'; ?>>Karyawan Tidak Tetap</option>
 							</select>
 							<?php echo form_error('status', '<div class="text-small text-danger mt-1"> </div>')?>
 						</div>
@@ -123,15 +120,8 @@
 						<div class="form-group">
 							<label class="font-weight-bold text-dark">Hak Akses</label>
 							<select name="hak_akses" class="form-control">
-								<option value="<?php echo $p->hak_akses ?>">
-									<?php if($p->hak_akses=='1') {
-										echo "Admin";
-									} else {
-										echo "Pegawai";
-									} ?>
-								</option>
-								<option value="1">Admin</option>
-								<option value="2">Pegawai</option>
+								<option value="1" <?php if($p->hak_akses == '1') echo 'selected'; ?>>Admin</option>
+								<option value="2" <?php if($p->hak_akses == '2') echo 'selected'; ?>>Pegawai</option>
 							</select>
 						</div>
 					</div>

@@ -113,10 +113,26 @@ class Data_Jabatan extends CI_Controller {
 	}
 
 	public function _rules() {
-		$this->form_validation->set_rules('nama_jabatan','Nama Jabatan','required');
+		$id_jabatan = $this->input->post('id_jabatan');
+		if (empty($id_jabatan)) {
+			$this->form_validation->set_rules('nama_jabatan','Nama Jabatan','required|is_unique[data_jabatan.nama_jabatan]', array('is_unique' => '%s sudah terdaftar!'));
+		} else {
+			$this->form_validation->set_rules('nama_jabatan','Nama Jabatan','required|callback_check_jabatan_update');
+		}
+		
 		$this->form_validation->set_rules('gaji_pokok','Gaji Pokok','required');
 		$this->form_validation->set_rules('tj_transport','Tunjangan Transport','required');
 		$this->form_validation->set_rules('uang_makan','Uang Makan','required');
+	}
+
+	public function check_jabatan_update($jabatan) {
+		$id_jabatan = $this->input->post('id_jabatan');
+		$query = $this->db->query("SELECT * FROM data_jabatan WHERE nama_jabatan = ? AND id_jabatan != ?", array($jabatan, $id_jabatan));
+		if ($query->num_rows() > 0) {
+			$this->form_validation->set_message('check_jabatan_update', '{field} sudah terdaftar!');
+			return FALSE;
+		}
+		return TRUE;
 	}
 
 	public function delete_data($id) {

@@ -74,7 +74,7 @@ $(document).ready(function() {
 
     if ($('.alert-success').length > 0) {
         var msg = $('.alert-success').text().replace('×', '').replace('Berhasil!', '').replace('Sync API Berhasil!', '').trim();
-        $('.alert-success').hide();
+        $('.alert-success').remove();
         Toast.fire({
             icon: 'success',
             title: 'Berhasil',
@@ -88,7 +88,7 @@ $(document).ready(function() {
     if ($('.alert-danger').length > 0) {
         var msg = $('.alert-danger').text().replace('×', '').replace('Gagal!', '').trim();
         if (msg === "") msg = "Terjadi Kesalahan / Ditolak";
-        $('.alert-danger').hide();
+        $('.alert-danger').remove();
         Toast.fire({
             icon: 'error',
             title: 'Oops!',
@@ -129,6 +129,12 @@ $(document).ready(function() {
 
   // Preloader Fade Out
   window.addEventListener('load', function() {
+      // Fix Sidebar on Mobile
+      if ($(window).width() <= 768) {
+          $("body").addClass("sidebar-toggled");
+          $(".sidebar").addClass("toggled");
+      }
+      
       setTimeout(function() {
           var preloader = document.getElementById('preloader');
           if (preloader) {
