@@ -250,7 +250,7 @@
             <img src="<?php echo base_url('assets/img/qr-dummy.png') ?>" class="qr-code" alt="Validasi Digital">
             <p style="font-size:10px; margin-top:-5px; font-style:italic;">Validasi Digital</p>
 
-            <p class="signature-name">Pimpinan Klinik</p>
+            <p class="signature-name">Dr. H. Muhammad Hidayatullah</p>
         </div>
         <div style="clear: both;"></div>
     </div>

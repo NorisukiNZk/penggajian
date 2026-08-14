@@ -107,6 +107,14 @@
             margin-top: 70px !important;
         }
 
+        /* QR Code */
+        .qr-code {
+            width: 70px;
+            height: 70px;
+            margin: 10px auto;
+            display: block;
+        }
+
         /* Aturan Print Khusus */
         @media print {
             body {
@@ -362,7 +370,9 @@
             <div class="signature-box">
                 <p>Banjarbaru, <?php echo date('d') . ' ' . $bulanIndo[date('m')] . ' ' . date('Y'); ?></p>
                 <p>Mengetahui Pimpinan Klinik,</p>
-                <p class="signature-name" style="margin-top: 60px !important;">Dr. H. Muhammad Hidayatullah</p>
+                <img src="<?php echo base_url('assets/img/qr-dummy.png') ?>" class="qr-code" alt="Validasi Digital">
+                <p style="font-size:10px; margin-top:-5px; font-style:italic;">Validasi Digital</p>
+                <p class="signature-name" style="margin-top: 10px !important;">Dr. H. Muhammad Hidayatullah</p>
             </div>
             <div style="clear: both;"></div>
         </div>

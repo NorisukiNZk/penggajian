@@ -100,6 +100,14 @@
             margin: 0; /* Menghilangkan margin untuk p */
         }
 
+        /* QR Code */
+        .qr-code {
+            width: 70px;
+            height: 70px;
+            margin: 10px auto;
+            display: block;
+        }
+
         /* Tampilan Header Klinik Baru */
         table.kop-surat {
             width: 100%;
@@ -372,17 +380,15 @@
             <div class="signature">
                 <p>Pegawai</p>
                 
-                <p class="font-weight-bold"><?php echo $ps->nama_pegawai ?></p>
+                <p class="font-weight-bold" style="margin-top: 80px !important;"><?php echo $ps->nama_pegawai ?></p>
             </div>
             <div class="signature">
-                <p>Mengetahui,</p>
+                <p>Mengetahui Pimpinan Klinik,</p>
 
             <img src="<?php echo base_url('assets/img/qr-dummy.png') ?>" class="qr-code" alt="Validasi Digital">
-            <p style="font-size:10px; margin-top:-5px; font-style:italic;">Validasi Digital</p>
+            <p style="font-size:10px; margin-top:-5px; margin-bottom:10px; font-style:italic;">Validasi Digital</p>
 
-                <p>dr. H.M.HIDAYATULLAH</p>
-                
-                <p>( Dr. H. Muhammad Hidayatullah )</p>
+                <p class="font-weight-bold" style="text-decoration: underline;">Dr. H. Muhammad Hidayatullah</p>
             </div>
         </div>
 

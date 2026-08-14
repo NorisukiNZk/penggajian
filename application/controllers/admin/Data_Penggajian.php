@@ -72,6 +72,9 @@ class Data_Penggajian extends CI_Controller {
 			$tahun = date('Y');
 			$bulantahun = $bulan.$tahun;
 		}
+		
+		$data['bulan'] = $bulan;
+		$data['tahun'] = $tahun;
 		$data['potongan'] = $this->ModelPenggajian->get_data('potongan_gaji')->result();
 		$data['cetak_gaji'] = $this->db->query("SELECT data_pegawai.nik,data_pegawai.nama_pegawai,
 			data_pegawai.jenis_kelamin,data_jabatan.nama_jabatan,data_jabatan.gaji_pokok,
