@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Panduan Simulasi Ujian Skripsi - Live Coding CRUD CI3</title>
+    <style>
+        @page {
+            margin: 20mm 18mm 20mm 18mm;
+        }
+        body {
+            font-family: 'Helvetica', 'Arial', sans-serif;
+            font-size: 10pt;
+            line-height: 1.45;
+            color: #2d3748;
+        }
+        .header-cover {
+            text-align: center;
+            padding-bottom: 15px;
+            border-bottom: 3px double #4a5568;
+            margin-bottom: 20px;
+        }
+        .title {
+            font-size: 18pt;
+            font-weight: bold;
+            color: #1a365d;
+            margin: 0 0 6px 0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .subtitle {
+            font-size: 12pt;
+            color: #2b6cb0;
+            margin: 0 0 10px 0;
+            font-weight: 600;
+        }
+        .meta-badge {
+            display: inline-block;
+            background-color: #ebf8ff;
+            color: #2b6cb0;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 8.5pt;
+            font-weight: bold;
+            border: 1px solid #bee3f8;
+        }
+        h2 {
+            font-size: 12.5pt;
+            color: #1a365d;
+            border-left: 4px solid #3182ce;
+            padding-left: 8px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+        h3 {
+            font-size: 11pt;
+            color: #2d3748;
+            margin-top: 14px;
+            margin-bottom: 6px;
+        }
+        p {
+            margin: 0 0 8px 0;
+            text-align: justify;
+        }
+        .alert-box {
+            background-color: #f7fafc;
+            border-left: 4px solid #4299e1;
+            padding: 8px 12px;
+            margin: 10px 0;
+            border-radius: 0 5px 5px 0;
+            font-size: 9.5pt;
+        }
+        .alert-box strong {
+            color: #2b6cb0;
+        }
+        .alert-tip {
+            background-color: #f0fff4;
+            border-left: 4px solid #38a169;
+            padding: 8px 12px;
+            margin: 10px 0;
+            border-radius: 0 5px 5px 0;
+            font-size: 9.5pt;
+        }
+        .alert-tip strong {
+            color: #276749;
+        }
+        .alert-danger {
+            background-color: #fff5f5;
+            border-left: 4px solid #e53e3e;
+            padding: 8px 12px;
+            margin: 10px 0;
+            border-radius: 0 5px 5px 0;
+            font-size: 9.5pt;
+        }
+        .alert-danger strong {
+            color: #9b2c2c;
+        }
+        code, pre {
+            font-family: "Courier New", Courier, monospace;
+        }
+        pre {
+            background-color: #1a202c;
+            color: #f7fafc;
+            padding: 8px 10px;
+            border-radius: 4px;
+            font-size: 8pt;
+            line-height: 1.3;
+            margin: 8px 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+            font-size: 9pt;
+        }
+        th, td {
+            border: 1px solid #cbd5e0;
+            padding: 6px 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #edf2f7;
+            color: #2d3748;
+            font-weight: bold;
+        }
+        .step-badge {
+            background-color: #3182ce;
+            color: white;
+            padding: 2px 7px;
+            border-radius: 3px;
+            font-size: 8.5pt;
+            font-weight: bold;
+        }
+        .page-break {
+            page-break-before: always;
+        }
+        ul, ol {
+            margin: 0 0 10px 0;
+            padding-left: 18px;
+        }
+        li {
+            margin-bottom: 4px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header-cover">
+        <div class="title">Buku Saku Simulasi Ujian Skripsi</div>
+        <div class="subtitle">Panduan Praktis Live Coding CRUD & Tambah Fitur (CodeIgniter 3)</div>
+        <span class="meta-badge">Aplikasi Penggajian & Absensi Pegawai Berbasis Web</span>
+    </div>
+
+    <div class="alert-box">
+        <strong>Tujuan Panduan:</strong> Menyiapkan mahasiswa agar siap, tenang, dan terstruktur saat dosen penguji meminta uji coba langsung (live coding) membuat fitur CRUD baru, menambah kolom/field baru, atau membuat cetak laporan baru pada sistem skripsi.
+    </div>
+
+    <h2>1. Mindset Utama & Strategi Ujian</h2>
+    <ul>
+        <li><strong>Dosen bukan menguji hafalan sintaks dari nol</strong>, melainkan memastikan apakah mahasiswa benar-benar memahami arsitektur program dan alur data dari frontend ke database.</li>
+        <li><strong>Gunakan Prinsip ATM (Amati, Tiru, Modifikasi)</strong>: Selalu buka file yang sudah berjalan normal di project Anda (seperti <code>Data_jabatan.php</code>), lalu jadikan acuan.</li>
+        <li><strong>Respon Awal yang Profesional:</strong> Jawab dengan sopan dan tenang: <em>"Baik Pak/Bu, saya siapkan struktur tabelnya di database terlebih dahulu, lalu membuat Controller dan View-nya."</em></li>
+    </ul>
+
+    <h2>2. Rumus 4 Langkah Emas (Pola Alur CI3)</h2>
+    <p>Setiap kali diminta membuat fitur CRUD baru, selalu ikuti 4 tahapan ini secara berurutan:</p>
+    
+    <table>
+        <thead>
+            <tr>
+                <th width="22%">Langkah</th>
+                <th width="38%">Lokasi File / Tool</th>
+                <th width="40%">Fungsi Utama</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>1. Database</strong></td>
+                <td><code>phpMyAdmin (MySQL)</code></td>
+                <td>Membuat tabel baru atau menambah kolom tabel.</td>
+            </tr>
+            <tr>
+                <td><strong>2. Controller</strong></td>
+                <td><code>application/controllers/admin/</code></td>
+                <td>Mengatur logika (Read, Create, Update, Delete).</td>
+            </tr>
+            <tr>
+                <td><strong>3. View</strong></td>
+                <td><code>application/views/admin/</code></td>
+                <td>Membuat tampilan form input, tabel data, & form edit.</td>
+            </tr>
+            <tr>
+                <td><strong>4. Sidebar</strong></td>
+                <td><code>views/template_admin/sidebar.php</code></td>
+                <td>Menambahkan link menu navigasi di sidebar dashboard.</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="alert-tip">
+        <strong>CATATAN PENTING (Model CI3):</strong> Di project Anda, <code>ModelPenggajian.php</code> sudah memiliki fungsi universal: <code>get_data($table)</code>, <code>insert_data($data, $table)</code>, <code>update_data($table, $data, $where)</code>, dan <code>delete_data($where, $table)</code>. Anda <strong>tidak perlu membuat query manual di Model</strong> untuk tabel master baru!
+    </div>
+
+    <div class="page-break"></div>
+
+    <h2>3. SKENARIO 1: Membuat CRUD Entitas Baru dari Nol</h2>
+    <p><strong>Contoh Permintaan Penguji:</strong> <em>"Coba buatkan modul CRUD baru untuk Data Departemen / Divisi!"</em></p>
+
+    <h3><span class="step-badge">Langkah 1</span> Buat Tabel di phpMyAdmin</h3>
+    <p>Buka <code>http://localhost/phpmyadmin</code> &gt; pilih database penggajian Anda &gt; jalankan query SQL berikut:</p>
+    <pre>CREATE TABLE data_departemen (
+    id_departemen INT(11) AUTO_INCREMENT PRIMARY KEY,
+    kode_departemen VARCHAR(20) NOT NULL,
+    nama_departemen VARCHAR(100) NOT NULL
+);</pre>
+
+    <h3><span class="step-badge">Langkah 2</span> Buat Controller Baru</h3>
+    <p>Buat file baru di: <code>application/controllers/admin/Data_departemen.php</code></p>
+    <pre>&lt;?php
+class Data_departemen extends CI_Controller {
+
+    public function __construct(){
+        parent::__construct();
+        if($this->session->userdata('hak_akses') != '1'){
+            redirect('login');
+        }
+    }
+
+    // 1. TAMPIL DATA (READ)
+    public function index() {
+        $data['title'] = "Data Departemen";
+        $data['departemen'] = $this->ModelPenggajian->get_data('data_departemen')->result();
+
+        $this->load->view('template_admin/header', $data);
+        $this->load->view('template_admin/sidebar');
+        $this->load->view('admin/departemen/data_departemen', $data);
+        $this->load->view('template_admin/footer');
+    }
+
+    // 2. FORM TAMBAH (CREATE)
+    public function tambah_data() {
+        $data['title'] = "Tambah Data Departemen";
+        $this->load->view('template_admin/header', $data);
+        $this->load->view('template_admin/sidebar');
+        $this->load->view('admin/departemen/tambah_data_departemen', $data);
+        $this->load->view('template_admin/footer');
+    }
+
+    // PROSES SIMPAN DATA BARU
+    public function tambah_data_aksi() {
+        $this->form_validation->set_rules('kode_departemen', 'Kode Departemen', 'required');
+        $this->form_validation->set_rules('nama_departemen', 'Nama Departemen', 'required');
+
+        if($this->form_validation->run() == FALSE) {
+            $this->tambah_data();
+        } else {
+            $data = array(
+                'kode_departemen' => $this->input->post('kode_departemen'),
+                'nama_departemen' => $this->input->post('nama_departemen'),
+            );
+            $this->ModelPenggajian->insert_data($data, 'data_departemen');
+            $this->session->set_flashdata('pesan', '&lt;div class="alert alert-success"&gt;Data berhasil ditambahkan!&lt;/div&gt;');
+            redirect('admin/data_departemen');
+        }
+    }
+
+    // 3. FORM EDIT (UPDATE)
+    public function update_data($id) {
+        $where = array('id_departemen' => $id);
+        $data['title'] = "Update Data Departemen";
+        $data['departemen'] = $this->db->get_where('data_departemen', $where)->result();
+
+        $this->load->view('template_admin/header', $data);
+        $this->load->view('template_admin/sidebar');
+        $this->load->view('admin/departemen/update_data_departemen', $data);
+        $this->load->view('template_admin/footer');
+    }
+
+    // PROSES UPDATE PERUBAHAN
+    public function update_data_aksi() {
+        $id = $this->input->post('id_departemen');
+        $data = array(
+            'kode_departemen' => $this->input->post('kode_departemen'),
+            'nama_departemen' => $this->input->post('nama_departemen'),
+        );
+        $where = array('id_departemen' => $id);
+        $this->ModelPenggajian->update_data('data_departemen', $data, $where);
+        $this->session->set_flashdata('pesan', '&lt;div class="alert alert-success"&gt;Data berhasil diupdate!&lt;/div&gt;');
+        redirect('admin/data_departemen');
+    }
+
+    // 4. HAPUS DATA (DELETE)
+    public function delete_data($id) {
+        $where = array('id_departemen' => $id);
+        $this->ModelPenggajian->delete_data($where, 'data_departemen');
+        $this->session->set_flashdata('pesan', '&lt;div class="alert alert-danger"&gt;Data berhasil dihapus!&lt;/div&gt;');
+        redirect('admin/data_departemen');
+    }
+}</pre>
+
+    <div class="page-break"></div>
+
+    <h3><span class="step-badge">Langkah 3</span> Buat Views</h3>
+    <p>Buat folder: <code>application/views/admin/departemen/</code> dan buat 3 file view berikut:</p>
+
+    <p><strong>A. File <code>data_departemen.php</code> (Tabel Data)</strong></p>
+    <pre>&lt;div class="container-fluid"&gt;
+    &lt;div class="d-sm-flex align-items-center justify-content-between mb-4"&gt;
+        &lt;h1 class="h3 mb-0 text-gray-800"&gt;&lt;?php echo $title ?&gt;&lt;/h1&gt;
+    &lt;/div&gt;
+
+    &lt;a class="btn btn-sm btn-success mb-3" href="&lt;?php echo base_url('admin/data_departemen/tambah_data') ?&gt;"&gt;
+        &lt;i class="fas fa-plus"&gt;&lt;/i&gt; Tambah Departemen
+    &lt;/a&gt;
+    &lt;?php echo $this->session->flashdata('pesan') ?&gt;
+
+    &lt;table class="table table-striped table-bordered mt-2"&gt;
+        &lt;thead&gt;
+            &lt;tr&gt;
+                &lt;th class="text-center" width="5%"&gt;No&lt;/th&gt;
+                &lt;th class="text-center"&gt;Kode Departemen&lt;/th&gt;
+                &lt;th class="text-center"&gt;Nama Departemen&lt;/th&gt;
+                &lt;th class="text-center" width="18%"&gt;Aksi&lt;/th&gt;
+            &lt;/tr&gt;
+        &lt;/thead&gt;
+        &lt;tbody&gt;
+        &lt;?php $no = 1; foreach($departemen as $d) : ?&gt;
+            &lt;tr&gt;
+                &lt;td class="text-center"&gt;&lt;?php echo $no++ ?&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;?php echo $d->kode_departemen ?&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;?php echo $d->nama_departemen ?&gt;&lt;/td&gt;
+                &lt;td class="text-center"&gt;
+                    &lt;a class="btn btn-sm btn-primary" href="&lt;?php echo base_url('admin/data_departemen/update_data/'.$d->id_departemen) ?&gt;"&gt;&lt;i class="fas fa-edit"&gt;&lt;/i&gt;&lt;/a&gt;
+                    &lt;a onclick="return confirm('Yakin ingin menghapus data ini?')" class="btn btn-sm btn-danger" href="&lt;?php echo base_url('admin/data_departemen/delete_data/'.$d->id_departemen) ?&gt;"&gt;&lt;i class="fas fa-trash"&gt;&lt;/i&gt;&lt;/a&gt;
+                &lt;/td&gt;
+            &lt;/tr&gt;
+        &lt;?php endforeach; ?&gt;
+        &lt;/tbody&gt;
+    &lt;/table&gt;
+&lt;/div&gt;</pre>
+
+    <p><strong>B. File <code>tambah_data_departemen.php</code> (Form Tambah)</strong></p>
+    <pre>&lt;div class="container-fluid"&gt;
+    &lt;div class="d-sm-flex align-items-center justify-content-between mb-4"&gt;
+        &lt;h1 class="h3 mb-0 text-gray-800"&gt;&lt;?php echo $title ?&gt;&lt;/h1&gt;
+    &lt;/div&gt;
+
+    &lt;div class="card" style="width: 60%;"&gt;
+        &lt;div class="card-body"&gt;
+            &lt;form method="POST" action="&lt;?php echo base_url('admin/data_departemen/tambah_data_aksi') ?&gt;"&gt;
+                &lt;div class="form-group"&gt;
+                    &lt;label&gt;Kode Departemen&lt;/label&gt;
+                    &lt;input type="text" name="kode_departemen" class="form-control" required&gt;
+                &lt;/div&gt;
+                &lt;div class="form-group"&gt;
+                    &lt;label&gt;Nama Departemen&lt;/label&gt;
+                    &lt;input type="text" name="nama_departemen" class="form-control" required&gt;
+                &lt;/div&gt;
+                &lt;button type="submit" class="btn btn-success"&gt;Simpan&lt;/button&gt;
+                &lt;a href="&lt;?php echo base_url('admin/data_departemen') ?&gt;" class="btn btn-secondary"&gt;Kembali&lt;/a&gt;
+            &lt;/form&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;</pre>
+
+    <p><strong>C. File <code>update_data_departemen.php</code> (Form Edit)</strong></p>
+    <pre>&lt;div class="container-fluid"&gt;
+    &lt;div class="d-sm-flex align-items-center justify-content-between mb-4"&gt;
+        &lt;h1 class="h3 mb-0 text-gray-800"&gt;&lt;?php echo $title ?&gt;&lt;/h1&gt;
+    &lt;/div&gt;
+
+    &lt;div class="card" style="width: 60%;"&gt;
+        &lt;div class="card-body"&gt;
+            &lt;?php foreach ($departemen as $d): ?&gt;
+            &lt;form method="POST" action="&lt;?php echo base_url('admin/data_departemen/update_data_aksi') ?&gt;"&gt;
+                &lt;input type="hidden" name="id_departemen" value="&lt;?php echo $d->id_departemen ?&gt;"&gt;
+                &lt;div class="form-group"&gt;
+                    &lt;label&gt;Kode Departemen&lt;/label&gt;
+                    &lt;input type="text" name="kode_departemen" class="form-control" value="&lt;?php echo $d->kode_departemen ?&gt;" required&gt;
+                &lt;/div&gt;
+                &lt;div class="form-group"&gt;
+                    &lt;label&gt;Nama Departemen&lt;/label&gt;
+                    &lt;input type="text" name="nama_departemen" class="form-control" value="&lt;?php echo $d->nama_departemen ?&gt;" required&gt;
+                &lt;/div&gt;
+                &lt;button type="submit" class="btn btn-primary"&gt;Update&lt;/button&gt;
+                &lt;a href="&lt;?php echo base_url('admin/data_departemen') ?&gt;" class="btn btn-secondary"&gt;Kembali&lt;/a&gt;
+            &lt;/form&gt;
+            &lt;?php endforeach; ?&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;</pre>
+
+    <div class="page-break"></div>
+
+    <h3><span class="step-badge">Langkah 4</span> Pasang Menu di Sidebar</h3>
+    <p>Buka <code>application/views/template_admin/sidebar.php</code>, tambahkan blok link menu ini:</p>
+    <pre>&lt;li class="nav-item"&gt;
+    &lt;a class="nav-link" href="&lt;?php echo base_url('admin/data_departemen') ?&gt;"&gt;
+        &lt;i class="fas fa-fw fa-building"&gt;&lt;/i&gt;
+        &lt;span&gt;Data Departemen&lt;/span&gt;
+    &lt;/a&gt;
+&lt;/li&gt;</pre>
+
+    <hr style="margin: 20px 0; border: none; border-top: 1px solid #e2e8f0;">
+
+    <h2>4. SKENARIO 2: Menambah Kolom / Field pada Fitur yang Ada</h2>
+    <p><strong>Contoh Permintaan Penguji:</strong> <em>"Coba tambahkan field Nomor HP/WhatsApp di form Data Pegawai!"</em></p>
+
+    <ol>
+        <li><strong>Database:</strong> Buka phpMyAdmin &gt; pilih tabel <code>data_pegawai</code> &gt; tab <strong>Structure</strong> &gt; Tambah kolom (atau SQL):
+            <pre>ALTER TABLE data_pegawai ADD no_telp VARCHAR(20) NULL AFTER jenis_kelamin;</pre>
+        </li>
+        <li><strong>Form Tambah (View):</strong> Buka <code>views/admin/pegawai/tambah_dataPegawai.php</code>, tambahkan blok input:
+            <pre>&lt;div class="form-group"&gt;
+    &lt;label&gt;No. Telepon / WhatsApp&lt;/label&gt;
+    &lt;input type="text" name="no_telp" class="form-control" placeholder="Contoh: 08123456789"&gt;
+&lt;/div&gt;</pre>
+        </li>
+        <li><strong>Form Edit (View):</strong> Buka <code>views/admin/pegawai/update_dataPegawai.php</code>, tambahkan input dengan value:
+            <pre>&lt;div class="form-group"&gt;
+    &lt;label&gt;No. Telepon / WhatsApp&lt;/label&gt;
+    &lt;input type="text" name="no_telp" class="form-control" value="&lt;?php echo $p->no_telp ?&gt;"&gt;
+&lt;/div&gt;</pre>
+        </li>
+        <li><strong>Controller:</strong> Buka <code>controllers/admin/Data_pegawai.php</code>:
+            <p>Pada method <code>tambah_data_aksi()</code> dan <code>update_data_aksi()</code>, tangkap nilainya:</p>
+            <pre>$no_telp = $this->input->post('no_telp');
+
+$data = array(
+    ...
+    'no_telp' => $no_telp,
+);</pre>
+        </li>
+        <li><strong>Tabel Tampil (View):</strong> Buka <code>views/admin/pegawai/data_pegawai.php</code>, tambahkan <code>&lt;th&gt;No Telp&lt;/th&gt;</code> pada thead dan <code>&lt;td&gt;&lt;?php echo $p->no_telp ?&gt;&lt;/td&gt;</code> pada tbody.</li>
+    </ol>
+
+    <div class="page-break"></div>
+
+    <h2>5. SKENARIO 3: Menambahkan Fitur Cetak / Laporan</h2>
+    <p><strong>Contoh Permintaan Penguji:</strong> <em>"Coba buatkan tombol Cetak Laporan untuk data tersebut!"</em></p>
+
+    <h3>1. Tambahkan Method Cetak di Controller:</h3>
+    <pre>public function cetak_departemen() {
+    $data['title'] = "Laporan Data Departemen";
+    $data['departemen'] = $this->ModelPenggajian->get_data('data_departemen')->result();
+    $this->load->view('admin/departemen/cetak_departemen', $data);
+}</pre>
+
+    <h3>2. Buat View <code>cetak_departemen.php</code>:</h3>
+    <pre>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;&lt;?php echo $title ?&gt;&lt;/title&gt;
+    &lt;style&gt;
+        body { font-family: 'Times New Roman', serif; margin: 30px; }
+        h2 { text-align: center; margin-bottom: 5px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid black; padding: 8px; font-size: 11pt; }
+        th { background-color: #f2f2f2; text-align: center; }
+        .text-center { text-align: center; }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h2&gt;LAPORAN DATA DEPARTEMEN&lt;/h2&gt;
+    &lt;hr&gt;
+    &lt;table&gt;
+        &lt;thead&gt;
+            &lt;tr&gt;
+                &lt;th width="5%"&gt;No&lt;/th&gt;
+                &lt;th&gt;Kode Departemen&lt;/th&gt;
+                &lt;th&gt;Nama Departemen&lt;/th&gt;
+            &lt;/tr&gt;
+        &lt;/thead&gt;
+        &lt;tbody&gt;
+            &lt;?php $no = 1; foreach($departemen as $d): ?&gt;
+            &lt;tr&gt;
+                &lt;td class="text-center"&gt;&lt;?php echo $no++ ?&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;?php echo $d->kode_departemen ?&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;?php echo $d->nama_departemen ?&gt;&lt;/td&gt;
+            &lt;/tr&gt;
+            &lt;?php endforeach; ?&gt;
+        &lt;/tbody&gt;
+    &lt;/table&gt;
+
+    &lt;script type="text/javascript"&gt;
+        window.print();
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+
+    <h3>3. Pasang Tombol Cetak di View (<code>data_departemen.php</code>):</h3>
+    <pre>&lt;a class="btn btn-sm btn-info mb-3" target="_blank" href="&lt;?php echo base_url('admin/data_departemen/cetak_departemen') ?&gt;"&gt;
+    &lt;i class="fas fa-print"&gt;&lt;/i&gt; Cetak Laporan
+&lt;/a&gt;</pre>
+
+    <div class="page-break"></div>
+
+    <h2>6. Troubleshooting Cepat (Penanganan Error Live)</h2>
+    <p>Jika saat demonstrasi muncul pesan error, jangan panik! Gunakan panduan diagnosa cepat ini:</p>
+
+    <table>
+        <thead>
+            <tr>
+                <th width="30%">Pesan Error</th>
+                <th width="30%">Penyebab Utama</th>
+                <th width="40%">Solusi Cepat</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><code>404 Page Not Found</code></td>
+                <td>Nama file Controller salah atau huruf besar/kecil tidak sesuai.</td>
+                <td>Pastikan nama class dan nama file Controller diawali huruf kapital (contoh: <code>Data_departemen.php</code> & <code>class Data_departemen</code>).</td>
+            </tr>
+            <tr>
+                <td><code>Unknown column 'xxx' in field list</code></td>
+                <td>Nama kolom di array <code>$data</code> Controller tidak sama dengan kolom tabel di database.</td>
+                <td>Buka phpMyAdmin, cek ejaan kolom di tabel. Samakan key array di Controller dengan nama kolom database.</td>
+            </tr>
+            <tr>
+                <td><code>Undefined variable: xxx</code></td>
+                <td>Variabel yang dipanggil di View belum dikirim dari Controller.</td>
+                <td>Cek Controller, pastikan ada <code>$data['xxx'] = ...</code> saat memanggil <code>$this->load->view('...', $data);</code>.</td>
+            </tr>
+            <tr>
+                <td><code>A PHP Error was encountered</code></td>
+                <td>Objek kosong atau memanggil properti/kolom yang salah.</td>
+                <td>Cek variabel loop di <code>foreach</code> view dan pastikan nama properti objek <code>$d-&gt;nama_kolom</code> sudah sesuai.</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="alert-tip">
+        <strong>Tips Sikap Saat Terjadi Error Live:</strong><br>
+        Katakan dengan tenang: <em>"Mohon maaf Pak/Bu, terdapat kesalahan penamaan kolom pada query controller, saya sesuaikan sekarang."</em>. Dosen justru sangat mengapresiasi mahasiswa yang mampu <strong>membaca error log dan memperbaiki kodenya secara cepat</strong> dibanding yang panik.
+    </div>
+
+    <h2>7. Daftar Rujukan File untuk ATM (Amati, Tiru, Modifikasi)</h2>
+    <ul>
+        <li><strong>Contoh CRUD Standar Paling Rapi:</strong> <code>application/controllers/admin/Data_jabatan.php</code></li>
+        <li><strong>Contoh CRUD Kompleks & Upload Foto:</strong> <code>application/controllers/admin/Data_pegawai.php</code></li>
+        <li><strong>Contoh Cetak Laporan dengan Filter Form:</strong> <code>application/controllers/admin/Laporan_pegawai.php</code></li>
+        <li><strong>Template Halaman Cetak Lengkap (Kop & TTD):</strong> <code>application/views/admin/pegawai/cetak_laporan_pegawai.php</code></li>
+    </ul>
+
+</body>
+</html>
