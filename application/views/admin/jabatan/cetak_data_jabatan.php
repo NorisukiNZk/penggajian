@@ -208,7 +208,7 @@
             <p>Mengetahui,</p>
             <p style="margin-bottom: 5px;">Pimpinan Klinik</p>
 
-            <img src="<?php echo base_url('assets/img/qr-dummy.png') ?>" class="qr-code" alt="Validasi Digital">
+            <img src="<?php echo base_url('assets/img/qr-dummy.png?v=' . time()) ?>" class="qr-code" alt="Validasi Digital">
             <p style="font-size:10px; margin-top:-5px; font-style:italic;">Validasi Digital</p>
 
             <p class="signature-name">Dr. H. Muhammad Hidayatullah</p>

@@ -389,7 +389,7 @@
                 <p>Banjarbaru, <?php echo date('d') . ' ' . $bulanIndo[date('m')] . ' ' . date('Y'); ?></p>
                 <p>Mengetahui Pimpinan Klinik,</p>
 
-                <img src="<?php echo base_url('assets/img/qr-dummy.png') ?>" class="qr-code" alt="Validasi Digital">
+                <img src="<?php echo base_url('assets/img/qr-dummy.png?v=' . time()) ?>" class="qr-code" alt="Validasi Digital">
                 <p style="font-size:10px; margin-top:-5px; margin-bottom:10px; font-style:italic;">Validasi Digital</p>
 
                 <p class="font-weight-bold" style="text-decoration: underline;">Dr. H. Muhammad Hidayatullah</p>
