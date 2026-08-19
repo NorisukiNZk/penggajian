@@ -376,17 +376,21 @@
             </tr>
         </table>
 
+        <?php 
+        $bulanIndo = ['01' => 'Januari', '02' => 'Februari', '03' => 'Maret', '04' => 'April', '05' => 'Mei', '06' => 'Juni', '07' => 'Juli', '08' => 'Agustus', '09' => 'September', '10' => 'Oktober', '11' => 'November', '12' => 'Desember']; 
+        ?>
         <div class="signature-container">
             <div class="signature">
-                <p>Pegawai</p>
+                <p>Pegawai Yang Bersangkutan,</p>
                 
-                <p class="font-weight-bold" style="margin-top: 80px !important;"><?php echo $ps->nama_pegawai ?></p>
+                <p class="font-weight-bold" style="margin-top: 80px !important;"><?php echo htmlspecialchars($ps->nama_pegawai, ENT_QUOTES, 'UTF-8'); ?></p>
             </div>
             <div class="signature">
+                <p>Banjarbaru, <?php echo date('d') . ' ' . $bulanIndo[date('m')] . ' ' . date('Y'); ?></p>
                 <p>Mengetahui Pimpinan Klinik,</p>
 
-            <img src="<?php echo base_url('assets/img/qr-dummy.png') ?>" class="qr-code" alt="Validasi Digital">
-            <p style="font-size:10px; margin-top:-5px; margin-bottom:10px; font-style:italic;">Validasi Digital</p>
+                <img src="<?php echo base_url('assets/img/qr-dummy.png') ?>" class="qr-code" alt="Validasi Digital">
+                <p style="font-size:10px; margin-top:-5px; margin-bottom:10px; font-style:italic;">Validasi Digital</p>
 
                 <p class="font-weight-bold" style="text-decoration: underline;">Dr. H. Muhammad Hidayatullah</p>
             </div>

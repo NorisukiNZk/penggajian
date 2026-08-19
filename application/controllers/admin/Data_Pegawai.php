@@ -229,13 +229,13 @@ class Data_Pegawai extends CI_Controller {
 	}
 
 	public function cetak()
-{
-    $data['title'] = "Data Pegawai";
-    $data['pegawai'] = $this->ModelPenggajian->get_data('data_pegawai')->result();
+	{
+		$data['title'] = "Laporan Data Pegawai";
+		$data['pegawai'] = $this->ModelPenggajian->get_data('data_pegawai')->result();
 
-    // Load view untuk cetak
-    $this->load->view('admin/pegawai/cetak_dataPegawai', $data);
-}
+		// Load view untuk cetak resmi dengan Kop, Watermark & QR Code
+		$this->load->view('admin/pegawai/cetak_laporan_pegawai', $data);
+	}
 
 }
 ?>

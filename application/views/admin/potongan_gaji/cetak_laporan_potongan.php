@@ -245,7 +245,7 @@
         <div class="signature-box">
             <p>Banjarbaru, <?php echo date('d') . ' ' . $bulanIndo[date('m')] . ' ' . date('Y'); ?></p>
             <p>Mengetahui,</p>
-            <p style="margin-bottom: 5px;">Bagian Keuangan</p>
+            <p style="margin-bottom: 5px;">Pimpinan Klinik</p>
 
             <img src="<?php echo base_url('assets/img/qr-dummy.png') ?>" class="qr-code" alt="Validasi Digital">
             <p style="font-size:10px; margin-top:-5px; font-style:italic;">Validasi Digital</p>
