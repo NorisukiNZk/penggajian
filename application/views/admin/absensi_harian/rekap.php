@@ -52,7 +52,7 @@
 			<form method="POST" action="<?php echo base_url('admin/absensi_harian/sinkron_gaji') ?>" class="d-inline">
 				<input type="hidden" name="bulan" value="<?php echo $bulan ?>">
 				<input type="hidden" name="tahun" value="<?php echo $tahun ?>">
-				<button type="submit" class="btn btn-success btn-sm" onclick="return confirm('Sinkronkan data absensi bulan ini ke Data Kehadiran untuk perhitungan gaji?')">
+				<button type="button" class="btn btn-success btn-sm btn-konfirmasi" data-judul="Sinkronisasi Data Absensi?" data-pesan="Data rekap absensi bulan ini akan disinkronkan ke Data Kehadiran untuk perhitungan gaji. Lanjutkan?" data-tipe="question" data-warna="#1cc88a" data-btn-teks="<i class='fas fa-sync'></i> Ya, Sinkronkan!">
 					<i class="fas fa-sync"></i> Sinkron ke Gaji
 				</button>
 			

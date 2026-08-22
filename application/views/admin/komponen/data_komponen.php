@@ -67,8 +67,7 @@
 								<a href="<?php echo base_url('admin/komponen_gaji/kelola_pegawai/' . $k->id_komponen) ?>" class="btn btn-sm btn-info" title="Kelola per Pegawai">
 									<i class="fas fa-users"></i> Pegawai
 								</a>
-								<a href="<?php echo base_url('admin/komponen_gaji/hapus/' . $k->id_komponen) ?>" class="btn btn-sm btn-danger" title="Hapus"
-								   onclick="return confirm('Apakah Anda yakin ingin menghapus komponen ini? Semua data terkait akan ikut terhapus.')">
+								<a href="<?php echo base_url('admin/komponen_gaji/hapus/' . $k->id_komponen) ?>" class="btn btn-sm btn-danger btn-hapus" title="Hapus" data-nama="<?php echo htmlspecialchars($k->nama_komponen, ENT_QUOTES, 'UTF-8') ?>">
 									<i class="fas fa-trash"></i>
 								</a>
 							</td>

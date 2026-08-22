@@ -37,7 +37,7 @@
 
                 <td class="text-center">
                     <a class="btn btn-sm btn-info shadow-sm" href="<?php echo base_url('admin/data_jabatan/update_data/' . $j->id_jabatan) ?>" data-toggle="tooltip" title="Edit Data"><i class="fas fa-edit"></i></a>
-                    <a onclick="return confirm('Yakin ingin menghapus jabatan <?php echo $j->nama_jabatan ?>?')" class="btn btn-sm btn-danger shadow-sm" href="<?php echo base_url('admin/data_jabatan/delete_data/' . $j->id_jabatan) ?>" data-toggle="tooltip" title="Hapus Data"><i class="fas fa-trash"></i></a>
+                    <a class="btn btn-sm btn-danger shadow-sm btn-hapus" href="<?php echo base_url('admin/data_jabatan/delete_data/' . $j->id_jabatan) ?>" data-nama="<?php echo htmlspecialchars($j->nama_jabatan, ENT_QUOTES, 'UTF-8') ?>" data-toggle="tooltip" title="Hapus Data"><i class="fas fa-trash"></i></a>
                 </td>
               </tr>
             <?php endforeach; ?>

@@ -28,8 +28,8 @@
                                 <td>Rp. <?php echo number_format($p->jml_potongan,0,',','.') ?></td>
                                 <td>
                                     <center>
-                                        <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#editModal<?php echo $p->id ?>"><i class="fas fa-edit"></i></button>
-                                        <a onclick="return confirm('Yakin hapus potongan ini?')" class="btn btn-sm btn-danger" href="<?php echo base_url('admin/potongan_gaji/delete_data/'.$p->id) ?>"><i class="fas fa-trash"></i></a>
+                                        <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#editModal<?php echo $p->id ?>" title="Edit Data"><i class="fas fa-edit"></i></button>
+                                        <a class="btn btn-sm btn-danger btn-hapus" href="<?php echo base_url('admin/potongan_gaji/delete_data/'.$p->id) ?>" data-nama="<?php echo htmlspecialchars($p->potongan, ENT_QUOTES, 'UTF-8') ?>" title="Hapus Data"><i class="fas fa-trash"></i></a>
                                     </center>
                                 </td>
                             </tr>

@@ -56,7 +56,7 @@
 										<input type="hidden" name="status" value="Disetujui">
 										
 <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" style="display: none">
-<button type="submit" class="btn btn-sm btn-success mb-1" onclick="return confirm('Setujui pengajuan lembur ini?')">
+<button type="button" class="btn btn-sm btn-success mb-1 btn-konfirmasi" data-judul="Setujui Lembur?" data-pesan="Setujui pengajuan lembur pegawai <?php echo htmlspecialchars($l->nama_pegawai, ENT_QUOTES, 'UTF-8'); ?>?" data-tipe="question" data-warna="#1cc88a" data-btn-teks="<i class='fas fa-check'></i> Ya, Setujui!">
 											<i class="fas fa-check"></i> Setujui
 										</button>
 									</form>
@@ -66,7 +66,7 @@
 										<input type="hidden" name="status" value="Ditolak">
 										
 <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" style="display: none">
-<button type="submit" class="btn btn-sm btn-danger mb-1" onclick="return confirm('Tolak pengajuan lembur ini?')">
+<button type="button" class="btn btn-sm btn-danger mb-1 btn-konfirmasi" data-judul="Tolak Lembur?" data-pesan="Tolak pengajuan lembur pegawai <?php echo htmlspecialchars($l->nama_pegawai, ENT_QUOTES, 'UTF-8'); ?>?" data-tipe="warning" data-warna="#e74a3b" data-btn-teks="<i class='fas fa-times'></i> Tolak Lembur">
 											<i class="fas fa-times"></i> Tolak
 										</button>
 									</form>

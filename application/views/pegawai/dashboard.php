@@ -89,8 +89,7 @@
                       <span class="badge badge-info">Sudah Pulang</span>
                     <?php else : ?>
                       <span class="h4 font-weight-bold text-muted">--:--</span><br>
-                      <a href="<?php echo base_url('pegawai/absensi/absen_pulang') ?>" class="btn btn-sm btn-info mt-1"
-                         onclick="return confirm('Absen Pulang sekarang?')">
+                      <a href="<?php echo base_url('pegawai/absensi/absen_pulang') ?>" class="btn btn-sm btn-info mt-1 btn-konfirmasi" data-judul="Absen Pulang?" data-pesan="Apakah Anda yakin ingin melakukan Absen Pulang sekarang?" data-tipe="question" data-warna="#36b9cc" data-btn-teks="<i class='fas fa-sign-out-alt'></i> Ya, Pulang!">
                         <i class="fas fa-sign-out-alt"></i> Absen Pulang
                       </a>
                     <?php endif; ?>
@@ -101,8 +100,7 @@
           <?php else : ?>
             <div class="text-center">
               <p class="text-muted mb-3">Anda belum absen hari ini.</p>
-              <a href="<?php echo base_url('pegawai/absensi/absen_masuk') ?>" class="btn btn-success btn-lg px-5"
-                 onclick="return confirm('Absen Masuk sekarang?')">
+              <a href="<?php echo base_url('pegawai/absensi/absen_masuk') ?>" class="btn btn-success btn-lg px-5 btn-konfirmasi" data-judul="Absen Masuk?" data-pesan="Catat kehadiran kerja Anda hari ini?" data-tipe="question" data-warna="#1cc88a" data-btn-teks="<i class='fas fa-sign-in-alt'></i> Ya, Absen Masuk!">
                 <i class="fas fa-sign-in-alt"></i> ABSEN MASUK
               </a>
             </div>

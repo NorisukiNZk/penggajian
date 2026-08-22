@@ -3,7 +3,7 @@
 
   <div class="d-sm-flex align-items-center justify-content-between mb-4">
     <h1 class="h3 mb-0 text-gray-800"><?php echo $title?></h1>
-    <a href="<?php echo base_url('admin/hari_libur/sync_api') ?>" class="btn btn-sm btn-info shadow-sm" onclick="return confirm('Proses ini membutuhkan koneksi internet. Lanjutkan?')">
+    <a href="<?php echo base_url('admin/hari_libur/sync_api') ?>" class="btn btn-sm btn-info shadow-sm btn-konfirmasi" data-judul="Sync API Hari Libur?" data-pesan="Proses ini akan menarik data kalender libur nasional via internet. Lanjutkan?" data-tipe="info" data-warna="#36b9cc" data-btn-teks="<i class='fas fa-sync'></i> Ya, Sinkronkan!">
       <i class="fas fa-sync fa-sm text-white-50"></i> Sync Data API Nasional
     </a>
   </div>
@@ -62,7 +62,7 @@
                       </td>
                       <td><?php echo $l->keterangan ?></td>
                       <td class="text-center">
-                          <a onclick="return confirm('Yakin ingin menghapus tanggal merah ini?')" class="btn btn-sm btn-danger" href="<?php echo base_url('admin/hari_libur/hapus/'.$l->id_libur) ?>">
+                          <a class="btn btn-sm btn-danger btn-hapus" href="<?php echo base_url('admin/hari_libur/hapus/'.$l->id_libur) ?>" data-nama="<?php echo htmlspecialchars($l->keterangan, ENT_QUOTES, 'UTF-8') ?>" title="Hapus Tanggal Merah">
                               <i class="fas fa-trash"></i>
                           </a>
                       </td>

@@ -98,6 +98,62 @@ $(document).ready(function() {
             color: 'white'
         });
     }
+
+    // 1. Konfirmasi Hapus Data Modern (SweetAlert2)
+    $(document).on('click', '.btn-hapus', function(e) {
+        e.preventDefault();
+        const href = $(this).attr('href');
+        const nama = $(this).data('nama') || 'data ini';
+
+        Swal.fire({
+            title: 'Apakah Anda Yakin?',
+            html: `Data <b>"${nama}"</b> akan dihapus permanen dari sistem!`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#e74a3b',
+            cancelButtonColor: '#858796',
+            confirmButtonText: '<i class="fas fa-trash"></i> Ya, Hapus Data!',
+            cancelButtonText: '<i class="fas fa-times"></i> Batal',
+            reverseButtons: true,
+            focusCancel: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.location.href = href;
+            }
+        });
+    });
+
+    // 2. Konfirmasi Aksi Umum (Setujui / Tolak / Sinkronisasi)
+    $(document).on('click', '.btn-konfirmasi', function(e) {
+        e.preventDefault();
+        const href = $(this).attr('href');
+        const form = $(this).closest('form');
+        const judul = $(this).data('judul') || 'Konfirmasi Aksi';
+        const pesan = $(this).data('pesan') || 'Apakah Anda yakin ingin melanjutkan proses ini?';
+        const tipe = $(this).data('tipe') || 'question';
+        const warnaBtn = $(this).data('warna') || '#4e73df';
+        const teksBtn = $(this).data('btn-teks') || 'Ya, Lanjutkan!';
+
+        Swal.fire({
+            title: judul,
+            text: pesan,
+            icon: tipe,
+            showCancelButton: true,
+            confirmButtonColor: warnaBtn,
+            cancelButtonColor: '#858796',
+            confirmButtonText: teksBtn,
+            cancelButtonText: '<i class="fas fa-times"></i> Batal',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                if (href) {
+                    document.location.href = href;
+                } else if (form.length) {
+                    form.submit();
+                }
+            }
+        });
+    });
 });
 </script>
 

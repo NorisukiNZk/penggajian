@@ -56,10 +56,10 @@
                             </td>
                             <td class="text-center">
                                 <?php if($p->status == 'Pending') { ?>
-                                    <a href="<?php echo base_url('admin/pinjaman/setujui/'.$p->id_pinjaman) ?>" class="btn btn-sm btn-success" onclick="return confirm('Apakah Anda yakin menyetujui pinjaman ini?')">
+                                    <a href="<?php echo base_url('admin/pinjaman/setujui/'.$p->id_pinjaman) ?>" class="btn btn-sm btn-success btn-konfirmasi" data-judul="Setujui Pinjaman?" data-pesan="Apakah Anda yakin menyetujui pengajuan pinjaman karyawan ini?" data-tipe="question" data-warna="#1cc88a" data-btn-teks="<i class='fas fa-check'></i> Ya, Setujui!">
                                         <i class="fas fa-check"></i> Setuju
                                     </a>
-                                    <a href="<?php echo base_url('admin/pinjaman/tolak/'.$p->id_pinjaman) ?>" class="btn btn-sm btn-danger" onclick="return confirm('Apakah Anda yakin menolak pinjaman ini?')">
+                                    <a href="<?php echo base_url('admin/pinjaman/tolak/'.$p->id_pinjaman) ?>" class="btn btn-sm btn-danger btn-konfirmasi" data-judul="Tolak Pinjaman?" data-pesan="Apakah Anda yakin menolak pengajuan pinjaman ini?" data-tipe="warning" data-warna="#e74a3b" data-btn-teks="<i class='fas fa-times'></i> Tolak Pinjaman">
                                         <i class="fas fa-times"></i> Tolak
                                     </a>
                                 <?php } else { ?>

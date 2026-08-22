@@ -66,7 +66,7 @@
 
                 <td class="text-center">
                     <a class="btn btn-sm btn-info shadow-sm" href="<?php echo base_url('admin/data_pegawai/update_data/' . $p->id_pegawai) ?>" data-toggle="tooltip" title="Edit Data"><i class="fas fa-edit"></i></a>
-                    <a onclick="return confirm('Yakin ingin menghapus data pegawai <?php echo $p->nama_pegawai ?>?')" class="btn btn-sm btn-danger shadow-sm" href="<?php echo base_url('admin/data_pegawai/delete_data/' . $p->id_pegawai) ?>" data-toggle="tooltip" title="Hapus Data"><i class="fas fa-trash"></i></a>
+                    <a class="btn btn-sm btn-danger shadow-sm btn-hapus" href="<?php echo base_url('admin/data_pegawai/delete_data/' . $p->id_pegawai) ?>" data-nama="<?php echo htmlspecialchars($p->nama_pegawai, ENT_QUOTES, 'UTF-8') ?>" data-toggle="tooltip" title="Hapus Data"><i class="fas fa-trash"></i></a>
                 </td>
               </tr>
             <?php endforeach; ?>

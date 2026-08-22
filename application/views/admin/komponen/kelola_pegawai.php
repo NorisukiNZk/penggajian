@@ -132,8 +132,8 @@
 								<td class="text-center">
 									<?php if ($pk->id_override) : ?>
 										<a href="<?php echo base_url('admin/komponen_gaji/hapus_komponen_pegawai/' . $pk->id_override . '/' . $komponen->id_komponen) ?>" 
-										   class="btn btn-sm btn-danger" title="Hapus Override"
-										   onclick="return confirm('Hapus override untuk pegawai ini?')">
+										   class="btn btn-sm btn-danger btn-hapus" title="Hapus Override"
+										   data-nama="Override <?php echo htmlspecialchars($pk->nama_pegawai, ENT_QUOTES, 'UTF-8'); ?>">
 											<i class="fas fa-times"></i>
 										</a>
 									<?php else : ?>
