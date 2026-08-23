@@ -164,6 +164,97 @@
 				</div>
 			</div>
 		</div>
+
+		<!-- Pusat Antrean Persetujuan HRD (Pending Approvals Widget) -->
+		<div class="col-xl-6 col-lg-6 mb-4">
+			<div class="card shadow h-100 border-left-warning">
+				<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+					<h6 class="m-0 font-weight-bold text-primary"><i class="fas fa-bell"></i> Pusat Persetujuan & Antrean HRD</h6>
+					<?php if ($total_pending > 0) : ?>
+						<span class="badge badge-warning px-2 py-1"><i class="fas fa-exclamation-circle"></i> <?php echo $total_pending ?> Perlu Tindakan</span>
+					<?php else : ?>
+						<span class="badge badge-success px-2 py-1"><i class="fas fa-check-circle"></i> Selesai (0 Pending)</span>
+					<?php endif; ?>
+				</div>
+				<div class="card-body d-flex flex-column justify-content-between">
+					<div class="list-group list-group-flush mb-3">
+						
+						<!-- Item Cuti -->
+						<div class="list-group-item d-flex justify-content-between align-items-center px-0">
+							<div>
+								<h6 class="my-0 font-weight-bold text-gray-800">
+									<i class="fas fa-umbrella-beach text-info mr-2"></i> Pengajuan Cuti Pegawai
+								</h6>
+								<small class="text-muted">Permohonan izin/cuti tahunan & sakit</small>
+							</div>
+							<div class="text-right">
+								<?php if ($pending_cuti > 0) : ?>
+									<span class="badge badge-warning badge-pill font-weight-bold mr-2"><?php echo $pending_cuti ?> Pending</span>
+								<?php else : ?>
+									<span class="badge badge-light border text-muted mr-2">0</span>
+								<?php endif; ?>
+								<a href="<?php echo base_url('admin/data_cuti') ?>" class="btn btn-sm btn-info shadow-sm" style="border-radius: 6px;">
+									Periksa <i class="fas fa-arrow-right fa-xs"></i>
+								</a>
+							</div>
+						</div>
+
+						<!-- Item Lembur -->
+						<div class="list-group-item d-flex justify-content-between align-items-center px-0">
+							<div>
+								<h6 class="my-0 font-weight-bold text-gray-800">
+									<i class="fas fa-business-time text-warning mr-2"></i> Pengajuan Lembur Karyawan
+								</h6>
+								<small class="text-muted">Verifikasi durasi & jam lembur kerja</small>
+							</div>
+							<div class="text-right">
+								<?php if ($pending_lembur > 0) : ?>
+									<span class="badge badge-warning badge-pill font-weight-bold mr-2"><?php echo $pending_lembur ?> Pending</span>
+								<?php else : ?>
+									<span class="badge badge-light border text-muted mr-2">0</span>
+								<?php endif; ?>
+								<a href="<?php echo base_url('admin/data_lembur') ?>" class="btn btn-sm btn-warning shadow-sm" style="border-radius: 6px;">
+									Periksa <i class="fas fa-arrow-right fa-xs"></i>
+								</a>
+							</div>
+						</div>
+
+						<!-- Item Pinjaman Kasbon -->
+						<div class="list-group-item d-flex justify-content-between align-items-center px-0">
+							<div>
+								<h6 class="my-0 font-weight-bold text-gray-800">
+									<i class="fas fa-hand-holding-usd text-success mr-2"></i> Pengajuan Pinjaman Kasbon
+								</h6>
+								<small class="text-muted">Persetujuan tenor & pencairan dana</small>
+							</div>
+							<div class="text-right">
+								<?php if ($pending_pinjaman > 0) : ?>
+									<span class="badge badge-warning badge-pill font-weight-bold mr-2"><?php echo $pending_pinjaman ?> Pending</span>
+								<?php else : ?>
+									<span class="badge badge-light border text-muted mr-2">0</span>
+								<?php endif; ?>
+								<a href="<?php echo base_url('admin/pinjaman') ?>" class="btn btn-sm btn-success shadow-sm" style="border-radius: 6px;">
+									Periksa <i class="fas fa-arrow-right fa-xs"></i>
+								</a>
+							</div>
+						</div>
+
+					</div>
+
+					<!-- Status Box Footer -->
+					<?php if ($total_pending == 0) : ?>
+						<div class="alert alert-success py-2 mb-0 text-center small font-weight-bold" style="border-radius: 8px;">
+							<i class="fas fa-check-circle mr-1"></i> Semua antrean permohonan pegawai telah selesai diproses.
+						</div>
+					<?php else : ?>
+						<div class="alert alert-warning py-2 mb-0 text-center small font-weight-bold" style="border-radius: 8px;">
+							<i class="fas fa-bell mr-1"></i> Terdapat total <b><?php echo $total_pending ?></b> pengajuan menunggu verifikasi Anda.
+						</div>
+					<?php endif; ?>
+
+				</div>
+			</div>
+		</div>
 	</div>
 
 </div>

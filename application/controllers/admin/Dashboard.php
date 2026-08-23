@@ -78,6 +78,18 @@ class Dashboard extends CI_Controller {
 		// Data Hari Libur Nasional (Terdekat)
 		$data['hari_libur'] = $this->db->query("SELECT * FROM hari_libur WHERE tanggal >= CURDATE() ORDER BY tanggal ASC LIMIT 5")->result();
 
+		// Data Antrean Persetujuan HRD (Pending Approvals)
+		$q_cuti = $this->db->query("SELECT * FROM data_cuti WHERE status_cuti IN ('Menunggu', 'Pending')");
+		$data['pending_cuti'] = $q_cuti ? $q_cuti->num_rows() : 0;
+
+		$q_lembur = $this->db->query("SELECT * FROM data_lembur WHERE status IN ('Menunggu', 'Pending')");
+		$data['pending_lembur'] = $q_lembur ? $q_lembur->num_rows() : 0;
+
+		$q_pinjaman = $this->db->query("SELECT * FROM data_pinjaman WHERE status IN ('Menunggu', 'Pending')");
+		$data['pending_pinjaman'] = $q_pinjaman ? $q_pinjaman->num_rows() : 0;
+
+		$data['total_pending'] = $data['pending_cuti'] + $data['pending_lembur'] + $data['pending_pinjaman'];
+
 		$this->load->view('template_admin/header',$data);
 		$this->load->view('template_admin/sidebar');
 		$this->load->view('admin/dashboard', $data);
