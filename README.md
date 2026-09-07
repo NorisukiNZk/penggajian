@@ -14,13 +14,16 @@
     <a href="https://codeigniter.com"><img src="https://img.shields.io/badge/Framework-CodeIgniter%203.1.11-DD4814?style=for-the-badge&logo=codeigniter&logoColor=white" alt="CodeIgniter"></a>
     <a href="https://php.net"><img src="https://img.shields.io/badge/Language-PHP%207.4%20%7C%208.x-777BB4?style=for-the-badge&logo=php&logoColor=white" alt="PHP"></a>
     <a href="https://mysql.com"><img src="https://img.shields.io/badge/Database-MySQL%20%2F%20MariaDB-4479A1?style=for-the-badge&logo=mysql&logoColor=white" alt="MySQL"></a>
-    <a href="https://getbootstrap.com"><img src="https://img.shields.io/badge/UI%20Framework-Bootstrap%204.6-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white" alt="Bootstrap"></a>
+    <a href="https://getbootstrap.com"><img src="https://img.shields.io/badge/UI%20Framework-Bootstrap%204.6%20%2B%20Modern%20SaaS-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white" alt="Bootstrap"></a>
   </p>
   <p>
-    <img src="https://img.shields.io/badge/Security-BCRYPT%20%2B%20CSRF%20%2B%20reCAPTCHA-success?style=flat-square&logo=shield" alt="Security">
-    <img src="https://img.shields.io/badge/Reporting-Smart%20QR%20%26%20Watermark-informational?style=flat-square&logo=adobeacrobatreader" alt="Reporting">
+    <img src="https://img.shields.io/badge/UI%20Design-Plus%20Jakarta%20Sans%20%26%20Dark%20Mode-0ea5e9?style=flat-square&logo=googlefonts" alt="Typography">
+    <img src="https://img.shields.io/badge/Charts-Chart.js%20v4.4+-FF6384?style=flat-square&logo=chartdotjs" alt="ChartJS">
+    <img src="https://img.shields.io/badge/Tables-DataTables%202.x-3884ff?style=flat-square&logo=databricks" alt="DataTables">
+    <img src="https://img.shields.io/badge/Icons-FontAwesome%206-538DD5?style=flat-square&logo=fontawesome" alt="FontAwesome">
+    <img src="https://img.shields.io/badge/Alerts-SweetAlert2%20v11-f27474?style=flat-square" alt="SweetAlert2">
+    <img src="https://img.shields.io/badge/Security-BCRYPT%20%2B%20reCAPTCHA%20%2B%20CSRF-success?style=flat-square&logo=shield" alt="Security">
     <img src="https://img.shields.io/badge/Status-Production%20Ready-brightgreen?style=flat-square" alt="Status">
-    <img src="https://img.shields.io/badge/License-MIT-blue?style=flat-square" alt="License">
   </p>
 
 </div>
@@ -29,6 +32,7 @@
 
 ## 📑 Daftar Isi (*Table of Contents*)
 - [Ringkasan Eksekutif (*Executive Summary*)](#-ringkasan-eksekutif-executive-summary)
+- [Pembaruan Antarmuka Modern (*Modern UI/UX Overhaul*)](#-pembaruan-antarmuka-modern-modern-uiux-overhaul)
 - [Arsitektur & Modul Unggulan (*Core Modules*)](#-arsitektur--modul-unggulan-core-modules)
   - [1. Manajemen Data Master & Hak Akses (RBAC)](#1--manajemen-data-master--hak-akses-rbac)
   - [2. Modul Pinjaman Karyawan / Kasbon (Stateless Dynamic Deduct)](#2--modul-pinjaman-karyawan--kasbon-stateless-dynamic-deduct)
@@ -45,16 +49,41 @@
 ---
 
 ## 💡 Ringkasan Eksekutif (*Executive Summary*)
-**Enterprise HRIS & Payroll Management System** adalah platform berbasis Web terintegrasi yang dirancang untuk menjawab kompleksitas pengelolaan sumber daya manusia, presensi harian, administrasi lembur/cuti, serta komputasi penggajian (*Payroll*) pada fasilitas kesehatan (**Klinik Pratama Dr. H.M. Hidayatullah**).
+**Enterprise HRIS & Payroll Management System** adalah platform web terpadu yang dirancang untuk menjawab kebutuhan operasional kepegawaian, presensi harian, administrasi lembur/cuti, serta komputasi penggajian (*Payroll*) pada instansi kesehatan (**Klinik Pratama Dr. H.M. Hidayatullah**).
 
-Sistem ini mengimplementasikan logika komputasi tingkat lanjut (*Advanced Computational Logic*), validasi silang bebas kecurangan (*Anti-Fraud Cross-Validation*), arsitektur perhitungan pinjaman tanpa mutasi ganda (*Stateless Anti-Double Deduct*), serta format berkas cetak resmi berstandar korporat dengan verifikasi digital QR Code.
+Sistem ini memadukan logika komputasi presisi (*Advanced Computational Logic*), validasi silang bebas kecurangan (*Anti-Fraud Cross-Validation*), arsitektur pinjaman tanpa mutasi ganda (*Stateless Anti-Double Deduct*), format dokumen resmi berstandar korporat dengan verifikasi digital QR Code, serta antarmuka modern bernuansa **Enterprise SaaS Dashboard**.
+
+---
+
+## 🎨 Pembaruan Antarmuka Modern (*Modern UI/UX Overhaul*)
+
+Aplikasi telah diperbarui secara menyeluruh menggunakan pustaka JavaScript dan standar CSS modern terkini:
+
+* 🔤 **Tipografi Modern (Google Font Plus Jakarta Sans):** Tampilan teks yang bersih, rapi, dan memiliki tingkat keterbacaan tinggi di berbagai resolusi layar.
+* 🧭 **Deep Navy Sidebar & Inline Nested Accordion:**
+  - Sidebar desktop proporsional (`260px`) dengan gradien deep navy (`#091a2e`).
+  - Submenu (`Master Data`, `Transaksi`, `Laporan`) mengadopsi sistem **inline accordion** bersarang yang rapi di dalam lekukan sidebar (menghilangkan kotak putih melayang / *floating box bug*).
+  - Rotasi ikon panah (*chevron*) yang mulus dengan animasi transisi yang halus.
+* 📈 **Visualisasi Interaktif (Chart.js v4.4+):**
+  - **Area Spline Chart:** Menampilkan tren presensi bulanan dengan kurva halus (*bezier tension: 0.4*) dan arsiran gradien transparan.
+  - **Modern Donut Chart:** Komposisi persebaran jabatan pegawai dengan *cutout 72%* dan palet warna profesional.
+* 🔍 **DataTables 2.2+ Terlokalisasi:**
+  - Input pencarian bergaya *rounded pill* dengan icon placeholder.
+  - Navigasi halaman modern dengan tombol ber-radius dan status halaman aktif yang kontras.
+  - Terlokalisasi penuh ke dalam Bahasa Indonesia.
+* 🌙 **Sistem Dark Mode Permanen:**
+  - Pilihan mode gelap (Dark Slate `#091a2e` dan `#1e293b`) ramah mata yang dapat diaktifkan melalui satu klik pada tombol di topbar, dengan status tersimpan otomatis di `localStorage`.
+* ⏰ **Live Digital Clock:**
+  - Indikator waktu real-time dengan penyesuaian zona waktu lokal (WITA).
+* 🔔 **Notifikasi Interaktif (SweetAlert2 v11):**
+  - Toast notifikasi di bagian atas layar untuk umpan balik instan serta dialog konfirmasi hapus data yang elegan.
 
 ---
 
 ## 🚀 Arsitektur & Modul Unggulan (*Core Modules*)
 
 ### 1. 👥 Manajemen Data Master & Hak Akses (RBAC)
-* **Master Pegawai:** Manajemen biodata lengkap, Nomor Induk Kependudukan (NIK) terisolasi unik, jabatan, status kerja (Tetap / Kontrak), filter rekapitulasi, dan manajemen avatar profil.
+* **Master Pegawai:** Biodata lengkap, Nomor Induk Kependudukan (NIK) terisolasi unik, jabatan, status kerja (Tetap / Kontrak), dan manajemen foto profil.
 * **Master Jabatan & Komponen Upah:** Pengaturan terstruktur untuk besaran Gaji Pokok, Tunjangan Transportasi, serta Uang Makan per posisi jabatan.
 * **Tunjangan & Potongan Dinamis:** Dukungan penambahan komponen insentif atau potongan kustom baik bernilai nominal tetap (Rp) maupun persentase (%).
 * **Role-Based Access Control (RBAC):**
@@ -81,7 +110,7 @@ Sistem mengadopsi mekanisme perhitungan pinjaman mutakhir yang bersifat **Statel
       └─ TDK ➔ Bebas Potongan (Tanpa Mengubah Saldo Database)
 ```
 
-* 🛡️ **Anti-Double Deduction:** Slip gaji tidak menyimpan mutasi statis; pencetakan slip hingga 1000 kali tidak akan mengurangi sisa pinjaman secara keliru.
+* 🛡️ **Anti-Double Deduction:** Slip gaji tidak menyimpan mutasi statis; pencetakan slip berulang kali tidak akan mengurangi sisa pinjaman secara keliru.
 * 🏷️ **Label Status Transparan:** Menampilkan keterangan urutan angsuran secara eksplisit pada rincian slip gaji pegawai.
 
 ---
@@ -135,12 +164,12 @@ Seluruh berkas keluaran (*Print Out*) telah distandarisasi untuk keperluan legal
 
 ### 5. 📊 Dashboard Analytics & Interaktivitas UI/UX
 * **Kartu KPI Real-Time:** Monitoring cepat jumlah total pegawai aktif, hadir tepat waktu, terlambat, dan sakit/izin hari ini.
-* **Grafik Tren Kehadiran (Line Chart):** Analisis histori kehadiran 6 bulan terakhir berbasis Chart.js.
-* **Komposisi Pegawai (Doughnut Chart):** Visualisasi proporsi distribusi karyawan berdasarkan posisi jabatan.
+* **Grafik Tren Kehadiran (Line Chart v4):** Analisis histori kehadiran 6 bulan terakhir dengan kurva spline dan gradien fill.
+* **Komposisi Pegawai (Doughnut Chart v4):** Visualisasi proporsi distribusi karyawan berdasarkan posisi jabatan.
 * **Widget Hari Libur Terdekat:** Informasi jadwal cuti bersama dan libur nasional terdekat.
 * **Persistent Dark Mode:** Pengaturan tema gelap/terang ramah mata dengan status tersimpan permanen di `localStorage`.
 * **Live Digital Clock:** Penunjuk jam digital real-time dengan zona waktu lokal (WITA).
-* **Mobile-First Responsive Sidebar:** Sidebar otomatis menutup (*auto-collapse*) pada perangkat berlayar kecil (Android/iOS) sehingga konten tidak tertimpa.
+* **Mobile-First Responsive:** Penyesuaian layout otomatis pada perangkat mobile dan tablet.
 
 ---
 
@@ -166,7 +195,8 @@ Seluruh berkas keluaran (*Print Out*) telah distandarisasi untuk keperluan legal
 ┌─────────────────────────────────────────────────────────────┐
 │                       PRESENTATION LAYER                    │
 │   HTML5  •  CSS3  •  JavaScript (ES6)  •  Bootstrap 4.6     │
-│   SB Admin 2  •  SweetAlert2  •  Chart.js  •  FontAwesome 5 │
+│   Plus Jakarta Sans  •  Chart.js v4.4+  •  DataTables 2.2+  │
+│   FontAwesome 6  •  SweetAlert2 v11  •  Dark Mode Storage   │
 ├─────────────────────────────────────────────────────────────┤
 │                       APPLICATION LAYER                     │
 │               PHP 7.4+ / 8.x  •  CodeIgniter 3.1.11         │
@@ -200,7 +230,7 @@ penggajian/
 ├── assets/
 │   ├── css/                # Stylesheet kustom & Dark Mode CSS
 │   ├── img/                # Aset logo instansi, watermark, & QR Code dummy
-│   ├── js/                 # Skrip logika Chart, Live Clock, & SweetAlert2
+│   ├── js/                 # Skrip logika Chart v4, Live Clock, & SweetAlert2
 │   └── vendor/             # Bootstrap, FontAwesome, DataTables, ChartJS
 ├── db database/            # Berkas migrasi database SQL (penggajian.sql)
 └── README.md               # Dokumentasi Proyek
@@ -255,8 +285,8 @@ penggajian/
 
 | Hak Akses / Role | Username | Password Default | Target Halaman Dasbor |
 | :--- | :--- | :--- | :--- |
-| **Administrator (HRD)** | `admin` | `admin` | `/admin/dashboard` |
-| **Pegawai (Contoh)** | `pegawai` *(atau NIK)* | `123456` *(atau sesuai DB)* | `/pegawai/dashboard` |
+| **Administrator (HRD)** | `waffa` | `12345` | `/admin/dashboard` |
+| **Pegawai (Contoh)** | `anya` | `12345` | `/pegawai/dashboard` |
 
 > ℹ️ *Catatan: Untuk pengujian verifikasi reCAPTCHA di server localhost, sistem secara otomatis menggunakan Google Test Keys yang selalu valid.*
 
