@@ -37,14 +37,37 @@
 <script src="<?php echo base_url(); ?>assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script src="<?php echo base_url(); ?>assets/vendor/jquery-easing/jquery.easing.min.js"></script>
 <script src="<?php echo base_url(); ?>assets/js/sb-admin-2.min.js"></script>
-<script src="<?php echo base_url(); ?>assets/vendor/chart.js/Chart.min.js"></script>
-<script src="<?php echo base_url(); ?>assets/js/Chart.js"></script>
-<script src="<?php echo base_url(); ?>assets/vendor/datatables/jquery.dataTables.min.js"></script>
-<script src="<?php echo base_url(); ?>assets/vendor/datatables/dataTables.bootstrap4.min.js"></script>
-<script src="<?php echo base_url(); ?>assets/js/demo/datatables-demo.js"></script>
-<link href="<?php echo base_url(); ?>assets/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+<!-- Modern Chart.js v4.4+ -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
 
-<!-- Chart script initialization moved to specific view -->
+<!-- Modern DataTables 2.x -->
+<script src="https://cdn.datatables.net/2.2.2/js/dataTables.min.js"></script>
+<script>
+$(document).ready(function() {
+  if ($.fn.DataTable && $('#dataTable').length > 0) {
+    $('#dataTable').DataTable({
+      responsive: true,
+      pageLength: 10,
+      language: {
+        search: "",
+        searchPlaceholder: "🔍 Cari data...",
+        lengthMenu: "Tampilkan _MENU_ baris",
+        info: "Menampilkan _START_ - _END_ dari _TOTAL_ entri",
+        infoEmpty: "Menampilkan 0 entri",
+        infoFiltered: "(filter dari _MAX_ total data)",
+        zeroRecords: "Data tidak ditemukan",
+        paginate: {
+          first: '<i class="fas fa-angles-left"></i>',
+          previous: '<i class="fas fa-angle-left"></i>',
+          next: '<i class="fas fa-angle-right"></i>',
+          last: '<i class="fas fa-angles-right"></i>'
+        }
+      }
+    });
+  }
+});
+</script>
+
 
 <!-- SweetAlert2 -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

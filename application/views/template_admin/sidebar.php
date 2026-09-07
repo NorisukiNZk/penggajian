@@ -1,40 +1,10 @@
-<style>
-/* Modernized Blue Sidebar Theme */
-.bg-modern-blue {
-    background-color: #0c2b4d; 
-    background-image: linear-gradient(180deg, #0c2b4d 10%, #1a4270 100%); 
-    background-size: cover;
-}
-/* Utility classes for modern dropdown icons */
-.bg-primary-light { background-color: rgba(78, 115, 223, 0.1); width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; border-radius: 50%; }
-.bg-warning-light { background-color: rgba(246, 194, 62, 0.1); width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; border-radius: 50%; }
-.bg-danger-light { background-color: rgba(231, 74, 59, 0.1); width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; border-radius: 50%; }
-.sidebar-dark .nav-item .nav-link {
-    transition: all 0.3s ease;
-}
-.sidebar-dark .nav-item .nav-link:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-    transform: translateX(5px);
-    border-radius: 8px;
-    margin: 0 10px;
-    width: auto;
-}
-.sidebar-brand {
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    font-weight: 800;
-}
-.sidebar-brand-text {
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
-}
-</style>
 <body id="page-top" class="page-fade-in">
 
     <!-- Preloader -->
     <div id="preloader">
         <div class="spinner-container">
             <div class="spinner"></div>
-            <div class="preloader-text">MEMUAT...</div>
+            <div class="preloader-text">MEMUAT HRIS...</div>
         </div>
     </div>
   <!-- Page Wrapper -->
@@ -44,28 +14,34 @@
     <ul class="navbar-nav bg-modern-blue sidebar sidebar-dark accordion" id="accordionSidebar">
 
       <!-- Sidebar - Brand -->
-      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="#">
-        <div class="sidebar-brand-text mx-3"> Penggajian </div>
+      <a class="sidebar-brand d-flex align-items-center" href="<?php echo base_url('admin/dashboard') ?>">
+        <div class="sidebar-brand-icon">
+          <i class="fas fa-heartbeat text-info"></i>
+        </div>
+        <div class="sidebar-brand-text text-white font-weight-bold">
+          <div>HRIS <span class="text-info font-weight-light">KLINIK</span></div>
+          <div class="text-white-50" style="font-size: 0.65rem; font-weight: 400; text-transform: none; letter-spacing: 0.02em;">Pratama Hidayatullah</div>
+        </div>
       </a>
 
       <!-- Divider -->
-      <hr class="sidebar-divider my-0">
+      <hr class="sidebar-divider my-0" style="border-top-color: rgba(255,255,255,0.06);">
 
       <!-- Nav Item - Dashboard -->
       <li class="nav-item">
         <a class="nav-link" href="<?php echo base_url('admin/dashboard') ?>">
-          <i class="fas fa-fw fa-tachometer-alt"></i>
+          <i class="fas fa-fw fa-gauge-high"></i>
           <span>Dashboard</span></a>
       </li>
 
       <!-- Nav Item - Pages Collapse Menu -->
       <li class="nav-item">
-        <a class="nav-link collapsed" href="" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
           <i class="fa fa-fw fa-database"></i>
           <span>Master Data</span>
         </a>
         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-          <div class="bg-white py-2 collapse-inner rounded">
+          <div class="collapse-inner">
             <a class="collapse-item" href="<?php echo base_url('admin/data_pegawai') ?>">Data Pegawai</a>
             <a class="collapse-item" href="<?php echo base_url('admin/data_jabatan') ?>">Data Jabatan</a>
             <a class="collapse-item" href="<?php echo base_url('admin/hari_libur') ?>">Hari Libur Nasional</a>
@@ -75,12 +51,12 @@
 
       <!-- Nav Item - Utilities Collapse Menu -->
       <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
-          <i class="fas fa-fw fa-money-check-alt"></i>
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="false" aria-controls="collapseUtilities">
+          <i class="fas fa-fw fa-money-bill-transfer"></i>
           <span>Transaksi</span>
         </a>
         <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
-          <div class="bg-white py-2 collapse-inner rounded">
+          <div class="collapse-inner">
             <h6 class="collapse-header">Absensi:</h6>
             <a class="collapse-item" href="<?php echo base_url('admin/absensi_harian') ?>">Monitoring Hari Ini</a>
             <a class="collapse-item" href="<?php echo base_url('admin/data_cuti') ?>">Pengajuan Cuti/Izin</a>
@@ -99,12 +75,12 @@
 
       <!-- Nav Item - Pages Collapse Menu -->
       <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
-          <i class="fas fa-fw fa-copy"></i>
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
+          <i class="fas fa-fw fa-chart-pie"></i>
           <span>Laporan</span>
         </a>
         <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
-          <div class="bg-white py-2 collapse-inner rounded">
+          <div class="collapse-inner">
             <h6 class="collapse-header">Laporan Transaksi:</h6>
             <a class="collapse-item" href="<?php echo base_url('admin/laporan_gaji') ?>">Laporan Gaji Bulanan</a>
             <a class="collapse-item" href="<?php echo base_url('admin/laporan_absensi') ?>">Laporan Absensi</a>
@@ -122,8 +98,8 @@
       </li>
 
       <!-- Sidebar Toggler (Sidebar) -->
-      <div class="text-center d-none d-md-inline">
-        <button class="rounded-circle border-0" id="sidebarToggle"></button>
+      <div class="text-center d-none d-md-inline mt-3 mb-4">
+        <button class="rounded-circle border-0" id="sidebarToggle" title="Toggle Sidebar"></button>
       </div>
 
     </ul>

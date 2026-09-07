@@ -46,87 +46,95 @@
 <!-- Custom scripts for all pages-->
 <script src="<?php echo base_url(); ?>assets/js/sb-admin-2.min.js"></script>
 
-<!-- Page level plugins -->
-<script src="<?php echo base_url(); ?>assets/vendor/chart.js/Chart.min.js"></script>
+<!-- Modern Chart.js v4.4+ -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
 
-<!-- Page level custom scripts -->
-<script src="<?php echo base_url(); ?>assets/js/Chart.js"></script>
-
-
-<!-- Page level plugins -->
-<script src="<?php echo base_url(); ?>assets/vendor/datatables/jquery.dataTables.min.js"></script>
-<script src="<?php echo base_url(); ?>assets/vendor/datatables/dataTables.bootstrap4.min.js"></script>
-
-<!-- Page level custom scripts -->
-<script src="<?php echo base_url(); ?>assets/js/demo/datatables-demo.js"></script>
-
-
-<script type="text/javascript">
-// Pie Chart Example
-var ctx = document.getElementById("myPieChart");
-var myPieChart = new Chart(ctx, {
-  type: 'doughnut',
-  data: {
-    labels: ["HRD", "Manager", "Staff Marketing", "Direktur"],
-    datasets: [{
-      data: [<?php echo $this->db->query("select jabatan from data_pegawai where jabatan='HRD'")->num_rows(); ?>,
-      <?php echo $this->db->query("select jabatan from data_pegawai where jabatan='Manager'")->num_rows(); ?>,
-      <?php echo $this->db->query("select jabatan from data_pegawai where jabatan='Staff Marketing'")->num_rows(); ?>,
-      <?php echo $this->db->query("select jabatan from data_pegawai where jabatan='Direktur'")->num_rows(); ?>],
-      backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc', '#dddfeb'],
-      hoverBackgroundColor: ['#2e59d9', '#17a673', '#2c9faf', '#dddfeb'],
-      hoverBorderColor: "rgba(234, 236, 244, 1)",
-    }],
-  },
-  options: {
-    maintainAspectRatio: false,
-    tooltips: {
-      backgroundColor: "rgb(255,255,255)",
-      bodyFontColor: "#858796",
-      borderColor: '#dddfeb',
-      borderWidth: 1,
-      xPadding: 15,
-      yPadding: 15,
-      displayColors: false,
-      caretPadding: 10,
-    },
-    legend: {
-      display: false
-    },
-    cutoutPercentage: 80,
-  },
-});
-</script>
-
-<script type="text/javascript">
-// Area Chart Example
-var ctx = document.getElementById("myBarChart");
-var myBarChart = new Chart(ctx, {
-  type: 'bar',
-  data:  {
-    labels: ["Laki - Laki", "Perempuan"],
-    datasets : [{
-      label: "Berdasarkan Jenis Kelamin",
-      backgroundColor: 'rgb(23, 125, 255)',
-      borderColor: 'rgb(23, 125, 255)',
-      data: [<?php echo $this->db->query("select jenis_kelamin from data_pegawai where jenis_kelamin='Laki-laki'")->num_rows(); ?>,
-      <?php echo $this->db->query("select jenis_kelamin from data_pegawai where jenis_kelamin='Perempuan'")->num_rows(); ?>,
-    ],
-    }],
-  },
-  options: {
-    responsive: true,
-    maintainAspectRatio: false,
-    scales: {
-      yAxes: [{
-        ticks: {
-          beginAtZero:true
+<!-- Modern DataTables 2.x -->
+<script src="https://cdn.datatables.net/2.2.2/js/dataTables.min.js"></script>
+<script>
+$(document).ready(function() {
+  if ($.fn.DataTable && $('#dataTable').length > 0) {
+    $('#dataTable').DataTable({
+      responsive: true,
+      pageLength: 10,
+      language: {
+        search: "",
+        searchPlaceholder: "🔍 Cari data...",
+        lengthMenu: "Tampilkan _MENU_ baris",
+        info: "Menampilkan _START_ - _END_ dari _TOTAL_ entri",
+        infoEmpty: "Menampilkan 0 entri",
+        infoFiltered: "(filter dari _MAX_ total data)",
+        zeroRecords: "Data tidak ditemukan",
+        paginate: {
+          first: '<i class="fas fa-angles-left"></i>',
+          previous: '<i class="fas fa-angle-left"></i>',
+          next: '<i class="fas fa-angle-right"></i>',
+          last: '<i class="fas fa-angles-right"></i>'
         }
-      }]
-    },
+      }
+    });
+  }
+
+  // Chart handlers with v4 syntax if canvas exists
+  var ctxPie = document.getElementById("myPieChart");
+  if (ctxPie) {
+    new Chart(ctxPie, {
+      type: 'doughnut',
+      data: {
+        labels: ["HRD", "Manager", "Staff Marketing", "Direktur"],
+        datasets: [{
+          data: [
+            <?php echo $this->db->query("select jabatan from data_pegawai where jabatan='HRD'")->num_rows(); ?>,
+            <?php echo $this->db->query("select jabatan from data_pegawai where jabatan='Manager'")->num_rows(); ?>,
+            <?php echo $this->db->query("select jabatan from data_pegawai where jabatan='Staff Marketing'")->num_rows(); ?>,
+            <?php echo $this->db->query("select jabatan from data_pegawai where jabatan='Direktur'")->num_rows(); ?>
+          ],
+          backgroundColor: ['#0c2b4d', '#0ea5e9', '#10b981', '#f59e0b'],
+          hoverOffset: 6
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false }
+        },
+        cutout: '75%'
+      }
+    });
+  }
+
+  var ctxBar = document.getElementById("myBarChart");
+  if (ctxBar) {
+    new Chart(ctxBar, {
+      type: 'bar',
+      data: {
+        labels: ["Laki - Laki", "Perempuan"],
+        datasets: [{
+          label: "Jenis Kelamin",
+          backgroundColor: ['#0ea5e9', '#ec4899'],
+          borderRadius: 8,
+          data: [
+            <?php echo $this->db->query("select jenis_kelamin from data_pegawai where jenis_kelamin='Laki-laki'")->num_rows(); ?>,
+            <?php echo $this->db->query("select jenis_kelamin from data_pegawai where jenis_kelamin='Perempuan'")->num_rows(); ?>
+          ]
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false }
+        },
+        scales: {
+          y: { beginAtZero: true }
+        }
+      }
+    });
   }
 });
 </script>
+
 
 <!-- SweetAlert2 -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
