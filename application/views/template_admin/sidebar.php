@@ -199,7 +199,7 @@
                   <?php } ?>
                 </div>
                 <div class="dropdown-divider my-0"></div>
-                <a class="dropdown-item text-center small text-primary font-weight-bold py-3 bg-light" href="<?php echo base_url('admin/dashboard') ?>" style="border-radius: 0 0 12px 12px;">Tutup Panel <i class="fas fa-times ml-1"></i></a>
+                <a class="dropdown-item text-center small text-primary font-weight-bold py-3" href="javascript:void(0);" style="border-radius: 0 0 12px 12px; cursor: pointer;">Tutup Panel <i class="fas fa-times ml-1"></i></a>
               </div>
             </li>
 

@@ -186,6 +186,7 @@ Seluruh berkas keluaran (*Print Out*) telah distandarisasi untuk keperluan legal
 | **Validasi NIK & Jabatan** | Aturan `is_unique` & Custom Callback Update | Mencegah terjadinya duplikasi data master saat proses *create* maupun *update*. |
 | **Error Obfuscation** | Penonaktifan `db_debug` pada lingkungan publik | Menghilangkan kebocoran informasi teknis database (*Information Disclosure*). |
 | **Anti-Spam Flashdata** | Manipulasi DOM `.remove()` pada SweetAlert2 | Mencegah alert muncul berulang saat refresh (*bfcache browser*). |
+| **Pemulihan Akun Mandiri** | Verifikasi Multi-Faktor (Username + NIK) & Sesi Terisolasi | Pemulihan/reset kata sandi mandiri (*Self-Service*) aman dengan enkripsi BCRYPT & reCAPTCHA. |
 
 ---
 
@@ -218,7 +219,8 @@ penggajian/
 │   ├── controllers/
 │   │   ├── admin/          # Controller Modul Administrator / HRD
 │   │   ├── pegawai/        # Controller Modul Employee Self-Service (ESS)
-│   │   └── Login.php       # Autentikasi Login, reCAPTCHA & Sesi
+│   │   ├── Login.php       # Autentikasi Login, reCAPTCHA & Sesi
+│   │   └── Lupa_password.php # Verifikasi Identitas & Pemulihan Kata Sandi Mandiri
 │   ├── models/
 │   │   ├── ModelPenggajian.php   # Komputasi Gaji, Lembur, Pinjaman & CRUD
 │   │   └── ModelKomponen.php     # Komputasi Tunjangan & Potongan Dinamis

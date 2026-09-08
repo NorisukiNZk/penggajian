@@ -4,18 +4,18 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>Login | HRIS Klinik Hidayatullah</title>
+  <title><?php echo isset($title) ? $title : 'Lupa Password | HRIS Klinik Hidayatullah'; ?></title>
 
   <!-- Google Fonts: Plus Jakarta Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-  <!-- Tailwind CSS v4 Browser Runtime -->
-  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-
   <!-- FontAwesome 6 -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Animate.css -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
 
   <!-- Base Stylesheet -->
   <link href="<?php echo base_url(); ?>assets/css/sb-admin-2.min.css" rel="stylesheet">
@@ -96,12 +96,6 @@
       background: #ffffff;
     }
 
-    .login-form-container h2 {
-      font-weight: 800;
-      color: #0c2b4d;
-      letter-spacing: -0.02em;
-    }
-
     .form-control-modern {
       border-radius: 12px;
       padding: 0.85rem 1.15rem;
@@ -121,7 +115,7 @@
       background-color: #ffffff;
     }
 
-    .btn-login-modern {
+    .btn-action-modern {
       background: linear-gradient(135deg, #0c2b4d 0%, #164e87 100%);
       color: white;
       border-radius: 12px;
@@ -133,7 +127,7 @@
       box-shadow: 0 4px 14px rgba(12, 43, 77, 0.25);
     }
 
-    .btn-login-modern:hover {
+    .btn-action-modern:hover {
       background: linear-gradient(135deg, #103b69 0%, #1c5f9f 100%);
       transform: translateY(-2px);
       box-shadow: 0 8px 22px rgba(12, 43, 77, 0.35);
@@ -146,12 +140,6 @@
       top: 50%;
       transform: translateY(-50%);
       color: #94a3b8;
-      transition: color 0.2s;
-    }
-
-    .input-icon-modern.clickable:hover {
-      color: var(--accent-color);
-      cursor: pointer;
     }
 
     @media (max-width: 768px) {
@@ -166,49 +154,47 @@
   <div class="container d-flex justify-content-center align-items-center py-4">
     <div class="login-container">
       
-      <!-- Left Side: Image/Branding -->
+      <!-- Left Side: Branding -->
       <div class="login-image">
         <div id="particles-js"></div>
         <img src="<?php echo base_url(); ?>assets/img/kpmh.png" alt="Logo Klinik">
-        <span class="badge badge-pill badge-info mb-3 px-3 py-1 font-weight-bold" style="letter-spacing: 0.08em; background-color: rgba(14, 165, 233, 0.3); border: 1px solid rgba(14, 165, 233, 0.5);">PORTAL RESMI</span>
-        <h3 class="font-weight-bold mb-2 text-white">HRIS & Penggajian</h3>
+        <span class="badge badge-pill badge-info mb-3 px-3 py-1 font-weight-bold" style="letter-spacing: 0.08em; background-color: rgba(14, 165, 233, 0.3); border: 1px solid rgba(14, 165, 233, 0.5);">PEMULIHAN AKUN</span>
+        <h3 class="font-weight-bold mb-2 text-white">Lupa Password?</h3>
         <p class="text-light small opacity-75 mb-0" style="max-width: 320px; line-height: 1.6;">
-          Sistem Manajemen SDM & Penggajian Terpadu Klinik Pratama Dr. H.M. Hidayatullah
+          Verifikasi identitas kepegawaian Anda untuk mengatur ulang kata sandi akun secara aman.
         </p>
       </div>
 
-      <!-- Right Side: Form -->
+      <!-- Right Side: Verification Form -->
       <div class="login-form-container">
         <div class="mb-4">
-          <h2 class="h4 mb-1">Selamat Datang! 👋</h2>
-          <p class="text-muted small mb-0">Silakan masuk menggunakan akun kredensial Anda.</p>
+          <div class="d-inline-flex align-items-center justify-content-center bg-light text-primary rounded-circle mb-2" style="width: 44px; height: 44px;">
+            <i class="fas fa-shield-alt fa-lg text-info"></i>
+          </div>
+          <h2 class="h4 font-weight-bold mb-1 text-gray-900">Verifikasi Identitas</h2>
+          <p class="text-muted small mb-0">Masukkan Username SSO dan NIK terdaftar Anda.</p>
         </div>
         
-        <?php echo $this->session->flashdata('pesan') ?>
+        <?php echo $this->session->flashdata('pesan'); ?>
 
-        <form method="POST" action="<?php echo base_url('login') ?>">
+        <form method="POST" action="<?php echo base_url('lupa_password'); ?>">
           
           <div class="form-group mb-3">
             <label class="font-weight-bold text-gray-700 small mb-1">Username SSO</label>
             <div class="position-relative">
-              <input type="text" class="form-control-modern" name="username" placeholder="Masukkan Username..." required autofocus>
+              <input type="text" class="form-control-modern" name="username" value="<?php echo set_value('username'); ?>" placeholder="Masukkan Username..." required autofocus>
               <i class="fas fa-user input-icon-modern"></i>
             </div>
-            <?php echo form_error('username', '<div class="text-small text-danger mt-1">', '</div>') ?>
+            <?php echo form_error('username', '<div class="text-small text-danger mt-1">', '</div>'); ?>
           </div>
 
           <div class="form-group mb-4">
-            <div class="d-flex justify-content-between align-items-center mb-1">
-              <label class="font-weight-bold text-gray-700 small mb-0">Password</label>
-              <a href="<?php echo base_url('lupa_password'); ?>" class="text-primary small font-weight-bold" style="text-decoration: none; transition: color 0.2s;">
-                Lupa Password?
-              </a>
-            </div>
+            <label class="font-weight-bold text-gray-700 small mb-1">Nomor Induk Kependudukan (NIK)</label>
             <div class="position-relative">
-              <input type="password" class="form-control-modern" name="password" id="password" placeholder="Masukkan Password..." required>
-              <i class="fas fa-eye input-icon-modern clickable" id="togglePassword" title="Tampilkan Password"></i>
+              <input type="text" class="form-control-modern" name="nik" value="<?php echo set_value('nik'); ?>" placeholder="Masukkan 6-16 digit NIK..." required>
+              <i class="fas fa-id-card input-icon-modern"></i>
             </div>
-            <?php echo form_error('password', '<div class="text-small text-danger mt-1">', '</div>') ?>
+            <?php echo form_error('nik', '<div class="text-small text-danger mt-1">', '</div>'); ?>
           </div>
           
           <!-- reCAPTCHA Widget -->
@@ -216,15 +202,19 @@
             <div class="g-recaptcha" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"></div>
           </div>
           
-          <button type="submit" class="btn btn-login-modern btn-block">
-            MASUK KE SISTEM <i class="fas fa-arrow-right ml-2"></i>
+          <button type="submit" class="btn btn-action-modern btn-block py-3">
+            VERIFIKASI IDENTITAS <i class="fas fa-arrow-right ml-2"></i>
           </button>
+
+          <a href="<?php echo base_url('login'); ?>" class="btn btn-light btn-block border py-2 mt-3 font-weight-bold text-gray-700" style="border-radius: 12px;">
+            <i class="fas fa-arrow-left mr-2"></i> Kembali ke Halaman Login
+          </a>
         
           <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
         </form>
 
         <div class="text-center mt-4 pt-2 border-top">
-          <small class="text-muted">© <?php echo date('Y') ?> Klinik Pratama Dr. H.M. Hidayatullah</small>
+          <small class="text-muted">© <?php echo date('Y'); ?> Klinik Pratama Dr. H.M. Hidayatullah</small>
         </div>
       </div>
 
@@ -234,34 +224,23 @@
   <!-- Scripts -->
   <script src="<?php echo base_url(); ?>assets/vendor/jquery/jquery.min.js"></script>
   <script src="<?php echo base_url(); ?>assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  
-  <!-- Particles.js -->
   <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-  
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.17.2/dist/sweetalert2.all.min.js"></script>
+
   <script>
-    // Initialize Particles.js
     if (document.getElementById('particles-js')) {
       particlesJS('particles-js', {
         "particles": {
-          "number": {
-            "value": 50,
-            "density": { "enable": true, "value_area": 800 }
-          },
+          "number": { "value": 45, "density": { "enable": true, "value_area": 800 } },
           "color": { "value": "#ffffff" },
           "shape": { "type": "circle" },
-          "opacity": {
-            "value": 0.4,
-            "random": true
-          },
-          "size": {
-            "value": 3,
-            "random": true
-          },
+          "opacity": { "value": 0.4, "random": true },
+          "size": { "value": 3, "random": true },
           "line_linked": {
             "enable": true,
-            "distance": 140,
+            "distance": 150,
             "color": "#ffffff",
-            "opacity": 0.3,
+            "opacity": 0.2,
             "width": 1
           },
           "move": {
@@ -270,38 +249,15 @@
             "direction": "none",
             "random": true,
             "straight": false,
-            "out_mode": "out"
+            "out_mode": "out",
+            "bounce": false
           }
         },
         "interactivity": {
           "detect_on": "canvas",
-          "events": {
-            "onhover": { "enable": true, "mode": "grab" },
-            "onclick": { "enable": true, "mode": "push" },
-            "resize": true
-          },
-          "modes": {
-            "grab": { "distance": 130, "line_linked": { "opacity": 0.8 } }
-          }
+          "events": { "onhover": { "enable": false }, "onclick": { "enable": false }, "resize": true }
         },
         "retina_detect": true
-      });
-    }
-
-    // Password Toggle Logic
-    const togglePassword = document.querySelector('#togglePassword');
-    const password = document.querySelector('#password');
-
-    if (togglePassword && password) {
-      togglePassword.addEventListener('click', function (e) {
-        const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
-        password.setAttribute('type', type);
-        this.classList.toggle('fa-eye-slash');
-        if (type === 'text') {
-          this.setAttribute('title', 'Sembunyikan Password');
-        } else {
-          this.setAttribute('title', 'Tampilkan Password');
-        }
       });
     }
   </script>

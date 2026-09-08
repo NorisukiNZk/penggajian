@@ -2,6 +2,12 @@
 <html lang="id">
 
 <head>
+  <script>
+    // Gapless Dark Mode Pre-render Detection (Mencegah flash putih / FOUC)
+    if (localStorage.getItem('darkMode') === 'enabled') {
+      document.documentElement.classList.add('dark-mode');
+    }
+  </script>
 
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -21,6 +27,9 @@
 
   <!-- Modern DataTables 2.x CSS -->
   <link rel="stylesheet" href="https://cdn.datatables.net/2.2.2/css/dataTables.dataTables.min.css">
+
+  <!-- Animate.css for Modern SweetAlert2 & Micro-interactions -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
 
   <!-- Base Grid & Theme Layout Stylesheet -->
   <link href="<?php echo base_url(); ?>assets/css/sb-admin-2.min.css" rel="stylesheet">
@@ -462,71 +471,267 @@
       letter-spacing: 2px;
     }
 
-    /* Dark Mode */
+    /* =========================================================
+       SEAMLESS & GAPLESS DARK MODE TRANSITIONS ENGINE
+       ========================================================= */
+    /* View Transitions API Tuning for Seamless Morph */
+    ::view-transition-old(root),
+    ::view-transition-new(root) {
+      animation-duration: 0.35s;
+      animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Fallback Smooth Transition when toggling themes */
+    html.theme-transitioning,
+    html.theme-transitioning *,
+    html.theme-transitioning *:before,
+    html.theme-transitioning *:after {
+      transition: background-color 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                  border-color 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                  color 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                  box-shadow 0.35s cubic-bezier(0.4, 0, 0.2, 1) !important;
+      transition-delay: 0s !important;
+    }
+
+    /* Dark Mode Toggle Micro-Interaction */
+    #darkModeToggle {
+      transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #darkModeToggle:hover {
+      transform: scale(1.18);
+    }
+    #darkModeIcon {
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.3s ease;
+    }
+
+    /* Dark Mode Core Styles (Gapless with html.dark-mode selector) */
+    html.dark-mode,
+    html.dark-mode body,
     body.dark-mode {
       background-color: #0b1120 !important;
       color: #f1f5f9 !important;
     }
-    body.dark-mode #content-wrapper, body.dark-mode #wrapper {
+    html.dark-mode #content-wrapper,
+    html.dark-mode #wrapper,
+    body.dark-mode #content-wrapper,
+    body.dark-mode #wrapper {
       background-color: #0b1120 !important;
     }
+    html.dark-mode .card,
     body.dark-mode .card {
       background-color: #1e293b !important;
       border-color: #334155 !important;
       box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.3) !important;
     }
+    html.dark-mode .card-header,
     body.dark-mode .card-header {
       border-bottom-color: #334155 !important;
     }
-    body.dark-mode .text-gray-800, body.dark-mode h1, body.dark-mode h2, body.dark-mode h3, body.dark-mode h4, body.dark-mode h5, body.dark-mode h6 {
+    html.dark-mode .text-gray-800,
+    body.dark-mode .text-gray-800,
+    html.dark-mode h1, body.dark-mode h1,
+    html.dark-mode h2, body.dark-mode h2,
+    html.dark-mode h3, body.dark-mode h3,
+    html.dark-mode h4, body.dark-mode h4,
+    html.dark-mode h5, body.dark-mode h5,
+    html.dark-mode h6, body.dark-mode h6 {
       color: #f8fafc !important;
     }
-    body.dark-mode .text-gray-600, body.dark-mode .text-gray-500, body.dark-mode .text-muted {
+    html.dark-mode .text-gray-600, body.dark-mode .text-gray-600,
+    html.dark-mode .text-gray-500, body.dark-mode .text-gray-500,
+    html.dark-mode .text-muted, body.dark-mode .text-muted {
       color: #94a3b8 !important;
     }
+    html.dark-mode .table thead th,
     body.dark-mode .table thead th {
       background-color: #1e293b !important;
       color: #cbd5e1 !important;
       border-bottom-color: #334155 !important;
     }
+    html.dark-mode .table td,
     body.dark-mode .table td {
       border-color: #334155 !important;
       color: #e2e8f0 !important;
     }
+    html.dark-mode .table tbody tr:hover,
     body.dark-mode .table tbody tr:hover {
       background-color: #1e293b !important;
     }
+    html.dark-mode .form-control,
     body.dark-mode .form-control {
       background-color: #1e293b !important;
       border-color: #475569 !important;
       color: #f8fafc !important;
     }
+    html.dark-mode .sidebar .collapse .collapse-inner,
     body.dark-mode .sidebar .collapse .collapse-inner {
       background-color: #1e293b !important;
       border: 1px solid #334155 !important;
     }
+    html.dark-mode .sidebar .collapse-item,
     body.dark-mode .sidebar .collapse-item {
       color: #cbd5e1 !important;
     }
+    html.dark-mode .sidebar .collapse-item:hover,
     body.dark-mode .sidebar .collapse-item:hover {
       background-color: #334155 !important;
       color: #ffffff !important;
     }
+    html.dark-mode .dropdown-menu,
     body.dark-mode .dropdown-menu {
       background-color: #1e293b !important;
       border-color: #334155 !important;
     }
+    html.dark-mode .dropdown-item,
     body.dark-mode .dropdown-item {
       color: #e2e8f0 !important;
     }
+    html.dark-mode .dropdown-item:hover,
     body.dark-mode .dropdown-item:hover {
       background-color: #334155 !important;
       color: #ffffff !important;
     }
+    html.dark-mode .modal-content,
     body.dark-mode .modal-content {
       background-color: #1e293b !important;
       color: #f8fafc !important;
       border-color: #334155 !important;
+    }
+    html.dark-mode .footer,
+    body.dark-mode .footer,
+    html.dark-mode footer.sticky-footer,
+    body.dark-mode footer.sticky-footer {
+      background-color: #0b1120 !important;
+      color: #94a3b8 !important;
+      border-top: 1px solid #1e293b !important;
+    }
+    html.dark-mode footer.sticky-footer span,
+    body.dark-mode footer.sticky-footer span {
+      color: #94a3b8 !important;
+    }
+
+    /* =========================================================
+       MODERN SWEETALERT2 DESIGN SYSTEM
+       ========================================================= */
+    .swal2-container {
+      font-family: var(--font-main) !important;
+    }
+
+    /* Efek glass blur HANYA diterapkan pada backdrop modal dialog/konfirmasi (bukan toast) */
+    body:not(.swal2-toast-shown) .swal2-container.swal2-backdrop-show,
+    .swal2-container.swal2-backdrop-show:not(:has(.swal2-toast)) {
+      backdrop-filter: blur(6px) !important;
+      -webkit-backdrop-filter: blur(6px) !important;
+    }
+
+    /* Mencegah efek blur menutupi layar dari atas-bawah saat toast notification muncul */
+    body.swal2-toast-shown .swal2-container,
+    .swal2-container:has(.swal2-toast) {
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+      height: auto !important;
+      min-height: 0 !important;
+      pointer-events: none !important;
+    }
+
+    .swal2-popup {
+      border-radius: 22px !important;
+      padding: 2.2rem 1.8rem !important;
+      box-shadow: 0 25px 60px -12px rgba(15, 23, 42, 0.28) !important;
+      border: 1px solid rgba(226, 232, 240, 0.9) !important;
+      background: #ffffff !important;
+    }
+    .swal2-title {
+      font-family: var(--font-main) !important;
+      font-size: 1.35rem !important;
+      font-weight: 700 !important;
+      color: #0f172a !important;
+      letter-spacing: -0.02em !important;
+      padding-top: 0.5rem !important;
+    }
+    .swal2-html-container {
+      font-family: var(--font-main) !important;
+      font-size: 0.95rem !important;
+      color: #64748b !important;
+      line-height: 1.6 !important;
+      margin: 1rem 0 0 0 !important;
+    }
+    .swal2-icon {
+      border-width: 3.5px !important;
+      margin: 1rem auto 1.25rem !important;
+      transform: scale(1.1);
+    }
+    .swal2-actions {
+      gap: 0.75rem !important;
+      margin-top: 1.75rem !important;
+    }
+    .swal2-actions button {
+      border-radius: 12px !important;
+      font-weight: 600 !important;
+      padding: 0.65rem 1.45rem !important;
+      font-size: 0.885rem !important;
+      align-items: center;
+      gap: 0.45rem;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    }
+    .swal2-actions .swal2-confirm,
+    .swal2-actions .swal2-cancel {
+      display: inline-flex !important;
+    }
+    .swal2-actions .swal2-deny {
+      display: none !important;
+    }
+    .swal2-actions button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px -3px rgba(15, 23, 42, 0.2);
+    }
+    
+    /* Modern Crisp Toast Notification (Bebas Efek Blur Menutupi Layar) */
+    .swal2-toast {
+      border-radius: 14px !important;
+      padding: 0.85rem 1.25rem !important;
+      box-shadow: 0 16px 36px -4px rgba(15, 23, 42, 0.18), 0 6px 14px -2px rgba(15, 23, 42, 0.08) !important;
+      border: 1px solid rgba(226, 232, 240, 0.9) !important;
+      background: #ffffff !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+      pointer-events: all !important;
+    }
+    .swal2-toast .swal2-title {
+      font-size: 0.925rem !important;
+      font-weight: 600 !important;
+      color: #0f172a !important;
+      padding: 0 !important;
+    }
+    .swal2-timer-progress-bar {
+      background: linear-gradient(90deg, #0ea5e9, #38bdf8) !important;
+      height: 3px !important;
+    }
+
+    /* Dark Mode SweetAlert2 */
+    body.dark-mode .swal2-popup {
+      background: #1e293b !important;
+      border-color: #334155 !important;
+      box-shadow: 0 25px 60px -12px rgba(0, 0, 0, 0.7) !important;
+    }
+    body.dark-mode .swal2-title {
+      color: #f8fafc !important;
+    }
+    body.dark-mode .swal2-html-container {
+      color: #94a3b8 !important;
+    }
+    body.dark-mode .swal2-toast {
+      background: #1e293b !important;
+      color: #f8fafc !important;
+      border-color: #334155 !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+    }
+    body.dark-mode .swal2-toast .swal2-title {
+      color: #f8fafc !important;
     }
   </style>
 
