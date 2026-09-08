@@ -10,19 +10,20 @@ class Login extends CI_Controller {
 		if($this->form_validation->run()==FALSE) {
 			$this->load->view('login');
 		}else{
-			// --- reCAPTCHA Verification Start ---
+			// --- 1. Verifikasi reCAPTCHA Terlebih Dahulu ---
 			$recaptchaResponse = trim($this->input->post('g-recaptcha-response'));
 			$userIp = $this->input->ip_address();
 			$secretKey = "6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe"; // Google Test Secret Key
 
 			if(empty($recaptchaResponse)) {
 				$this->session->set_flashdata('pesan','<div class="alert alert-danger alert-dismissible fade show" role="alert">
-				<strong>Peringatan!</strong> Silakan centang kotak verifikasi "I\'m not a robot" terlebih dahulu.
+				<strong>Verifikasi reCAPTCHA Diperlukan!</strong> Mohon centang kotak verifikasi reCAPTCHA terlebih dahulu.
 				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 				<span aria-hidden="true">&times;</span>
 				</button>
 				</div>');
 				redirect('login');
+				exit;
 			}
 
 			$url = "https://www.google.com/recaptcha/api/siteverify?secret=".$secretKey."&response=".$recaptchaResponse."&remoteip=".$userIp;
@@ -30,22 +31,25 @@ class Login extends CI_Controller {
 			$ch = curl_init(); 
 			curl_setopt($ch, CURLOPT_URL, $url); 
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
+			curl_setopt($ch, CURLOPT_TIMEOUT, 10);
 			$output = curl_exec($ch); 
 			curl_close($ch);      
 			
 			$status = json_decode($output, true);
 			
-			if(!$status['success']) {
+			if(!$status || empty($status['success'])) {
 				$this->session->set_flashdata('pesan','<div class="alert alert-danger alert-dismissible fade show" role="alert">
-				<strong>Verifikasi Captcha Gagal!</strong> Terdeteksi sebagai aktivitas tidak sah (Bot).
+				<strong>Verifikasi Captcha Gagal!</strong> Mohon centang ulang kotak verifikasi reCAPTCHA Anda.
 				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 				<span aria-hidden="true">&times;</span>
 				</button>
 				</div>');
 				redirect('login');
+				exit;
 			}
 			// --- reCAPTCHA Verification End ---
 
+			// --- 2. Jika reCAPTCHA Lolos, Baru Verifikasi Username & Password ---
 			$username = $this->input->post('username');
 			$password = $this->input->post('password');
 
@@ -55,12 +59,13 @@ class Login extends CI_Controller {
 			if($cek == FALSE || !password_verify($password, $cek->password))
 			{	
 				$this->session->set_flashdata('pesan','<div class="alert alert-danger alert-dismissible fade show" role="alert">
-				<strong>Username atau Password Salah!</strong>
+				<i class="fas fa-circle-xmark mr-1"></i> <strong>Username atau Password Salah!</strong> Mohon periksa kembali username dan password Anda.
 				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 				<span aria-hidden="true">&times;</span>
 				</button>
 				</div>');
 				redirect('login');
+				exit;
 			}else{
 				$this->session->set_userdata('hak_akses',$cek->hak_akses);
 				$this->session->set_userdata('nama_pegawai',$cek->nama_pegawai);

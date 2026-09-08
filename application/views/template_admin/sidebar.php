@@ -60,6 +60,7 @@
             <h6 class="collapse-header">Absensi:</h6>
             <a class="collapse-item" href="<?php echo base_url('admin/absensi_harian') ?>">Monitoring Hari Ini</a>
             <a class="collapse-item" href="<?php echo base_url('admin/data_cuti') ?>">Pengajuan Cuti/Izin</a>
+            <a class="collapse-item" href="<?php echo base_url('admin/data_cuti/setting') ?>">Setting Kuota Cuti</a>
             <a class="collapse-item" href="<?php echo base_url('admin/absensi_harian/rekap') ?>">Rekap Absensi</a>
             <a class="collapse-item" href="<?php echo base_url('admin/absensi_harian/setting') ?>">Setting Absensi</a>
             <a class="collapse-item" href="<?php echo base_url('admin/data_absensi') ?>">Data Absensi (Lama)</a>

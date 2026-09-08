@@ -324,12 +324,115 @@
 </div>
 <!-- /.container-fluid -->
 
-<!-- SweetAlert2 Interactive Modals Script for Admin Pinjaman -->
+<!-- Modal Setujui Pinjaman (Bootstrap 4 Native) -->
+<div class="modal fade" id="modalApprovePinjaman" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content border-0 shadow-lg" style="border-radius: 16px;">
+      <div class="modal-header bg-success text-white py-3" style="border-radius: 16px 16px 0 0;">
+        <h5 class="modal-title font-weight-bold" style="font-size: 1.1rem;">
+          <i class="fas fa-check-circle mr-2"></i>Setujui Pengajuan Kasbon / Pinjaman
+        </h5>
+        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form id="formApprovePinjaman" method="POST" action="">
+        <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
+        
+        <div class="modal-body p-4">
+          <div class="alert alert-info py-2 px-3 mb-3 small" style="border-radius: 10px;">
+            <i class="fas fa-info-circle mr-1"></i> Pemotongan cicilan akan otomatis disuntikkan ke slip gaji bulanan pegawai saat payroll diproses.
+          </div>
+
+          <div class="p-3 mb-3 rounded bg-light border">
+            <div class="mb-2">
+              <span class="text-muted small d-block">Pegawai Pemohon:</span>
+              <strong class="text-dark h6 mb-0" id="app_nama"></strong>
+            </div>
+            <div class="row small">
+              <div class="col-6 mb-1">
+                <span class="text-muted">Nominal Pinjaman:</span>
+                <div class="font-weight-bold text-primary" id="app_nominal"></div>
+              </div>
+              <div class="col-6 mb-1">
+                <span class="text-muted">Tenor:</span>
+                <div class="font-weight-bold text-dark" id="app_tenor"></div>
+              </div>
+              <div class="col-6">
+                <span class="text-muted">Cicilan per Bulan:</span>
+                <div class="font-weight-bold text-danger" id="app_cicilan"></div>
+              </div>
+              <div class="col-6">
+                <span class="text-muted">Beban Anggaran (DSR):</span>
+                <div class="font-weight-bold text-dark" id="app_dsr"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group mb-0">
+            <label class="font-weight-bold small text-dark mb-1">
+              Catatan HRD / Pimpinan (Opsional):
+            </label>
+            <textarea name="pesan_admin" id="app_pesan" class="form-control" rows="2" placeholder="Misal: Disetujui sesuai plafon operasional."></textarea>
+          </div>
+        </div>
+
+        <div class="modal-footer bg-light py-3">
+          <button type="button" class="btn btn-light border px-3 font-weight-bold" data-dismiss="modal">
+            Batal
+          </button>
+          <button type="submit" class="btn btn-success px-4 font-weight-bold shadow-sm">
+            <i class="fas fa-check mr-1"></i> Ya, Setujui Kasbon
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Tolak Pinjaman (Bootstrap 4 Native) -->
+<div class="modal fade" id="modalRejectPinjaman" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content border-0 shadow-lg" style="border-radius: 16px;">
+      <div class="modal-header bg-danger text-white py-3" style="border-radius: 16px 16px 0 0;">
+        <h5 class="modal-title font-weight-bold" style="font-size: 1.1rem;">
+          <i class="fas fa-ban mr-2"></i>Tolak Pengajuan Kasbon / Pinjaman
+        </h5>
+        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form id="formRejectPinjaman" method="POST" action="">
+        <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
+        
+        <div class="modal-body p-4">
+          <p class="mb-3 text-dark">
+            Anda akan menolak pengajuan pinjaman untuk pegawai: <strong id="rej_nama"></strong>.
+          </p>
+          <div class="form-group mb-0">
+            <label class="font-weight-bold small text-dark mb-1">
+              Alasan Penolakan <span class="text-danger">*</span>:
+            </label>
+            <textarea name="pesan_admin" id="rej_pesan" class="form-control" rows="3" required placeholder="Tuliskan alasan penolakan secara jelas (misal: Rasio cicilan melebihi 30% gaji bersih)..."></textarea>
+          </div>
+        </div>
+
+        <div class="modal-footer bg-light py-3">
+          <button type="button" class="btn btn-light border px-3 font-weight-bold" data-dismiss="modal">
+            Batal
+          </button>
+          <button type="submit" class="btn btn-danger px-4 font-weight-bold shadow-sm">
+            <i class="fas fa-ban mr-1"></i> Tolak Pengajuan
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const isDark = () => document.body.classList.contains('dark-mode');
-
-    // 1. Interactive Approval Dialog with Risk Summary
+    // 1. Approve Dialog Trigger (Bootstrap Modal)
     $(document).on('click', '.btn-approve-pinjaman', function(e) {
         e.preventDefault();
         const id = $(this).data('id');
@@ -339,111 +442,31 @@ document.addEventListener('DOMContentLoaded', function() {
         const cicilan = $(this).data('cicilan');
         const dsr = $(this).data('dsr');
 
-        Swal.fire({
-            title: 'Setujui Pengajuan Kasbon?',
-            html: `
-                <div class="text-left mb-2">
-                    <div class="alert alert-info py-2 px-3 mb-3" style="font-size: 0.88rem; border-radius: 10px;">
-                        <i class="fas fa-info-circle mr-1"></i> Pemotongan cicilan akan otomatis disuntikkan ke slip gaji bulanan pegawai.
-                    </div>
-                    <p class="mb-1 font-weight-bold" style="font-size: 1rem;">Pegawai: ${nama}</p>
-                    <p class="small mb-1 text-muted">Nominal: <strong class="text-primary">${nominal}</strong> &bull; Tenor: <b>${tenor}</b></p>
-                    <p class="small mb-3 text-muted">Cicilan: <strong class="text-danger">${cicilan}</strong> &bull; Beban Gaji: <b>${dsr}</b></p>
-                    <label class="font-weight-bold small mb-1">Catatan HRD / Pimpinan (Opsional):</label>
-                    <textarea id="swal_pesan_admin" class="form-control" rows="2" placeholder="Misal: Disetujui sesuai plafon. Pemotongan cicilan aktif mulai payroll bulan ini."></textarea>
-                </div>
-            `,
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonColor: '#10b981',
-            cancelButtonColor: '#64748b',
-            confirmButtonText: '<i class="fas fa-check mr-1"></i> Ya, Setujui Kasbon',
-            cancelButtonText: '<i class="fas fa-times mr-1"></i> Batal',
-            background: isDark() ? '#1e293b' : '#ffffff',
-            color: isDark() ? '#f8fafc' : '#0f172a',
-            preConfirm: () => {
-                return document.getElementById('swal_pesan_admin').value;
-            }
-        }).then((result) => {
-            if (result.isConfirmed) {
-                const form = document.createElement('form');
-                form.method = 'POST';
-                form.action = '<?php echo base_url("admin/pinjaman/setujui/"); ?>' + id;
+        $('#app_nama').text(nama);
+        $('#app_nominal').text(nominal);
+        $('#app_tenor').text(tenor);
+        $('#app_cicilan').text(cicilan);
+        $('#app_dsr').text(dsr);
+        $('#app_pesan').val('');
 
-                const inputPesan = document.createElement('input');
-                inputPesan.type = 'hidden';
-                inputPesan.name = 'pesan_admin';
-                inputPesan.value = result.value || '';
-                form.appendChild(inputPesan);
-
-                const inputCsrf = document.createElement('input');
-                inputCsrf.type = 'hidden';
-                inputCsrf.name = '<?php echo $this->security->get_csrf_token_name(); ?>';
-                inputCsrf.value = '<?php echo $this->security->get_csrf_hash(); ?>';
-                form.appendChild(inputCsrf);
-
-                document.body.appendChild(form);
-                form.submit();
-            }
-        });
+        document.getElementById('formApprovePinjaman').action = '<?php echo base_url("admin/pinjaman/setujui/"); ?>' + id;
+        $('#modalApprovePinjaman').modal('show');
     });
 
-    // 2. Interactive Rejection Dialog
+    // 2. Reject Dialog Trigger (Bootstrap Modal)
     $(document).on('click', '.btn-reject-pinjaman', function(e) {
         e.preventDefault();
         const id = $(this).data('id');
         const nama = $(this).data('nama');
 
-        Swal.fire({
-            title: 'Tolak Pinjaman Pegawai?',
-            html: `
-                <div class="text-left mb-2">
-                    <p class="mb-2">Anda akan menolak pengajuan pinjaman pegawai: <b>${nama}</b>.</p>
-                    <label class="font-weight-bold small mb-1">Alasan Penolakan <span class="text-danger">*</span>:</label>
-                    <textarea id="swal_alasan_tolak" class="form-control" rows="3" placeholder="Tuliskan alasan penolakan secara jelas (misal: Rasio beban kredit melebihi batas anggaran)..."></textarea>
-                </div>
-            `,
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#ef4444',
-            cancelButtonColor: '#64748b',
-            confirmButtonText: '<i class="fas fa-times mr-1"></i> Ya, Tolak Pengajuan',
-            cancelButtonText: '<i class="fas fa-ban mr-1"></i> Batal',
-            background: isDark() ? '#1e293b' : '#ffffff',
-            color: isDark() ? '#f8fafc' : '#0f172a',
-            preConfirm: () => {
-                const alasan = document.getElementById('swal_alasan_tolak').value;
-                if (!alasan || !alasan.trim()) {
-                    Swal.showValidationMessage('Alasan penolakan wajib diisi!');
-                    return false;
-                }
-                return alasan.trim();
-            }
-        }).then((result) => {
-            if (result.isConfirmed) {
-                const form = document.createElement('form');
-                form.method = 'POST';
-                form.action = '<?php echo base_url("admin/pinjaman/tolak/"); ?>' + id;
+        $('#rej_nama').text(nama);
+        $('#rej_pesan').val('');
 
-                const inputPesan = document.createElement('input');
-                inputPesan.type = 'hidden';
-                inputPesan.name = 'pesan_admin';
-                inputPesan.value = result.value;
-                form.appendChild(inputPesan);
-
-                const inputCsrf = document.createElement('input');
-                inputCsrf.type = 'hidden';
-                inputCsrf.name = '<?php echo $this->security->get_csrf_token_name(); ?>';
-                inputCsrf.value = '<?php echo $this->security->get_csrf_hash(); ?>';
-                form.appendChild(inputCsrf);
-
-                document.body.appendChild(form);
-                form.submit();
-            }
-        });
+        document.getElementById('formRejectPinjaman').action = '<?php echo base_url("admin/pinjaman/tolak/"); ?>' + id;
+        $('#modalRejectPinjaman').modal('show');
     });
 
-    // 3. Interactive Mark as Paid (Lunas)
+    // 3. Mark as Paid (Lunas) - Clean Confirmation
     $(document).on('click', '.btn-lunas-pinjaman', function(e) {
         e.preventDefault();
         const href = $(this).attr('href');
@@ -451,15 +474,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
         Swal.fire({
             title: 'Tandai Pinjaman Lunas?',
-            html: `Apakah Anda yakin ingin menandai pinjaman pegawai <strong>${nama}</strong> telah <strong>LUNAS PENUH</strong>? Tindakan ini akan menghentikan pemotongan otomatis pada payroll berikutnya.`,
+            text: 'Apakah Anda yakin ingin menandai pinjaman pegawai ' + nama + ' telah LUNAS? Pemotongan cicilan pada payroll akan dihentikan.',
             icon: 'question',
             showCancelButton: true,
-            confirmButtonColor: '#6366f1',
-            cancelButtonColor: '#64748b',
-            confirmButtonText: '<i class="fas fa-check-double mr-1"></i> Ya, Tandai Lunas',
-            cancelButtonText: '<i class="fas fa-times mr-1"></i> Batal',
-            background: isDark() ? '#1e293b' : '#ffffff',
-            color: isDark() ? '#f8fafc' : '#0f172a'
+            confirmButtonColor: '#0c2b4d',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Ya, Tandai Lunas',
+            cancelButtonText: 'Batal',
+            reverseButtons: true
         }).then((result) => {
             if (result.isConfirmed) {
                 window.location.href = href;

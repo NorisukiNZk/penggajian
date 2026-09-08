@@ -144,140 +144,32 @@ $(document).ready(function() {
         return document.body.classList.contains('dark-mode');
     }
 
-    // Modern Toast Mixin with Animate.css
-    const Toast = Swal.mixin({
-      toast: true,
-      position: 'top-end',
-      showConfirmButton: false,
-      timer: 3500,
-      timerProgressBar: true,
-      showClass: {
-        popup: 'animate__animated animate__fadeInDown animate__faster'
-      },
-      hideClass: {
-        popup: 'animate__animated animate__fadeOutUp animate__faster'
-      },
-      didOpen: (toast) => {
-        toast.addEventListener('mouseenter', Swal.stopTimer);
-        toast.addEventListener('mouseleave', Swal.resumeTimer);
-      }
-    });
-
-    // Welcome Greeting Toast
-    <?php if($this->session->flashdata('welcome_msg')): ?>
-        Toast.fire({
-          icon: 'info',
-          title: '<?php echo $this->session->flashdata("welcome_msg"); ?>',
-          background: isDarkMode() ? '#1e293b' : '#ffffff',
-          color: isDarkMode() ? '#f8fafc' : '#0f172a'
-        });
-    <?php endif; ?>
-
-    // Success Flashdata Interceptor
-    if ($('.alert-success').length > 0) {
-        var msg = $('.alert-success').text().replace('×', '').replace('Berhasil!', '').replace('Sync API Berhasil!', '').trim();
-        if (!msg) msg = "Operasi berhasil diproses!";
-        $('.alert-success').remove();
-        Toast.fire({
-            icon: 'success',
-            title: 'Berhasil!',
-            text: msg,
-            background: isDarkMode() ? '#1e293b' : '#ffffff',
-            color: isDarkMode() ? '#f8fafc' : '#0f172a'
-        });
-    }
-
-    // Danger / Error Flashdata Interceptor
-    if ($('.alert-danger').length > 0) {
-        var msg = $('.alert-danger').text().replace('×', '').replace('Gagal!', '').trim();
-        if (!msg) msg = "Terjadi kesalahan pada sistem!";
-        $('.alert-danger').remove();
-        Toast.fire({
-            icon: 'error',
-            title: 'Oops!',
-            text: msg,
-            background: isDarkMode() ? '#1e293b' : '#ffffff',
-            color: isDarkMode() ? '#f8fafc' : '#0f172a'
-        });
-    }
-
-    // Warning Flashdata Interceptor
-    if ($('.alert-warning').length > 0) {
-        var msg = $('.alert-warning').text().replace('×', '').replace('Peringatan!', '').trim();
-        if (!msg) msg = "Perhatikan data yang Anda masukkan!";
-        $('.alert-warning').remove();
-        Toast.fire({
-            icon: 'warning',
-            title: 'Peringatan!',
-            text: msg,
-            background: isDarkMode() ? '#1e293b' : '#ffffff',
-            color: isDarkMode() ? '#f8fafc' : '#0f172a'
-        });
-    }
-
-    // Info Flashdata Interceptor
-    if ($('.alert-info').length > 0) {
-        var msg = $('.alert-info').text().replace('×', '').trim();
-        $('.alert-info').remove();
-        Toast.fire({
-            icon: 'info',
-            title: 'Informasi',
-            text: msg,
-            background: isDarkMode() ? '#1e293b' : '#ffffff',
-            color: isDarkMode() ? '#f8fafc' : '#0f172a'
-        });
-    }
-
-    // 1. Konfirmasi Hapus Data Modern (SweetAlert2)
+    // =========================================================
+    // BERSIH & TENANG: Konfirmasi Tindakan Kritis (SweetAlert2)
+    // Flashdata alert tetap tampil tenang sebagai Bootstrap Alert asli di halaman
+    // =========================================================
     $(document).on('click', '.btn-hapus', function(e) {
         e.preventDefault();
         const href = $(this).attr('href');
         const nama = $(this).data('nama') || $(this).attr('title') || 'data ini';
 
         Swal.fire({
-            title: 'Hapus Data Ini?',
-            html: `Data <span class="badge badge-light border text-danger font-weight-bold px-2 py-1 mx-1" style="font-size: 0.95em;">${nama}</span> akan dihapus permanen dari sistem dan tidak dapat dipulihkan!`,
+            title: 'Konfirmasi Hapus',
+            text: 'Apakah Anda yakin ingin menghapus ' + nama + '? Tindakan ini tidak dapat dibatalkan.',
             icon: 'warning',
-            iconColor: '#f43f5e',
             showCancelButton: true,
-            showDenyButton: false,
-            confirmButtonText: '<i class="fas fa-trash-can mr-2"></i> Ya, Hapus Sekarang!',
-            cancelButtonText: '<i class="fas fa-xmark mr-2"></i> Batal',
-            customClass: {
-                popup: 'swal2-modern-popup',
-                confirmButton: 'btn btn-danger px-4 py-2 shadow-sm',
-                cancelButton: 'btn btn-light border px-4 py-2 shadow-sm'
-            },
-            buttonsStyling: false,
-            reverseButtons: true,
-            focusCancel: true,
-            background: isDarkMode() ? '#1e293b' : '#ffffff',
-            color: isDarkMode() ? '#f8fafc' : '#0f172a',
-            showClass: {
-                popup: 'animate__animated animate__zoomIn animate__faster'
-            },
-            hideClass: {
-                popup: 'animate__animated animate__zoomOut animate__faster'
-            }
+            confirmButtonColor: '#dc3545',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Ya, Hapus',
+            cancelButtonText: 'Batal',
+            reverseButtons: true
         }).then((result) => {
             if (result.isConfirmed) {
-                Swal.fire({
-                    title: 'Memproses...',
-                    html: 'Sedang menghapus data dari sistem',
-                    allowOutsideClick: false,
-                    showConfirmButton: false,
-                    didOpen: () => {
-                        Swal.showLoading();
-                    },
-                    background: isDarkMode() ? '#1e293b' : '#ffffff',
-                    color: isDarkMode() ? '#f8fafc' : '#0f172a'
-                });
                 document.location.href = href;
             }
         });
     });
 
-    // 2. Konfirmasi Aksi Umum (Presensi / Pengajuan / Konfirmasi)
     $(document).on('click', '.btn-konfirmasi', function(e) {
         e.preventDefault();
         const href = $(this).attr('href');
@@ -285,31 +177,17 @@ $(document).ready(function() {
         const judul = $(this).data('judul') || 'Konfirmasi Tindakan';
         const pesan = $(this).data('pesan') || 'Apakah Anda yakin ingin melanjutkan proses ini?';
         const tipe = $(this).data('tipe') || 'question';
-        const warnaBtn = $(this).data('warna') || '#0284c7';
-        const teksBtn = $(this).data('btn-teks') || '<i class="fas fa-check mr-2"></i> Ya, Lanjutkan!';
 
         Swal.fire({
             title: judul,
-            html: pesan,
+            text: pesan,
             icon: tipe,
             showCancelButton: true,
-            confirmButtonText: teksBtn,
-            cancelButtonText: '<i class="fas fa-xmark mr-2"></i> Batal',
-            customClass: {
-                popup: 'swal2-modern-popup',
-                confirmButton: 'btn btn-primary px-4 py-2 shadow-sm',
-                cancelButton: 'btn btn-light border px-4 py-2 shadow-sm'
-            },
-            buttonsStyling: false,
-            reverseButtons: true,
-            background: isDarkMode() ? '#1e293b' : '#ffffff',
-            color: isDarkMode() ? '#f8fafc' : '#0f172a',
-            showClass: {
-                popup: 'animate__animated animate__fadeInDown animate__faster'
-            },
-            hideClass: {
-                popup: 'animate__animated animate__fadeOutUp animate__faster'
-            }
+            confirmButtonColor: '#0c2b4d',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Ya, Lanjutkan',
+            cancelButtonText: 'Batal',
+            reverseButtons: true
         }).then((result) => {
             if (result.isConfirmed) {
                 if (href) {
@@ -320,36 +198,6 @@ $(document).ready(function() {
             }
         });
     });
-
-    // Global AppAlert Utility
-    window.AppAlert = {
-        toast: (icon, title, text) => Toast.fire({ icon, title, text, background: isDarkMode() ? '#1e293b' : '#ffffff', color: isDarkMode() ? '#f8fafc' : '#0f172a' }),
-        success: (title, text) => window.AppAlert.toast('success', title, text),
-        error: (title, text) => window.AppAlert.toast('error', title, text),
-        warning: (title, text) => window.AppAlert.toast('warning', title, text),
-        info: (title, text) => window.AppAlert.toast('info', title, text),
-        confirm: (title, html, onConfirm) => {
-            Swal.fire({
-                title,
-                html,
-                icon: 'question',
-                showCancelButton: true,
-                confirmButtonText: '<i class="fas fa-check mr-2"></i> Ya',
-                cancelButtonText: '<i class="fas fa-xmark mr-2"></i> Batal',
-                customClass: {
-                    popup: 'swal2-modern-popup',
-                    confirmButton: 'btn btn-primary px-4 py-2 shadow-sm',
-                    cancelButton: 'btn btn-light border px-4 py-2 shadow-sm'
-                },
-                buttonsStyling: false,
-                reverseButtons: true,
-                background: isDarkMode() ? '#1e293b' : '#ffffff',
-                color: isDarkMode() ? '#f8fafc' : '#0f172a'
-            }).then((result) => {
-                if (result.isConfirmed && typeof onConfirm === 'function') onConfirm();
-            });
-        }
-    };
 });
 </script>
 

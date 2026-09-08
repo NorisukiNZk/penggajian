@@ -134,5 +134,109 @@ class ModelPenggajian extends CI_model{
 			'detail' => $detail_cicilan
 		);
 	}
+
+	/**
+	 * Mengambil konfigurasi kuota cuti dari tabel setting_cuti
+	 */
+	public function get_setting_cuti() {
+		$setting = $this->db->get_where('setting_cuti', array('id' => 1))->row();
+		if (!$setting) {
+			return (object) array(
+				'id' => 1,
+				'mode_kuota_cuti' => 'Kombinasi',
+				'kuota_cuti_tahunan' => 12,
+				'kuota_cuti_bulanan' => 5,
+				'keterangan_kebijakan' => 'Kebijakan Standar: Jatah tahunan 12 hari dengan batas maksimal pengambilan 5 hari per bulan kerja.'
+			);
+		}
+		return $setting;
+	}
+
+	/**
+	 * Menghitung saldo cuti pegawai secara dinamis berdasarkan kebijakan aktif
+	 */
+	public function hitung_saldo_cuti($nik, $bulan = null, $tahun = null) {
+		if ($bulan === null) $bulan = date('m');
+		if ($tahun === null) $tahun = date('Y');
+
+		$setting = $this->get_setting_cuti();
+		$mode = $setting->mode_kuota_cuti;
+		$kuota_tahunan = (int)$setting->kuota_cuti_tahunan;
+		$kuota_bulanan = (int)$setting->kuota_cuti_bulanan;
+
+		// 1. Hitung cuti terpakai tahun ini (Januari - Desember)
+		$riwayat_tahun = $this->db->query("
+			SELECT tanggal_mulai, tanggal_akhir 
+			FROM data_cuti 
+			WHERE nik = ? 
+			  AND status_cuti = 'Disetujui' 
+			  AND jenis_cuti = 'Tahunan'
+			  AND YEAR(tanggal_mulai) = ?
+		", array($nik, $tahun))->result();
+
+		$cuti_terpakai_tahun = 0;
+		foreach ($riwayat_tahun as $rc) {
+			$start = new DateTime($rc->tanggal_mulai);
+			$end = new DateTime($rc->tanggal_akhir);
+			$end->modify('+1 day');
+			$cuti_terpakai_tahun += $start->diff($end)->days;
+		}
+
+		// 2. Hitung cuti terpakai bulan ini
+		$riwayat_bulan = $this->db->query("
+			SELECT tanggal_mulai, tanggal_akhir 
+			FROM data_cuti 
+			WHERE nik = ? 
+			  AND status_cuti = 'Disetujui' 
+			  AND jenis_cuti = 'Tahunan'
+			  AND MONTH(tanggal_mulai) = ?
+			  AND YEAR(tanggal_mulai) = ?
+		", array($nik, (int)$bulan, $tahun))->result();
+
+		$cuti_terpakai_bulan = 0;
+		foreach ($riwayat_bulan as $rc) {
+			$start = new DateTime($rc->tanggal_mulai);
+			$end = new DateTime($rc->tanggal_akhir);
+			$end->modify('+1 day');
+			$cuti_terpakai_bulan += $start->diff($end)->days;
+		}
+
+		// 3. Hitung sisa kuota berdasarkan mode yang aktif
+		$sisa_tahunan = max(0, $kuota_tahunan - $cuti_terpakai_tahun);
+		$sisa_bulanan = max(0, $kuota_bulanan - $cuti_terpakai_bulan);
+
+		if ($mode == 'Bulanan') {
+			$kuota_total_tampil = $kuota_bulanan;
+			$terpakai_tampil    = $cuti_terpakai_bulan;
+			$sisa_tampil        = $sisa_bulanan;
+			$label_periode      = 'Bulan Ini (' . date('M Y', strtotime("$tahun-$bulan-01")) . ')';
+		} elseif ($mode == 'Tahunan') {
+			$kuota_total_tampil = $kuota_tahunan;
+			$terpakai_tampil    = $cuti_terpakai_tahun;
+			$sisa_tampil        = $sisa_tahunan;
+			$label_periode      = 'Tahun ' . $tahun;
+		} else { // Kombinasi
+			$kuota_total_tampil = $kuota_tahunan;
+			$terpakai_tampil    = $cuti_terpakai_tahun;
+			$sisa_tampil        = min($sisa_tahunan, $sisa_bulanan);
+			$label_periode      = 'Tahun ' . $tahun . ' (Maks. ' . $kuota_bulanan . ' hr/bln)';
+		}
+
+		return array(
+			'setting'               => $setting,
+			'mode'                  => $mode,
+			'kuota_tahunan'         => $kuota_tahunan,
+			'kuota_bulanan'         => $kuota_bulanan,
+			'cuti_terpakai_tahun'   => $cuti_terpakai_tahun,
+			'cuti_terpakai_bulan'   => $cuti_terpakai_bulan,
+			'sisa_tahunan'          => $sisa_tahunan,
+			'sisa_bulanan'          => $sisa_bulanan,
+			'kuota_total_tampil'    => $kuota_total_tampil,
+			'terpakai_tampil'       => $terpakai_tampil,
+			'sisa_tampil'           => $sisa_tampil,
+			'label_periode'         => $label_periode,
+			'keterangan_kebijakan'  => $setting->keterangan_kebijakan
+		);
+	}
 }
 ?>
