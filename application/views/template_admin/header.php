@@ -677,6 +677,291 @@
     body.dark-mode .swal2-html-container {
       color: #94a3b8 !important;
     }
+
+    /* Modern SweetAlert2 Logout Dialog */
+    .swal2-logout-popup {
+      border-radius: 20px !important;
+      padding: 2rem 1.75rem 1.75rem !important;
+      border: 1px solid #e2e8f0 !important;
+      box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.25) !important;
+    }
+    .logout-badge-circle {
+      width: 68px;
+      height: 68px;
+      margin: 0 auto 1.25rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.75rem;
+      background: rgba(239, 68, 68, 0.1);
+      color: #ef4444;
+      border: 4px solid rgba(239, 68, 68, 0.08);
+      box-shadow: 0 4px 14px rgba(239, 68, 68, 0.15);
+      transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .logout-badge-circle:hover {
+      transform: scale(1.06);
+    }
+    .logout-info-box {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 0.75rem 1rem;
+      font-size: 0.825rem;
+      color: #64748b;
+      text-align: left;
+      margin-top: 1rem;
+      display: flex;
+      align-items: center;
+      line-height: 1.45;
+    }
+    .swal2-logout-actions {
+      gap: 0.75rem !important;
+      margin-top: 1.5rem !important;
+      width: 100% !important;
+      justify-content: center !important;
+    }
+    .swal2-logout-actions .btn {
+      min-width: 130px;
+      border-radius: 10px !important;
+      font-size: 0.9rem !important;
+      padding: 0.6rem 1.25rem !important;
+      transition: all 0.2s ease !important;
+    }
+    .swal2-logout-actions .btn:hover {
+      transform: translateY(-1px);
+    }
+
+    /* Dark Mode SweetAlert2 Logout */
+    body.dark-mode .swal2-logout-popup {
+      border-color: #334155 !important;
+      background: #1e293b !important;
+    }
+    body.dark-mode .logout-badge-circle {
+      background: rgba(239, 68, 68, 0.2);
+      color: #f87171;
+      border-color: rgba(239, 68, 68, 0.25);
+    }
+    body.dark-mode .logout-info-box {
+      background: #0f172a;
+      border-color: #334155;
+      color: #94a3b8;
+    }
+    body.dark-mode .swal2-logout-actions .btn-light {
+      background: #334155 !important;
+      border-color: #475569 !important;
+      color: #f1f5f9 !important;
+    }
+
+    /* SweetAlert2 Success Checkmark Mask Bugfix */
+    .swal2-icon.swal2-success .swal2-success-circular-line-left,
+    .swal2-icon.swal2-success .swal2-success-circular-line-right,
+    .swal2-icon.swal2-success .swal2-success-fix {
+      background: transparent !important;
+    }
+    body.dark-mode .swal2-icon.swal2-success .swal2-success-circular-line-left,
+    body.dark-mode .swal2-icon.swal2-success .swal2-success-circular-line-right,
+    body.dark-mode .swal2-icon.swal2-success .swal2-success-fix {
+      background: transparent !important;
+    }
+
+    /* Smooth Logout Loading Spinner */
+    .logout-loading-content {
+      padding: 0.5rem 0.25rem !important;
+    }
+    .logout-spinner-container {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .logout-spinner-container .spinner-border {
+      border-color: #ef4444;
+      border-right-color: transparent;
+      animation: spinner-border 0.65s linear infinite;
+    }
+
+    /* =========================================================
+       MODERN TOPBAR & NAVBAR DROPDOWN MENUS
+       ========================================================= */
+    .topbar-user-trigger {
+      display: flex;
+      align-items: center;
+      padding: 0.35rem 0.75rem !important;
+      border-radius: 9999px;
+      transition: background 0.2s ease, transform 0.2s ease;
+      text-decoration: none !important;
+    }
+    .topbar-user-trigger:hover {
+      background: rgba(255, 255, 255, 0.12);
+      transform: translateY(-1px);
+    }
+    .topbar-avatar-wrapper {
+      position: relative;
+      display: inline-block;
+    }
+    .topbar-avatar-img {
+      width: 40px;
+      height: 40px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 2px solid rgba(255, 255, 255, 0.85);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    }
+    .online-indicator-dot {
+      position: absolute;
+      bottom: 1px;
+      right: 1px;
+      width: 10px;
+      height: 10px;
+      background-color: #10b981;
+      border: 2px solid #ffffff;
+      border-radius: 50%;
+      box-shadow: 0 0 4px rgba(16, 185, 129, 0.5);
+    }
+
+    /* User Profile Dropdown Card */
+    .topbar-dropdown-menu {
+      border-radius: 18px !important;
+      border: 1px solid #e2e8f0 !important;
+      box-shadow: 0 20px 45px -10px rgba(15, 23, 42, 0.22) !important;
+      overflow: hidden;
+      min-width: 290px !important;
+      padding: 0 !important;
+      transform-origin: top right;
+      animation: dropdownFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes dropdownFadeIn {
+      from { opacity: 0; transform: scale(0.96) translateY(-8px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .topbar-dropdown-header {
+      background: linear-gradient(135deg, #0c2b4d 0%, #1e4976 100%);
+      padding: 1.5rem 1.25rem 1.25rem;
+      position: relative;
+      text-align: center;
+      color: #ffffff;
+    }
+    .topbar-dropdown-header::before {
+      content: '';
+      position: absolute;
+      top: -30px;
+      right: -30px;
+      width: 100px;
+      height: 100px;
+      background: radial-gradient(circle, rgba(14, 165, 233, 0.25) 0%, rgba(14, 165, 233, 0) 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .header-avatar-circle {
+      position: relative;
+      display: inline-block;
+      margin-bottom: 0.65rem;
+    }
+    .header-avatar-img {
+      width: 68px;
+      height: 68px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 3px solid rgba(255, 255, 255, 0.9);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+    .header-online-badge {
+      position: absolute;
+      bottom: 2px;
+      right: 3px;
+      width: 15px;
+      height: 15px;
+      background: #10b981;
+      border: 2.5px solid #0c2b4d;
+      border-radius: 50%;
+    }
+
+    /* Menu Item Styling */
+    .topbar-dropdown-body {
+      padding: 0.65rem !important;
+      background: #ffffff;
+    }
+    .topbar-dropdown-item {
+      display: flex !important;
+      align-items: center !important;
+      padding: 0.65rem 0.85rem !important;
+      border-radius: 12px !important;
+      margin-bottom: 0.25rem !important;
+      color: #334155 !important;
+      text-decoration: none !important;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    }
+    .topbar-dropdown-item:hover {
+      background-color: #f1f5f9 !important;
+      color: #0f172a !important;
+      transform: translateX(3px);
+    }
+    .topbar-dropdown-item:active {
+      transform: scale(0.98);
+    }
+    .menu-icon-squircle {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.95rem;
+      flex-shrink: 0;
+      margin-right: 0.85rem;
+      transition: transform 0.2s ease;
+    }
+    .topbar-dropdown-item:hover .menu-icon-squircle {
+      transform: scale(1.08);
+    }
+
+    /* Backgrounds for Squircles */
+    .squircle-primary { background: rgba(14, 165, 233, 0.12); color: #0284c7; }
+    .squircle-warning { background: rgba(245, 158, 11, 0.12); color: #d97706; }
+    .squircle-info    { background: rgba(99, 102, 241, 0.12); color: #6366f1; }
+    .squircle-success { background: rgba(16, 185, 129, 0.12); color: #059669; }
+    .squircle-danger  { background: rgba(239, 68, 68, 0.12); color: #dc2626; }
+
+    /* Dropdown Footer Strip */
+    .topbar-dropdown-footer {
+      padding: 0.6rem 1rem;
+      background: #f8fafc;
+      border-top: 1px solid #e2e8f0;
+      font-size: 0.72rem;
+      color: #94a3b8;
+      text-align: center;
+      letter-spacing: 0.02em;
+    }
+
+    /* Dark Mode Topbar Dropdown Overrides */
+    body.dark-mode .topbar-dropdown-menu {
+      background: #1e293b !important;
+      border-color: #334155 !important;
+      box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.5) !important;
+    }
+    body.dark-mode .topbar-dropdown-body {
+      background: #1e293b !important;
+    }
+    body.dark-mode .topbar-dropdown-item {
+      color: #e2e8f0 !important;
+    }
+    body.dark-mode .topbar-dropdown-item:hover {
+      background-color: #334155 !important;
+      color: #ffffff !important;
+    }
+    body.dark-mode .topbar-dropdown-footer {
+      background: #0f172a !important;
+      border-top-color: #334155 !important;
+      color: #64748b !important;
+    }
+    body.dark-mode .squircle-primary { background: rgba(14, 165, 233, 0.2); color: #38bdf8; }
+    body.dark-mode .squircle-warning { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
+    body.dark-mode .squircle-info    { background: rgba(99, 102, 241, 0.2); color: #818cf8; }
+    body.dark-mode .squircle-success { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+    body.dark-mode .squircle-danger  { background: rgba(239, 68, 68, 0.2); color: #f87171; }
   </style>
 
 </head>

@@ -198,6 +198,92 @@ $(document).ready(function() {
             }
         });
     });
+
+    // =========================================================
+    // MODERN SWEETALERT2: Konfirmasi Logout Premium & Profesional
+    // =========================================================
+    $(document).on('click', '.btn-logout-swal, [data-target="#logoutModal"], a[href*="login/logout"]', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        if ($('#logoutModal').length) {
+            $('#logoutModal').modal('hide');
+        }
+
+        const logoutUrl = $(this).attr('href') && $(this).attr('href') !== '#' ? $(this).attr('href') : '<?php echo base_url("login/logout"); ?>';
+        const userName = $(this).data('user') || '<?php echo htmlspecialchars($this->session->userdata("nama_pegawai") ?? "Pegawai"); ?>';
+        const userRole = $(this).data('role') || 'Pegawai';
+        const isDark = typeof isDarkMode === 'function' ? isDarkMode() : document.body.classList.contains('dark-mode');
+
+        Swal.fire({
+            html: `
+                <div class="logout-modal-content">
+                    <div class="logout-badge-circle">
+                        <i class="fas fa-power-off"></i>
+                    </div>
+                    <h4 class="font-weight-bold mb-2 ${isDark ? 'text-white' : 'text-gray-900'}" style="font-size: 1.25rem;">
+                        Konfirmasi Logout
+                    </h4>
+                    <p class="text-muted small mb-2" style="font-size: 0.9rem; line-height: 1.5;">
+                        Halo <strong class="${isDark ? 'text-light' : 'text-dark'}">${userName}</strong>, apakah Anda yakin ingin mengakhiri sesi di <strong>Portal ${userRole}</strong>?
+                    </p>
+                    <div class="logout-info-box">
+                        <i class="fas fa-shield-alt text-primary fa-lg mr-2"></i>
+                        <span class="small">Sesi autentikasi Anda akan diakhiri dengan aman. Pastikan seluruh pengajuan atau data telah tersimpan.</span>
+                    </div>
+                </div>
+            `,
+            showCancelButton: true,
+            confirmButtonText: '<i class="fas fa-sign-out-alt mr-2"></i> Ya, Logout',
+            cancelButtonText: '<i class="fas fa-times mr-2"></i> Tetap di Sini',
+            customClass: {
+                popup: 'swal2-logout-popup shadow-lg',
+                actions: 'swal2-logout-actions',
+                confirmButton: 'btn btn-danger px-4 py-2 font-weight-bold shadow-sm',
+                cancelButton: 'btn btn-light border px-4 py-2 font-weight-bold shadow-sm text-secondary'
+            },
+            buttonsStyling: false,
+            reverseButtons: true,
+            focusCancel: true,
+            width: 440,
+            background: isDark ? '#1e293b' : '#ffffff',
+            color: isDark ? '#f8fafc' : '#0f172a'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    html: `
+                        <div class="logout-loading-content py-3 text-center">
+                            <div class="logout-spinner-container mb-3 position-relative d-inline-block">
+                                <div class="spinner-border text-danger" style="width: 3.5rem; height: 3.5rem; border-width: 3.5px;" role="status">
+                                    <span class="sr-only">Loading...</span>
+                                </div>
+                                <div class="position-absolute" style="top: 50%; left: 50%; transform: translate(-50%, -50%); color: #ef4444; font-size: 1.25rem;">
+                                    <i class="fas fa-power-off"></i>
+                                </div>
+                            </div>
+                            <h5 class="font-weight-bold mb-2 ${isDark ? 'text-white' : 'text-gray-900'}" style="font-size: 1.2rem; letter-spacing: -0.01em;">
+                                Mengakhiri Sesi...
+                            </h5>
+                            <p class="text-muted small mb-0" style="font-size: 0.88rem; line-height: 1.4;">
+                                Membersihkan sesi aman dan mengalihkan ke halaman login...
+                            </p>
+                        </div>
+                    `,
+                    showConfirmButton: false,
+                    allowOutsideClick: false,
+                    showCancelButton: false,
+                    width: 390,
+                    background: isDark ? '#1e293b' : '#ffffff',
+                    color: isDark ? '#f8fafc' : '#0f172a',
+                    customClass: {
+                        popup: 'swal2-logout-popup shadow-lg'
+                    }
+                });
+                setTimeout(function() {
+                    window.location.href = logoutUrl;
+                }, 750);
+            }
+        });
+    });
 });
 </script>
 

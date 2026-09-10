@@ -82,18 +82,23 @@
         </a>
         <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
           <div class="collapse-inner">
+            <a class="collapse-item font-weight-bold text-primary mb-1" href="<?php echo base_url('admin/laporan') ?>" style="background: rgba(14, 165, 233, 0.08); border-radius: 8px;">
+              <i class="fas fa-th-large mr-2 text-primary"></i> Pusat Laporan Terpadu
+            </a>
+            <div class="dropdown-divider my-1"></div>
+
             <h6 class="collapse-header">Laporan Transaksi:</h6>
-            <a class="collapse-item" href="<?php echo base_url('admin/laporan_gaji') ?>">Laporan Gaji Bulanan</a>
-            <a class="collapse-item" href="<?php echo base_url('admin/laporan_absensi') ?>">Laporan Absensi</a>
-            <a class="collapse-item" href="<?php echo base_url('admin/laporan_cuti') ?>">Laporan Cuti Pegawai</a>
-            <a class="collapse-item" href="<?php echo base_url('admin/laporan_lembur') ?>">Laporan Lembur</a>
-            <a class="collapse-item" href="<?php echo base_url('admin/laporan_potongan') ?>">Laporan Potongan Gaji</a>
+            <a class="collapse-item" href="<?php echo base_url('admin/laporan_gaji') ?>"><i class="fas fa-file-invoice-dollar mr-2 text-primary"></i> Gaji Bulanan</a>
+            <a class="collapse-item" href="<?php echo base_url('admin/laporan_absensi') ?>"><i class="fas fa-user-check mr-2 text-info"></i> Presensi / Absensi</a>
+            <a class="collapse-item" href="<?php echo base_url('admin/laporan_cuti') ?>"><i class="fas fa-calendar-minus mr-2 text-warning"></i> Cuti & Izin</a>
+            <a class="collapse-item" href="<?php echo base_url('admin/laporan_lembur') ?>"><i class="fas fa-business-time mr-2 text-secondary"></i> Lembur Karyawan</a>
+            <a class="collapse-item" href="<?php echo base_url('admin/laporan_potongan') ?>"><i class="fas fa-percent mr-2 text-danger"></i> Potongan Gaji</a>
             
-            <h6 class="collapse-header">Laporan Master & Cetak:</h6>
-            <a class="collapse-item" href="<?php echo base_url('admin/laporan_tahunan') ?>">Laporan Gaji Tahunan</a>
-            <a class="collapse-item" href="<?php echo base_url('admin/laporan_pegawai') ?>">Data Master Pegawai</a>
-            <a class="collapse-item" target="_blank" href="<?php echo base_url('admin/data_jabatan/cetak_data_jabatan') ?>">Data Master Jabatan</a>
-            <a class="collapse-item" href="<?php echo base_url('admin/slip_gaji') ?>">Cetak Slip Gaji</a>
+            <h6 class="collapse-header">Laporan Master & Rekap:</h6>
+            <a class="collapse-item" href="<?php echo base_url('admin/laporan_tahunan') ?>"><i class="fas fa-chart-line mr-2 text-success"></i> Gaji Tahunan</a>
+            <a class="collapse-item" href="<?php echo base_url('admin/slip_gaji') ?>"><i class="fas fa-receipt mr-2 text-dark"></i> Cetak Slip Gaji</a>
+            <a class="collapse-item" href="<?php echo base_url('admin/laporan_pegawai') ?>"><i class="fas fa-address-book mr-2 text-primary"></i> Master Pegawai</a>
+            <a class="collapse-item" target="_blank" href="<?php echo base_url('admin/data_jabatan/cetak_data_jabatan') ?>"><i class="fas fa-network-wired mr-2 text-info"></i> Standar Jabatan</a>
           </div>
         </div>
       </li>
@@ -137,70 +142,96 @@
 
             <!-- Nav Item - Alerts -->
             <?php 
-              // Query untuk mengambil jumlah cuti & lembur yang menunggu persetujuan
+              // Query untuk mengambil jumlah cuti, lembur, dan pinjaman yang menunggu persetujuan
               $notif_cuti = $this->db->query("SELECT * FROM data_cuti WHERE status_cuti='Menunggu'")->num_rows();
               $notif_lembur = $this->db->query("SELECT * FROM data_lembur WHERE status='Pending'")->num_rows();
-              $total_notif = $notif_cuti + $notif_lembur;
+              $notif_pinjaman = $this->db->query("SELECT * FROM data_pinjaman WHERE status='Menunggu'")->num_rows();
+              $total_notif = $notif_cuti + $notif_lembur + $notif_pinjaman;
             ?>
             <li class="nav-item dropdown no-arrow mx-1">
               <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <i class="fas fa-bell fa-fw"></i>
-                <!-- Counter - Alerts -->
-                <?php if($total_notif > 0) { ?>
-                  <span class="badge badge-danger badge-counter"><?php echo $total_notif ?></span>
-                <?php } ?>
-              </a>
-              <!-- Dropdown - Alerts -->
-              <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in p-0 border-0" aria-labelledby="alertsDropdown" style="border-radius: 12px; overflow: hidden; min-width: 320px;">
-                <div class="dropdown-header bg-modern-blue text-white d-flex align-items-center justify-content-between" style="padding: 1rem; font-size: 0.9rem; letter-spacing: 1px;">
-                  <span><i class="fas fa-bell mr-2"></i> PUSAT NOTIFIKASI</span>
+                <div class="position-relative">
+                  <i class="fas fa-bell fa-fw text-light" style="font-size: 1.15rem;"></i>
                   <?php if($total_notif > 0) { ?>
-                      <span class="badge badge-danger badge-pill shadow-sm"><?php echo $total_notif ?> Baru</span>
+                    <span class="badge badge-danger badge-counter shadow-sm" style="font-size: 0.68rem; top: -6px; right: -8px; border: 1.5px solid #0c2b4d;"><?php echo $total_notif ?></span>
                   <?php } ?>
                 </div>
-                <div class="p-2">
+              </a>
+              <!-- Modern Dropdown - Alerts -->
+              <div class="dropdown-list dropdown-menu dropdown-menu-right shadow-lg topbar-dropdown-menu animated--grow-in p-0 border-0" aria-labelledby="alertsDropdown" style="min-width: 340px !important;">
+                <div class="topbar-dropdown-header d-flex align-items-center justify-content-between text-left py-3 px-3">
+                  <div>
+                    <h6 class="m-0 font-weight-bold text-white"><i class="fas fa-bell mr-2"></i> PUSAT NOTIFIKASI</h6>
+                    <span class="small text-white-50">Antrean persetujuan staf klinik</span>
+                  </div>
+                  <?php if($total_notif > 0) { ?>
+                    <span class="badge badge-danger px-2 py-1 font-weight-bold shadow-sm"><?php echo $total_notif ?> Menunggu</span>
+                  <?php } else { ?>
+                    <span class="badge badge-success px-2 py-1 font-weight-bold">Semua Beres</span>
+                  <?php } ?>
+                </div>
+
+                <div class="topbar-dropdown-body p-2">
                   <?php if($notif_cuti > 0) { ?>
-                    <a class="dropdown-item d-flex align-items-center py-3 rounded mb-1" href="<?php echo base_url('admin/data_cuti') ?>" style="transition: all 0.2s; background-color: #f8f9fc;">
-                      <div class="mr-3">
-                        <div class="icon-circle bg-warning-light">
-                          <i class="fas fa-file-signature text-warning"></i>
-                        </div>
+                    <a class="topbar-dropdown-item" href="<?php echo base_url('admin/data_cuti') ?>">
+                      <div class="menu-icon-squircle squircle-warning">
+                        <i class="fas fa-calendar-minus"></i>
                       </div>
-                      <div>
-                        <div class="small text-primary font-weight-bold mb-1"><i class="fas fa-calendar-day mr-1"></i> <?php echo date('d M Y') ?></div>
-                        <span class="font-weight-bold text-gray-800 d-block" style="font-size: 0.95rem;">Pengajuan Cuti / Izin</span>
-                        <span class="small text-muted"><?php echo $notif_cuti ?> pengajuan menunggu persetujuan Anda.</span>
+                      <div class="flex-grow-1">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                          <span class="font-weight-bold item-title" style="font-size: 0.88rem;">Permohonan Cuti & Izin</span>
+                          <span class="badge badge-warning px-2 font-weight-bold"><?php echo $notif_cuti ?> Baru</span>
+                        </div>
+                        <div class="small text-muted" style="font-size: 0.74rem;">Staf klinik mengajukan cuti / izin kerja.</div>
                       </div>
                     </a>
                   <?php } ?>
 
                   <?php if($notif_lembur > 0) { ?>
-                    <a class="dropdown-item d-flex align-items-center py-3 rounded mb-1" href="<?php echo base_url('admin/data_lembur') ?>" style="transition: all 0.2s; background-color: #f8f9fc;">
-                      <div class="mr-3">
-                        <div class="icon-circle bg-info-light" style="background-color: rgba(54, 185, 204, 0.1); width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
-                          <i class="fas fa-clock text-info"></i>
-                        </div>
+                    <a class="topbar-dropdown-item" href="<?php echo base_url('admin/data_lembur') ?>">
+                      <div class="menu-icon-squircle squircle-info">
+                        <i class="fas fa-business-time"></i>
                       </div>
-                      <div>
-                        <div class="small text-primary font-weight-bold mb-1"><i class="fas fa-calendar-day mr-1"></i> <?php echo date('d M Y') ?></div>
-                        <span class="font-weight-bold text-gray-800 d-block" style="font-size: 0.95rem;">Pengajuan Lembur</span>
-                        <span class="small text-muted"><?php echo $notif_lembur ?> pengajuan lembur menunggu di-approve.</span>
+                      <div class="flex-grow-1">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                          <span class="font-weight-bold item-title" style="font-size: 0.88rem;">Pengajuan Lembur</span>
+                          <span class="badge badge-info px-2 font-weight-bold"><?php echo $notif_lembur ?> Baru</span>
+                        </div>
+                        <div class="small text-muted" style="font-size: 0.74rem;">Pengajuan jam lembur menunggu verifikasi.</div>
+                      </div>
+                    </a>
+                  <?php } ?>
+
+                  <?php if($notif_pinjaman > 0) { ?>
+                    <a class="topbar-dropdown-item" href="<?php echo base_url('admin/pinjaman') ?>">
+                      <div class="menu-icon-squircle squircle-success">
+                        <i class="fas fa-hand-holding-usd"></i>
+                      </div>
+                      <div class="flex-grow-1">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                          <span class="font-weight-bold item-title" style="font-size: 0.88rem;">Pengajuan Pinjaman</span>
+                          <span class="badge badge-success px-2 font-weight-bold"><?php echo $notif_pinjaman ?> Baru</span>
+                        </div>
+                        <div class="small text-muted" style="font-size: 0.74rem;">Kasbon pegawai menunggu persetujuan HRD.</div>
                       </div>
                     </a>
                   <?php } ?>
 
                   <?php if($total_notif == 0) { ?>
-                    <div class="text-center py-4">
-                      <div class="icon-circle bg-light mx-auto mb-3" style="width: 60px; height: 60px;">
-                        <i class="fas fa-check-circle text-success" style="font-size: 2rem;"></i>
+                    <div class="text-center py-4 px-3">
+                      <div class="menu-icon-squircle squircle-success mx-auto mb-2" style="width: 48px; height: 48px; font-size: 1.4rem;">
+                        <i class="fas fa-check-circle"></i>
                       </div>
-                      <span class="text-gray-500 font-weight-bold d-block">Semua Terkendali!</span>
-                      <span class="small text-muted">Tidak ada notifikasi baru saat ini.</span>
+                      <h6 class="font-weight-bold text-gray-800 mb-1" style="font-size: 0.92rem;">Semua Terkendali!</h6>
+                      <p class="small text-muted mb-0">Tidak ada antrean yang menunggu persetujuan.</p>
                     </div>
                   <?php } ?>
                 </div>
-                <div class="dropdown-divider my-0"></div>
-                <a class="dropdown-item text-center small text-primary font-weight-bold py-3" href="javascript:void(0);" style="border-radius: 0 0 12px 12px; cursor: pointer;">Tutup Panel <i class="fas fa-times ml-1"></i></a>
+
+                <div class="topbar-dropdown-footer d-flex justify-content-between align-items-center px-3 py-2">
+                  <a href="<?php echo base_url('admin/data_cuti') ?>" class="text-primary font-weight-bold small text-decoration-none"><i class="fas fa-tasks mr-1"></i> Buka Antrean HRD</a>
+                  <span class="small text-muted"><?php echo date('d M Y'); ?></span>
+                </div>
               </div>
             </li>
 
@@ -208,39 +239,82 @@
 
             <!-- Nav Item - User Information -->
             <li class="nav-item dropdown no-arrow">
-              <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span class="mr-2 d-none d-lg-inline text-light small font-weight-bold"><?php echo $this->session->userdata('nama_pegawai')?></span>
-                <img class="img-profile rounded-circle" src="<?php echo base_url('photo/').$this->session->userdata('photo') ?>">
+              <a class="nav-link dropdown-toggle topbar-user-trigger" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <div class="topbar-avatar-wrapper mr-2">
+                  <img class="topbar-avatar-img" src="<?php echo base_url('photo/').$this->session->userdata('photo') ?>" alt="Avatar">
+                  <span class="online-indicator-dot"></span>
+                </div>
+                <div class="d-none d-lg-block text-left mr-2">
+                  <div class="text-white font-weight-bold" style="font-size: 0.85rem; line-height: 1.2;"><?php echo $this->session->userdata('nama_pegawai')?></div>
+                  <div class="text-white-50 small" style="font-size: 0.72rem;">Administrator</div>
+                </div>
+                <i class="fas fa-chevron-down fa-xs text-white-50 d-none d-lg-inline ml-1"></i>
               </a>
-              <!-- Dropdown - User Information -->
-              <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in p-0 border-0" aria-labelledby="userDropdown" style="border-radius: 12px; overflow: hidden; min-width: 220px;">
-                <!-- User Profile Header -->
-                <div class="bg-modern-blue p-4 d-flex flex-column align-items-center justify-content-center text-center">
-                    <img class="img-profile rounded-circle mb-2 shadow-sm" src="<?php echo base_url('photo/').$this->session->userdata('photo') ?>" style="width: 70px; height: 70px; border: 3px solid rgba(255,255,255,0.2);">
-                    <h6 class="mb-0 font-weight-bold text-white"><?php echo $this->session->userdata('nama_pegawai')?></h6>
-                    <span class="small text-white-50">Administrator</span>
+
+              <!-- Modern Dropdown Menu -->
+              <div class="dropdown-menu dropdown-menu-right shadow-lg topbar-dropdown-menu animated--grow-in p-0 border-0" aria-labelledby="userDropdown">
+                <!-- Executive Profile Header -->
+                <div class="topbar-dropdown-header">
+                  <div class="header-avatar-circle">
+                    <img class="header-avatar-img" src="<?php echo base_url('photo/').$this->session->userdata('photo') ?>" alt="User Photo">
+                    <span class="header-online-badge"></span>
+                  </div>
+                  <h6 class="font-weight-bold text-white mb-1" style="font-size: 1rem; letter-spacing: -0.01em;">
+                    <?php echo $this->session->userdata('nama_pegawai')?>
+                  </h6>
+                  <span class="badge badge-pill text-white small px-3 py-1 font-weight-bold" style="background: rgba(14, 165, 233, 0.25); border: 1px solid rgba(14, 165, 233, 0.4);">
+                    ADMINISTRATOR
+                  </span>
                 </div>
                 
-                <div class="p-2">
-                  <a class="dropdown-item d-flex align-items-center py-2 rounded" href="#">
-                    <div class="icon-circle bg-primary-light mr-3">
-                      <i class="fas fa-user text-primary"></i>
+                <!-- Dropdown Menu Items -->
+                <div class="topbar-dropdown-body">
+                  <a class="topbar-dropdown-item" href="<?php echo base_url('admin/dashboard') ?>">
+                    <div class="menu-icon-squircle squircle-primary">
+                      <i class="fas fa-chart-line"></i>
                     </div>
-                    <span class="text-gray-800 font-weight-bold">Profil Saya</span>
-                  </a>
-                  <a class="dropdown-item d-flex align-items-center py-2 rounded" href="<?php echo base_url('ganti_password') ?>">
-                    <div class="icon-circle bg-warning-light mr-3">
-                      <i class="fas fa-key text-warning"></i>
+                    <div class="flex-grow-1">
+                      <div class="font-weight-bold item-title" style="font-size: 0.88rem;">Dashboard Admin</div>
+                      <div class="small text-muted" style="font-size: 0.73rem;">Ringkasan sistem & analitik</div>
                     </div>
-                    <span class="text-gray-800 font-weight-bold">Ubah Password</span>
                   </a>
-                  <div class="dropdown-divider my-2"></div>
-                  <a class="dropdown-item d-flex align-items-center py-2 rounded" href="#" data-toggle="modal" data-target="#logoutModal">
-                    <div class="icon-circle bg-danger-light mr-3">
-                      <i class="fas fa-power-off text-danger"></i>
+
+                  <a class="topbar-dropdown-item" href="<?php echo base_url('admin/data_cuti/setting') ?>">
+                    <div class="menu-icon-squircle squircle-info">
+                      <i class="fas fa-sliders-h"></i>
                     </div>
-                    <span class="text-danger font-weight-bold">Logout Aplikasi</span>
+                    <div class="flex-grow-1">
+                      <div class="font-weight-bold item-title" style="font-size: 0.88rem;">Setting Kuota Cuti</div>
+                      <div class="small text-muted" style="font-size: 0.73rem;">Konfigurasi kuota klinik</div>
+                    </div>
                   </a>
+
+                  <a class="topbar-dropdown-item" href="<?php echo base_url('ganti_password') ?>">
+                    <div class="menu-icon-squircle squircle-warning">
+                      <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                      <div class="font-weight-bold item-title" style="font-size: 0.88rem;">Keamanan & Password</div>
+                      <div class="small text-muted" style="font-size: 0.73rem;">Perbarui kata sandi login</div>
+                    </div>
+                  </a>
+
+                  <div class="dropdown-divider my-2 mx-2"></div>
+
+                  <a class="topbar-dropdown-item btn-logout-swal" href="<?php echo base_url('login/logout') ?>" data-user="<?php echo htmlspecialchars($this->session->userdata('nama_pegawai') ?? 'Administrator'); ?>" data-role="Administrator" role="button">
+                    <div class="menu-icon-squircle squircle-danger">
+                      <i class="fas fa-power-off"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                      <div class="font-weight-bold text-danger item-title" style="font-size: 0.88rem;">Logout Aplikasi</div>
+                      <div class="small text-danger opacity-75" style="font-size: 0.73rem;">Keluar dari sesi admin</div>
+                    </div>
+                  </a>
+                </div>
+
+                <!-- Dropdown Footer -->
+                <div class="topbar-dropdown-footer">
+                  <i class="fas fa-heartbeat text-danger mr-1"></i> Klinik Pratama Dr. H.M. Hidayatullah
                 </div>
               </div>
             </li>

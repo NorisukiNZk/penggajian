@@ -2,285 +2,258 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title><?php echo $title; ?></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?php echo $title; ?> - Periode <?php echo $bulan . '/' . $tahun; ?></title>
+    <!-- Google Fonts & FontAwesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style type="text/css">
+        * { box-sizing: border-box; }
         body {
-            font-family: 'Times New Roman', Times, serif;
-            color: black;
-            margin: 20px;
-            background-color: #ffffff;
-        }
-
-        /* Tampilan Header Klinik */
-        .header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .header h1 {
-            font-size: 24px;
-            font-weight: bold;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            color: #1e293b;
+            background-color: #f1f5f9;
             margin: 0;
-            letter-spacing: 2px;
-        }
-        .header h2 {
-            font-size: 14px;
-            font-weight: normal;
-            margin: 5px 0 0 0;
-        }
-        .kop-line {
-            border: 0;
-            border-top: 3px solid black;
-            border-bottom: 1px solid black;
-            height: 2px;
-            margin: 15px 0;
+            padding: 20px;
+            font-size: 12px;
+            line-height: 1.5;
         }
 
-        /* Judul Laporan */
-        .report-title {
-            text-align: center;
-            font-weight: bold;
-            font-size: 18px;
-            text-decoration: underline;
-            margin-bottom: 15px;
-            text-transform: uppercase;
+        /* Floating Action Bar */
+        .print-action-bar {
+            max-width: 1100px;
+            margin: 0 auto 20px auto;
+            background: #ffffff;
+            padding: 12px 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .btn-print {
+            background: #0284c7;
+            color: #ffffff;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 2px 6px rgba(2, 132, 199, 0.3);
+            transition: all 0.2s;
+        }
+        .btn-print:hover { background: #0369a1; }
+        .btn-close-doc {
+            background: #f1f5f9;
+            color: #475569;
+            border: 1px solid #cbd5e1;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn-close-doc:hover { background: #e2e8f0; }
+
+        /* Kertas Dokumen */
+        .page-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 35px 40px;
+            border-radius: 14px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
         }
 
-        /* Info Filter */
-        .info-filter {
-            margin-bottom: 15px;
-            font-size: 14px;
-        }
-        .info-filter table {
-            width: auto;
-            border: none;
-            margin: 0;
-        }
-        .info-filter td {
-            border: none;
-            padding: 3px 5px;
-            background-color: transparent !important;
-        }
+        /* Kop Surat */
+        .kop-table { width: 100%; border-collapse: collapse; margin-bottom: 8px; }
+        .kop-logo { width: 90px; text-align: center; vertical-align: middle; }
+        .kop-logo img { width: 76px; height: auto; }
+        .kop-text { text-align: center; vertical-align: middle; padding: 0 10px; }
+        .kop-title { font-size: 20px; font-weight: 800; color: #0c2b4d; letter-spacing: 1.5px; text-transform: uppercase; margin: 0 0 3px 0; }
+        .kop-subtitle { font-size: 12px; font-weight: 600; color: #0284c7; margin: 0 0 3px 0; }
+        .kop-address { font-size: 11px; color: #475569; margin: 0; line-height: 1.4; }
+        .kop-double-line { height: 3px; background: #0c2b4d; border-bottom: 1px solid #0c2b4d; margin-top: 10px; margin-bottom: 20px; }
+
+        /* Header Laporan */
+        .report-header { text-align: center; margin-bottom: 20px; }
+        .report-title-badge { display: inline-block; font-size: 15px; font-weight: 700; color: #0c2b4d; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid #0284c7; padding-bottom: 4px; margin-bottom: 6px; }
+        .report-meta-text { font-size: 12px; color: #64748b; font-weight: 500; }
 
         /* Tabel Data */
-        table.data-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 12px;
-            margin-bottom: 30px;
-        }
-        table.data-table th, table.data-table td {
-            border: 1px solid black;
-            padding: 8px 5px;
-        }
-        table.data-table th {
-            background-color: #e9ecef !important;
-            font-weight: bold;
-            text-align: center;
-            vertical-align: middle;
-        }
+        table.data-table { width: 100%; border-collapse: collapse; margin-bottom: 25px; font-size: 11px; }
+        table.data-table thead th { background-color: #0c2b4d; color: #ffffff; font-weight: 600; text-align: center; padding: 8px 6px; border: 1px solid #0c2b4d; font-size: 10.5px; }
+        table.data-table tbody td { border: 1px solid #cbd5e1; padding: 7px 6px; vertical-align: middle; color: #1e293b; }
+        table.data-table tbody tr:nth-child(even) { background-color: #f8fafc; }
+        table.data-table tbody td.text-center { text-align: center; }
 
         /* Tanda Tangan */
-        .signature-container {
-            width: 100%;
-            margin-top: 50px;
-        }
-        .signature-box {
-            float: right;
-            width: 300px;
-            text-align: center;
-            font-size: 14px;
-        }
-        .signature-box p {
-            margin: 5px 0;
-        }
-        .signature-name {
-            font-weight: bold;
-            text-decoration: underline;
-            margin-top: 60px !important;
-        }
+        .signature-section { width: 100%; margin-top: 30px; page-break-inside: avoid; }
+        .signature-table { width: 100%; border-collapse: collapse; }
+        .signature-table td { width: 50%; text-align: center; vertical-align: top; padding: 0 30px; }
+        .signature-title { font-size: 11.5px; color: #64748b; margin-bottom: 5px; }
+        .signature-role { font-size: 12px; font-weight: 600; color: #0c2b4d; margin-bottom: 12px; }
+        .qr-wrapper { margin: 6px auto; width: 70px; height: 70px; }
+        .qr-wrapper img { width: 100%; height: 100%; object-fit: contain; }
+        .signature-name { font-size: 12px; font-weight: 700; color: #0f172a; text-decoration: underline; margin-top: 4px; margin-bottom: 2px; }
+        .signature-nip { font-size: 10.5px; color: #64748b; }
 
-        /* Aturan Print Khusus */
-        @media print {
-            body {
-                margin: 0;
-                background-color: white;
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-            }
-            .kop-line {
-                border-top: 3px solid black !important;
-                border-bottom: 1px solid black !important;
-            }
-            table.data-table th {
-                background-color: #e9ecef !important;
-            }
-        }
-    
-        /* Tampilan Header Klinik Baru */
-        table.kop-surat {
-            width: 100%;
-            border-bottom: 3px solid black;
-            padding-bottom: 10px;
-            margin-bottom: 5px;
-        }
-        table.kop-surat img {
-            width: 110px;
-            height: auto;
-        }
-        table.kop-surat h1 {
-            font-size: 26px;
-            font-weight: bold;
-            margin: 0;
-            letter-spacing: 2px;
-            color: #000;
-        }
-        table.kop-surat h2 {
-            font-size: 14px;
-            font-weight: normal;
-            margin: 5px 0 0 0;
-            color: #333;
-        }
-        table.kop-surat p {
-            font-size: 13px;
-            margin: 5px 0 0 0;
-        }
-        .kop-line-2 {
-            border: 0;
-            border-top: 1px solid black;
-            height: 1px;
-            margin: 0 0 20px 0;
-        }
-    
-        /* Watermark */
         .watermark {
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            opacity: 0.1;
-            z-index: -1;
-            width: 400px;
-            height: auto;
+            opacity: 0.04;
+            z-index: 0;
+            width: 380px;
+            pointer-events: none;
         }
-        /* Nomor Surat */
-        .nomor-surat {
-            text-align: left;
-            font-size: 13px;
-            margin-top: -10px;
-            margin-bottom: 15px;
-            font-weight: bold;
-        }
-        /* QR Code */
-        .qr-code {
-            width: 70px;
-            height: 70px;
-            margin: 10px auto;
-            display: block;
+
+        @media print {
+            body { background: #ffffff !important; padding: 0 !important; font-size: 10pt; }
+            .no-print { display: none !important; }
+            .page-container { box-shadow: none !important; padding: 0 !important; max-width: 100% !important; border-radius: 0 !important; }
+            table.data-table thead th { background-color: #0c2b4d !important; color: #ffffff !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            table.data-table tbody tr:nth-child(even) { background-color: #f8fafc !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            @page { size: landscape; margin: 10mm 12mm; }
         }
     </style>
 </head>
 <body>
-    <img src="<?php echo base_url('assets/img/kpmh.png') ?>" class="watermark">
 
-        <table class="kop-surat">
-        <tr>
-            <td width="15%" style="text-align: center;">
-                <img src="<?php echo base_url('assets/img/kpmh.png') ?>" alt="Logo Klinik">
-            </td>
-            <td width="70%" style="text-align: center;">
-                <h1>KLINIK PRATAMA HIDAYATULLAH</h1>
-                <h2>Jl. A. Yani KM 23 RT 01 RW 02, Kel. Landasan Ulin, Kec. Liang Anggang Banjarbaru</h2>
-                <p><strong>Telp:</strong> (0511) XXXXXXX | <strong>Email:</strong> klinik.kpmh@gmail.com</p>
-            </td>
-            <td width="15%" style="text-align: center;">
-                <!-- Ruang kosong atau logo kedua jika ada -->
-            </td>
-        </tr>
-    </table>
-    <hr class="kop-line-2">
-    <?php
-    $bulanRomawi = array(1=>"I","II","III", "IV", "V","VI","VII","VIII","IX","X", "XI","XII");
-    $noSurat = "Nomor : " . date('ymd') . "/HRD-KPMH/" . $bulanRomawi[date('n')] . "/" . date('Y');
-    ?>
-    <div class="nomor-surat"><?php echo $noSurat; ?></div>
+    <img src="<?php echo base_url('assets/img/kpmh.png') ?>" class="watermark" alt="Watermark">
 
+    <!-- Floating Action Bar -->
+    <div class="print-action-bar no-print">
+        <div class="d-flex align-items-center">
+            <span style="font-weight: 600; color: #0c2b4d; font-size: 14px;">
+                <i class="fas fa-calendar-minus text-primary mr-2"></i> Dokumen Rekapitulasi Cuti & Izin Kerja
+            </span>
+            <span style="margin-left: 15px; font-size: 12px; color: #64748b; background: #f1f5f9; padding: 4px 10px; border-radius: 6px;">
+                Orientasi: Landscape
+            </span>
+        </div>
+        <div>
+            <button onclick="window.close()" class="btn-close-doc mr-2"><i class="fas fa-times"></i> Tutup</button>
+            <button onclick="window.print()" class="btn-print"><i class="fas fa-print"></i> Cetak / Simpan PDF</button>
+        </div>
+    </div>
 
-    <div class="report-title">Laporan Cuti Pegawai (Disetujui)</div>
-
-    <?php
-        // Array nama bulan
-        $bulanIndo = ['01' => 'Januari', '02' => 'Februari', '03' => 'Maret', '04' => 'April', '05' => 'Mei', '06' => 'Juni', '07' => 'Juli', '08' => 'Agustus', '09' => 'September', '10' => 'Oktober', '11' => 'November', '12' => 'Desember'];
-    ?>
-
-    <div class="info-filter">
-        <table>
+    <div class="page-container">
+        
+        <!-- Kop Surat -->
+        <table class="kop-table">
             <tr>
-                <td>Bulan</td>
-                <td>:</td>
-                <td><strong><?php echo isset($bulanIndo[$bulan]) ? $bulanIndo[$bulan] : $bulan; ?></strong></td>
-            </tr>
-            <tr>
-                <td>Tahun</td>
-                <td>:</td>
-                <td><strong><?php echo htmlspecialchars($tahun, ENT_QUOTES, 'UTF-8'); ?></strong></td>
+                <td class="kop-logo">
+                    <img src="<?php echo base_url('assets/img/kpmh.png'); ?>" alt="Logo Klinik">
+                </td>
+                <td class="kop-text">
+                    <div class="kop-title">Klinik Pratama Dr. H.M. Hidayatullah</div>
+                    <div class="kop-subtitle">Pusat Layanan Kesehatan Terpadu, Gigi, Poli Umum & Penunjang Medis</div>
+                    <div class="kop-address">
+                        Jl. Pemuda No. 45, Banjarmasin, Kalimantan Selatan 70114 | Telp: (0511) 7654321<br>
+                        Izin Operasional Dinas Kesehatan: No. 445/098/Dinkes-Bjm/2022 &bull; Email: hrd@klinikhidayatullah.com
+                    </div>
+                </td>
             </tr>
         </table>
-    </div>
+        <div class="kop-double-line"></div>
 
-    <table class="data-table">
-        <thead>
-            <tr>
-                <th width="3%">No</th>
-                <th width="10%">NIK</th>
-                <th width="20%">Nama Pegawai</th>
-                <th width="15%">Jabatan</th>
-                <th width="10%">Jenis Cuti</th>
-                <th width="20%">Rentang Tanggal</th>
-                <th width="22%">Alasan</th>
-            </tr>
-        </thead>
-        <tbody>
-        <?php 
-        if (empty($laporan_cuti)) {
-            echo '<tr><td colspan="7" style="text-align:center;">Tidak ada data cuti yang disetujui pada periode ini.</td></tr>';
-        } else {
-            $no = 1; 
-            foreach ($laporan_cuti as $c) : 
-                $tgl_mulai = date('d-m-Y', strtotime($c->tanggal_mulai));
-                $tgl_akhir = date('d-m-Y', strtotime($c->tanggal_akhir));
+        <?php
+            $bulanIndo = ['01' => 'Januari', '02' => 'Februari', '03' => 'Maret', '04' => 'April', '05' => 'Mei', '06' => 'Juni', '07' => 'Juli', '08' => 'Agustus', '09' => 'September', '10' => 'Oktober', '11' => 'November', '12' => 'Desember'];
+            $namaBulan = isset($bulanIndo[$bulan]) ? $bulanIndo[$bulan] : $bulan;
+            $bulanRomawi = array(1=>"I","II","III", "IV", "V","VI","VII","VIII","IX","X", "XI","XII");
+            $noSurat = "No: " . date('ymd') . "/LAP-CUTI/KPH/" . $bulanRomawi[date('n')] . "/" . $tahun;
         ?>
-            <tr>
-                <td style="text-align: center;"><?php echo $no++; ?></td>
-                <td style="text-align: center;"><?php echo htmlspecialchars($c->nik, ENT_QUOTES, 'UTF-8'); ?></td>
-                <td><?php echo htmlspecialchars($c->nama_pegawai, ENT_QUOTES, 'UTF-8'); ?></td>
-                <td><?php echo htmlspecialchars($c->jabatan, ENT_QUOTES, 'UTF-8'); ?></td>
-                <td style="text-align: center;"><?php echo htmlspecialchars($c->jenis_cuti, ENT_QUOTES, 'UTF-8'); ?></td>
-                <td style="text-align: center;"><?php echo $tgl_mulai; ?> s.d <?php echo $tgl_akhir; ?></td>
-                <td><?php echo htmlspecialchars($c->alasan, ENT_QUOTES, 'UTF-8'); ?></td>
-            </tr>
-        <?php 
-            endforeach; 
-        }
-        ?>
-        </tbody>
-    </table>
 
-    <div class="signature-container">
-        <div class="signature-box">
-            <p>Banjarbaru, <?php echo date('d') . ' ' . $bulanIndo[date('m')] . ' ' . date('Y'); ?></p>
-            <p>Mengetahui,</p>
-
-            <img src="<?php echo base_url('assets/img/qr-dummy.png?v=' . time()) ?>" class="qr-code" alt="Validasi Digital">
-            <p style="font-size:10px; margin-top:-5px; font-style:italic;">Validasi Digital</p>
-
-            <p>Pimpinan Klinik</p>
-            <p class="signature-name">Dr. H. Muhammad Hidayatullah</p>
+        <!-- Header Laporan -->
+        <div class="report-header">
+            <div><span class="report-title-badge">Laporan Rekapitulasi Cuti & Izin Pegawai (Disahkan)</span></div>
+            <div class="report-meta-text">
+                Periode Validasi: <strong><?php echo $namaBulan . ' ' . $tahun; ?></strong> &bull; <?php echo $noSurat; ?>
+            </div>
         </div>
-        <div style="clear: both;"></div>
+
+        <!-- Tabel Data -->
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th width="3%">NO</th>
+                    <th width="9%">NIK</th>
+                    <th width="16%">NAMA PEGAWAI</th>
+                    <th width="13%">JABATAN</th>
+                    <th width="10%">JENIS CUTI</th>
+                    <th width="15%">RENTANG TANGGAL</th>
+                    <th width="14%">REKAN PENGGANTI</th>
+                    <th>ALASAN PENGAJUAN</th>
+                </tr>
+            </thead>
+            <tbody>
+            <?php 
+            if (empty($laporan_cuti)) {
+                echo '<tr><td colspan="8" class="text-center py-4 text-muted">Tidak ada arsip cuti yang disetujui pada periode ini.</td></tr>';
+            } else {
+                $no = 1; 
+                foreach ($laporan_cuti as $c) : 
+                    $tgl_mulai = date('d/m/Y', strtotime($c->tanggal_mulai));
+                    $tgl_akhir = date('d/m/Y', strtotime($c->tanggal_akhir));
+            ?>
+                <tr>
+                    <td class="text-center"><?php echo $no++; ?></td>
+                    <td class="text-center font-weight-bold"><?php echo htmlspecialchars($c->nik, ENT_QUOTES, 'UTF-8'); ?></td>
+                    <td><strong><?php echo htmlspecialchars($c->nama_pegawai, ENT_QUOTES, 'UTF-8'); ?></strong></td>
+                    <td><?php echo htmlspecialchars($c->jabatan, ENT_QUOTES, 'UTF-8'); ?></td>
+                    <td class="text-center">
+                        <span style="font-weight: 600; color: #0284c7;"><?php echo htmlspecialchars($c->jenis_cuti, ENT_QUOTES, 'UTF-8'); ?></span>
+                    </td>
+                    <td class="text-center"><?php echo $tgl_mulai; ?> s.d <?php echo $tgl_akhir; ?></td>
+                    <td>
+                        <?php echo !empty($c->nama_pengganti) ? htmlspecialchars($c->nama_pengganti, ENT_QUOTES, 'UTF-8') : '<span class="text-muted">-</span>'; ?>
+                    </td>
+                    <td><?php echo htmlspecialchars($c->alasan, ENT_QUOTES, 'UTF-8'); ?></td>
+                </tr>
+            <?php 
+                endforeach; 
+            }
+            ?>
+            </tbody>
+        </table>
+
+        <!-- Lembar Tanda Tangan -->
+        <div class="signature-section">
+            <table class="signature-table">
+                <tr>
+                    <td>
+                        <div class="signature-title">Diverifikasi & Direkap oleh,</div>
+                        <div class="signature-role">Kepala Bagian SDM & Kepegawaian</div>
+                        <div class="qr-wrapper">
+                            <img src="<?php echo base_url('assets/img/qr-dummy.png?v=' . time()) ?>" alt="Validasi Digital">
+                        </div>
+                        <div class="signature-name"><?php echo $this->session->userdata('nama_pegawai') ?? 'Staff SDM'; ?></div>
+                        <div class="signature-nip">Bagian Administrasi Kepegawaian</div>
+                    </td>
+                    <td>
+                        <div class="signature-title">Banjarmasin, <?php echo date('d') . ' ' . $bulanIndo[date('m')] . ' ' . date('Y'); ?></div>
+                        <div class="signature-role">Direktur Utama Klinik Pratama</div>
+                        <div class="qr-wrapper">
+                            <img src="<?php echo base_url('assets/img/qr-dummy.png?v=' . time()) ?>" alt="Validasi Digital">
+                        </div>
+                        <div class="signature-name">Dr. H. Muhammad Hidayatullah</div>
+                        <div class="signature-nip">SIP: 445/098/Dinkes-Bjm/2022</div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
     </div>
 
-    <script type="text/javascript">
-        window.print();
-    </script>
 </body>
 </html>
