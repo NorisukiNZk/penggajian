@@ -10,6 +10,20 @@
   <!-- Page Wrapper -->
   <div id="wrapper">
 
+    <?php 
+      // Query untuk mengambil jumlah cuti, lembur, dan pinjaman yang menunggu persetujuan (Optimized COUNT)
+      $q_cuti = $this->db->query("SELECT COUNT(*) AS total FROM data_cuti WHERE status_cuti='Menunggu'")->row();
+      $notif_cuti = $q_cuti ? (int)$q_cuti->total : 0;
+      
+      $q_lembur = $this->db->query("SELECT COUNT(*) AS total FROM data_lembur WHERE status='Pending'")->row();
+      $notif_lembur = $q_lembur ? (int)$q_lembur->total : 0;
+      
+      $q_pinjaman = $this->db->query("SELECT COUNT(*) AS total FROM data_pinjaman WHERE status='Menunggu'")->row();
+      $notif_pinjaman = $q_pinjaman ? (int)$q_pinjaman->total : 0;
+      
+      $total_notif = $notif_cuti + $notif_lembur + $notif_pinjaman;
+    ?>
+
     <!-- Sidebar -->
     <ul class="navbar-nav bg-modern-blue sidebar sidebar-dark accordion" id="accordionSidebar">
 
@@ -34,7 +48,7 @@
           <span>Dashboard</span></a>
       </li>
 
-      <!-- Nav Item - Pages Collapse Menu -->
+      <!-- Nav Item - Master Data Collapse Menu -->
       <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
           <i class="fa fa-fw fa-database"></i>
@@ -42,14 +56,21 @@
         </a>
         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
           <div class="collapse-inner">
-            <a class="collapse-item" href="<?php echo base_url('admin/data_pegawai') ?>">Data Pegawai</a>
-            <a class="collapse-item" href="<?php echo base_url('admin/data_jabatan') ?>">Data Jabatan</a>
-            <a class="collapse-item" href="<?php echo base_url('admin/hari_libur') ?>">Hari Libur Nasional</a>
+            <h6 class="collapse-header">Database Entitas:</h6>
+            <a class="collapse-item" href="<?php echo base_url('admin/data_pegawai') ?>">
+              <i class="fas fa-users-cog mr-2 text-primary"></i> Data Pegawai
+            </a>
+            <a class="collapse-item" href="<?php echo base_url('admin/data_jabatan') ?>">
+              <i class="fas fa-sitemap mr-2 text-info"></i> Data Jabatan
+            </a>
+            <a class="collapse-item" href="<?php echo base_url('admin/hari_libur') ?>">
+              <i class="fas fa-calendar-day mr-2 text-warning"></i> Hari Libur Nasional
+            </a>
           </div>
         </div>
       </li>
 
-      <!-- Nav Item - Utilities Collapse Menu -->
+      <!-- Nav Item - Transaksi Collapse Menu -->
       <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="false" aria-controls="collapseUtilities">
           <i class="fas fa-fw fa-money-bill-transfer"></i>
@@ -57,19 +78,53 @@
         </a>
         <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
           <div class="collapse-inner">
-            <h6 class="collapse-header">Absensi:</h6>
-            <a class="collapse-item" href="<?php echo base_url('admin/absensi_harian') ?>">Monitoring Hari Ini</a>
-            <a class="collapse-item" href="<?php echo base_url('admin/data_cuti') ?>">Pengajuan Cuti/Izin</a>
-            <a class="collapse-item" href="<?php echo base_url('admin/data_cuti/setting') ?>">Setting Kuota Cuti</a>
-            <a class="collapse-item" href="<?php echo base_url('admin/absensi_harian/rekap') ?>">Rekap Absensi</a>
-            <a class="collapse-item" href="<?php echo base_url('admin/absensi_harian/setting') ?>">Setting Absensi</a>
-            <a class="collapse-item" href="<?php echo base_url('admin/data_absensi') ?>">Data Absensi (Lama)</a>
-            <a class="collapse-item" href="<?php echo base_url('admin/data_lembur') ?>">Data Lembur</a>
-            <h6 class="collapse-header">Gaji:</h6>
-            <a class="collapse-item" href="<?php echo base_url('admin/potongan_gaji') ?>">Setting Potongan Gaji</a>
-            <a class="collapse-item" href="<?php echo base_url('admin/komponen_gaji') ?>">Komponen Gaji</a>
-            <a class="collapse-item" href="<?php echo base_url('admin/pinjaman') ?>">Pinjaman Karyawan</a>
-            <a class="collapse-item" href="<?php echo base_url('admin/data_penggajian') ?>">Data Gaji</a>
+            <h6 class="collapse-header">Presensi & Kehadiran:</h6>
+            <a class="collapse-item" href="<?php echo base_url('admin/absensi_harian') ?>">
+              <i class="fas fa-desktop mr-2 text-primary"></i> Monitoring Hari Ini
+            </a>
+            <a class="collapse-item" href="<?php echo base_url('admin/absensi_harian/rekap') ?>">
+              <i class="fas fa-clipboard-check mr-2 text-info"></i> Rekap Absensi
+            </a>
+            <a class="collapse-item" href="<?php echo base_url('admin/data_cuti') ?>">
+              <i class="fas fa-calendar-check mr-2 text-warning"></i> Pengajuan Cuti / Izin
+              <?php if($notif_cuti > 0) { ?>
+                <span class="badge badge-warning ml-auto px-1 font-weight-bold" style="font-size: 0.65rem; border-radius: 4px;"><?php echo $notif_cuti ?></span>
+              <?php } ?>
+            </a>
+            <a class="collapse-item" href="<?php echo base_url('admin/data_cuti/setting') ?>">
+              <i class="fas fa-sliders-h mr-2 text-secondary"></i> Setting Kuota Cuti
+            </a>
+            <a class="collapse-item" href="<?php echo base_url('admin/data_lembur') ?>">
+              <i class="fas fa-business-time mr-2 text-success"></i> Data Lembur
+              <?php if($notif_lembur > 0) { ?>
+                <span class="badge badge-info ml-auto px-1 font-weight-bold" style="font-size: 0.65rem; border-radius: 4px;"><?php echo $notif_lembur ?></span>
+              <?php } ?>
+            </a>
+            <a class="collapse-item" href="<?php echo base_url('admin/absensi_harian/setting') ?>">
+              <i class="fas fa-map-marker-alt mr-2 text-danger"></i> Setting Absensi & GPS
+            </a>
+            <a class="collapse-item" href="<?php echo base_url('admin/data_absensi') ?>">
+              <i class="fas fa-history mr-2 text-muted"></i> Data Absensi (Lama)
+            </a>
+
+            <div class="dropdown-divider my-1"></div>
+
+            <h6 class="collapse-header">Penggajian & Keuangan:</h6>
+            <a class="collapse-item" href="<?php echo base_url('admin/data_penggajian') ?>">
+              <i class="fas fa-money-check-alt mr-2 text-success"></i> Data Gaji Pegawai
+            </a>
+            <a class="collapse-item" href="<?php echo base_url('admin/pinjaman') ?>">
+              <i class="fas fa-hand-holding-usd mr-2 text-danger"></i> Pinjaman Karyawan
+              <?php if($notif_pinjaman > 0) { ?>
+                <span class="badge badge-danger ml-auto px-1 font-weight-bold" style="font-size: 0.65rem; border-radius: 4px;"><?php echo $notif_pinjaman ?></span>
+              <?php } ?>
+            </a>
+            <a class="collapse-item" href="<?php echo base_url('admin/komponen_gaji') ?>">
+              <i class="fas fa-layer-group mr-2 text-primary"></i> Komponen Gaji
+            </a>
+            <a class="collapse-item" href="<?php echo base_url('admin/potongan_gaji') ?>">
+              <i class="fas fa-percent mr-2 text-warning"></i> Setting Potongan Gaji
+            </a>
           </div>
         </div>
       </li>
@@ -141,13 +196,6 @@
             </li>
 
             <!-- Nav Item - Alerts -->
-            <?php 
-              // Query untuk mengambil jumlah cuti, lembur, dan pinjaman yang menunggu persetujuan
-              $notif_cuti = $this->db->query("SELECT * FROM data_cuti WHERE status_cuti='Menunggu'")->num_rows();
-              $notif_lembur = $this->db->query("SELECT * FROM data_lembur WHERE status='Pending'")->num_rows();
-              $notif_pinjaman = $this->db->query("SELECT * FROM data_pinjaman WHERE status='Menunggu'")->num_rows();
-              $total_notif = $notif_cuti + $notif_lembur + $notif_pinjaman;
-            ?>
             <li class="nav-item dropdown no-arrow mx-1">
               <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <div class="position-relative">

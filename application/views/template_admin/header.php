@@ -443,7 +443,7 @@
     ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
     ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 
-    /* Preloader */
+    /* Preloader - Ultra Fast & Non-Blocking */
     #preloader {
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
@@ -452,7 +452,18 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      transition: opacity 0.3s ease, visibility 0.3s ease;
+      transition: opacity 0.2s ease, visibility 0.2s ease;
+      pointer-events: auto;
+    }
+    #preloader.loaded,
+    #preloader.fade-out {
+      opacity: 0 !important;
+      visibility: hidden !important;
+      pointer-events: none !important;
+    }
+    /* Prevent accidental misclicks on child links while accordion is expanding */
+    .sidebar .collapsing .collapse-item {
+      pointer-events: none !important;
     }
     .spinner-container { text-align: center; }
     .spinner {

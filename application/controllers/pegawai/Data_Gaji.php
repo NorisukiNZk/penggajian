@@ -38,11 +38,14 @@ class Data_Gaji extends CI_Controller {
             $bulan = substr($g->bulan, 0, 2);
             $tahun = substr($g->bulan, 2, 4);
             $pinjaman = $this->ModelPenggajian->hitung_potongan_pinjaman($g->nik, $bulan, $tahun);
+            $lembur = $this->ModelPenggajian->hitung_uang_lembur($g->nik, $bulan, $tahun);
 
 			$data['komponen_per_bulan'][$g->bulan] = array(
-				'tunjangan' => $tunjangan,
-				'potongan'  => $potongan_dinamis,
-                'pinjaman'  => $pinjaman
+				'tunjangan'   => $tunjangan,
+				'potongan'    => $potongan_dinamis,
+                'pinjaman'    => $pinjaman,
+                'uang_lembur' => $lembur['uang_lembur'],
+                'jam_lembur'  => $lembur['total_jam']
 			);
 		}
 
@@ -55,13 +58,20 @@ class Data_Gaji extends CI_Controller {
 	public function cetak_slip($id)
 	{
 		$data['title'] = 'Cetak Slip Gaji';
-		$data['potongan'] = $this->ModelPenggajian->get_data('potongan_gaji')-> result();
+		$nik = $this->session->userdata('nik');
+		$data['potongan'] = $this->ModelPenggajian->get_data('potongan_gaji')->result();
 
 		$data['print_slip'] = $this->db->query("SELECT data_pegawai.nik,data_pegawai.nama_pegawai,data_jabatan.nama_jabatan,data_jabatan.gaji_pokok,data_jabatan.tj_transport,data_jabatan.uang_makan,data_kehadiran.alpha,data_kehadiran.bulan
 			FROM data_pegawai
 			INNER JOIN data_kehadiran ON data_kehadiran.nik=data_pegawai.nik
 			INNER JOIN data_jabatan ON data_jabatan.nama_jabatan=data_pegawai.jabatan
-			WHERE data_kehadiran.id_kehadiran = ?", array($id))->result();
+			WHERE data_kehadiran.id_kehadiran = ? AND data_pegawai.nik = ?", array($id, $nik))->result();
+
+		if (empty($data['print_slip'])) {
+			$this->session->set_flashdata('pesan', '<div class="alert alert-danger">Data slip gaji tidak ditemukan atau Anda tidak memiliki akses.</div>');
+			redirect('pegawai/data_gaji');
+			return;
+		}
 
 		// Komponen dinamis per pegawai
 		$data['komponen_per_pegawai'] = array();
@@ -73,15 +83,17 @@ class Data_Gaji extends CI_Controller {
             $bulan = substr($ps->bulan, 0, 2);
             $tahun = substr($ps->bulan, 2, 4);
             $pinjaman = $this->ModelPenggajian->hitung_potongan_pinjaman($ps->nik, $bulan, $tahun);
+            $lembur = $this->ModelPenggajian->hitung_uang_lembur($ps->nik, $bulan, $tahun);
 
 			$data['komponen_per_pegawai'][$ps->nik] = array(
-				'tunjangan' => $tunjangan,
-				'potongan'  => $potongan_dinamis,
-                'pinjaman'  => $pinjaman
+				'tunjangan'   => $tunjangan,
+				'potongan'    => $potongan_dinamis,
+                'pinjaman'    => $pinjaman,
+                'uang_lembur' => $lembur['uang_lembur'],
+                'jam_lembur'  => $lembur['total_jam']
 			);
 		}
 
-		$this->load->view('template_pegawai/header',$data);
 		$this->load->view('pegawai/cetak_slip_gaji', $data);
 	}
 }

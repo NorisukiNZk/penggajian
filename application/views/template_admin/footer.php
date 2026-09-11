@@ -286,21 +286,51 @@ $(document).ready(function() {
       });
   }
 
-  // Preloader Fade Out
-  window.addEventListener('load', function() {
+  // Preloader Fast & Non-Blocking Dismissal
+  (function() {
       // Fix Sidebar on Mobile
       if ($(window).width() <= 768) {
           $("body").addClass("sidebar-toggled");
           $(".sidebar").addClass("toggled");
       }
-      
-      setTimeout(function() {
-          var preloader = document.getElementById('preloader');
-          if (preloader) {
+
+      var preloader = document.getElementById('preloader');
+      if (!preloader) return;
+
+      function dismissPreloader() {
+          if (!preloader.classList.contains('loaded')) {
+              preloader.classList.add('loaded');
+              preloader.style.pointerEvents = 'none';
               preloader.style.opacity = '0';
-              setTimeout(function() { preloader.style.display = 'none'; }, 500);
+              setTimeout(function() {
+                  if (preloader) preloader.style.display = 'none';
+              }, 200);
           }
-      }, 300); // 300ms delay for smoothness
+      }
+
+      // Hide immediately as soon as DOM is interactive or loaded
+      if (document.readyState === 'interactive' || document.readyState === 'complete') {
+          setTimeout(dismissPreloader, 60);
+      } else {
+          document.addEventListener('DOMContentLoaded', function() {
+              setTimeout(dismissPreloader, 60);
+          });
+          window.addEventListener('load', dismissPreloader);
+      }
+
+      // Hard safety timeout: under no circumstance let the preloader trap clicks for >300ms
+      setTimeout(dismissPreloader, 300);
+  })();
+
+  // Prevent Bootstrap Accordion Transition Lock Bug on Rapid Clicking
+  $(document).on('click', '.sidebar .nav-link[data-toggle="collapse"]', function() {
+      var target = $(this).attr('data-target') || $(this).attr('href');
+      if (target) {
+          var $target = $(target);
+          if ($target.hasClass('collapsing')) {
+              $target.removeClass('collapsing').addClass('collapse');
+          }
+      }
   });
 
   // Live Digital Clock
