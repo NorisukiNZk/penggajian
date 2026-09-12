@@ -31,13 +31,12 @@ class ModelPenggajian extends CI_model{
 	}
 	public function cek_login()
 	{
-		$username = set_value('username');
+		$username = $this->input->post('username', TRUE) ? trim($this->input->post('username', TRUE)) : trim(set_value('username'));
 
-		// Hanya mencari berdasarkan username, password diverifikasi di Controller menggunakan password_verify
-		$result = $this->db->where('username',$username)
+		$result = $this->db->where('username', $username)
 							->limit(1)
 							->get('data_pegawai');
-		if($result->num_rows()>0){
+		if($result->num_rows() > 0){
 			return $result->row();
 		}else{
 			return FALSE;

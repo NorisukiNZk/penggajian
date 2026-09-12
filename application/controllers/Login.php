@@ -78,16 +78,6 @@ class Login extends CI_Controller {
 				$this->session->set_userdata('photo',$cek->photo);
 				$this->session->set_userdata('id_pegawai',$cek->id_pegawai);
 				$this->session->set_userdata('nik',$cek->nik);
-                
-                // Dynamic Time Greeting for SweetAlert Toast
-                date_default_timezone_set('Asia/Kuala_Lumpur');
-                $jam = date('H');
-                if ($jam >= 5 && $jam < 11) $sapaan = "Selamat Pagi ☀️";
-                else if ($jam >= 11 && $jam < 15) $sapaan = "Selamat Siang 🌤️";
-                else if ($jam >= 15 && $jam < 18) $sapaan = "Selamat Sore ⛅";
-                else $sapaan = "Selamat Malam 🌙";
-
-                $this->session->set_flashdata('welcome_msg', $sapaan . ', ' . $cek->nama_pegawai . '!');
 
 				switch ($cek->hak_akses) {
 					case 1 : redirect('admin/dashboard');
