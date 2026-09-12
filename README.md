@@ -283,16 +283,6 @@ penggajian/
 
 ---
 
-## 🔑 Kredensial Pengujian Bawaan (*Default Accounts*)
-
-| Hak Akses / Role | Username | Password Default | Target Halaman Dasbor |
-| :--- | :--- | :--- | :--- |
-| **Administrator (HRD)** | `waffa` | `12345` | `/admin/dashboard` |
-| **Pegawai (Contoh)** | `anya` | `12345` | `/pegawai/dashboard` |
-
-> ℹ️ *Catatan: Untuk pengujian verifikasi reCAPTCHA di server localhost, sistem secara otomatis menggunakan Google Test Keys yang selalu valid.*
-
----
 
 ## 👨‍💻 Hak Cipta & Pengembang (*Credits*)
 
