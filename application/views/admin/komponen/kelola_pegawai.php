@@ -81,7 +81,7 @@
 	<div class="card shadow mb-4">
 		<div class="card-header py-3">
 			<h6 class="m-0 font-weight-bold text-primary">
-				Override Nominal per Pegawai — Bulan <?php echo $bulan ?>/<?php echo $tahun ?>
+				Override Nominal per Pegawai (Bulan <?php echo $bulan ?>/<?php echo $tahun ?>)
 			</h6>
 		</div>
 		<div class="card-body">

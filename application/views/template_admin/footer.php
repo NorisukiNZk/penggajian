@@ -55,7 +55,8 @@ $(document).ready(function() {
         info: "Menampilkan _START_ - _END_ dari _TOTAL_ entri",
         infoEmpty: "Menampilkan 0 entri",
         infoFiltered: "(filter dari _MAX_ total data)",
-        zeroRecords: "Data tidak ditemukan",
+        zeroRecords: '<div class="py-3 text-muted font-weight-bold"><i class="fas fa-search mr-2 text-secondary"></i>Data tidak ditemukan</div>',
+        emptyTable: '<div class="py-3 text-muted font-weight-bold"><i class="fas fa-folder-open mr-2 text-secondary"></i>Belum ada data tersedia</div>',
         paginate: {
           first: '<i class="fas fa-angles-left"></i>',
           previous: '<i class="fas fa-angle-left"></i>',

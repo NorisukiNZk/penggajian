@@ -217,7 +217,7 @@
       border: 1px solid rgba(14, 165, 233, 0.3);
       color: #0284c7;
       padding: 0.45rem 1.15rem;
-      border-radius: 9999px;
+      border-radius: 8px;
       font-size: 0.85rem;
       font-weight: 700;
       letter-spacing: 0.02em;
@@ -263,19 +263,15 @@
       max-height: 420px;
       width: auto;
       filter: drop-shadow(0 20px 35px rgba(12, 43, 77, 0.15));
-      animation: floatHero 6s ease-in-out infinite;
-    }
-    @keyframes floatHero {
-      0%, 100% { transform: translateY(0px); }
-      50% { transform: translateY(-12px); }
+      transition: transform 0.3s ease;
     }
 
-    /* Floating Micro-Cards */
+    /* Floating Micro-Cards (Stable Healthcare Hierarchy) */
     .floating-card {
       position: absolute;
       background: var(--card-bg);
       border: 1px solid var(--card-border);
-      border-radius: 16px;
+      border-radius: 14px;
       padding: 0.85rem 1.15rem;
       box-shadow: 0 16px 36px -6px rgba(15, 23, 42, 0.15);
       display: flex;
@@ -283,28 +279,19 @@
       gap: 0.85rem;
       z-index: 2;
       backdrop-filter: blur(8px);
-      transition: transform 0.3s ease;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
     }
     .floating-card:hover {
-      transform: scale(1.05);
+      transform: translateY(-4px);
+      box-shadow: 0 20px 40px -8px rgba(15, 23, 42, 0.2);
     }
     .floating-card-1 {
       top: 15%;
       left: -5%;
-      animation: floatBadge1 5s ease-in-out infinite;
     }
     .floating-card-2 {
       bottom: 15%;
       right: -2%;
-      animation: floatBadge2 5.5s ease-in-out infinite;
-    }
-    @keyframes floatBadge1 {
-      0%, 100% { transform: translateY(0px); }
-      50% { transform: translateY(-8px); }
-    }
-    @keyframes floatBadge2 {
-      0%, 100% { transform: translateY(0px); }
-      50% { transform: translateY(8px); }
     }
 
     /* Trust Badges Bar */

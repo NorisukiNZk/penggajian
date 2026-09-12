@@ -53,7 +53,7 @@
 <script src="https://cdn.datatables.net/2.2.2/js/dataTables.min.js"></script>
 <script>
 $(document).ready(function() {
-  if ($.fn.DataTable && $('#dataTable').length > 0) {
+  if ($.fn.DataTable && $('#dataTable').length > 0 && !$.fn.DataTable.isDataTable('#dataTable')) {
     $('#dataTable').DataTable({
       responsive: true,
       pageLength: 10,
@@ -64,7 +64,8 @@ $(document).ready(function() {
         info: "Menampilkan _START_ - _END_ dari _TOTAL_ entri",
         infoEmpty: "Menampilkan 0 entri",
         infoFiltered: "(filter dari _MAX_ total data)",
-        zeroRecords: "Data tidak ditemukan",
+        zeroRecords: '<div class="py-3 text-muted font-weight-bold"><i class="fas fa-search mr-2 text-secondary"></i>Data tidak ditemukan</div>',
+        emptyTable: '<div class="py-3 text-muted font-weight-bold"><i class="fas fa-folder-open mr-2 text-secondary"></i>Belum ada data tersedia</div>',
         paginate: {
           first: '<i class="fas fa-angles-left"></i>',
           previous: '<i class="fas fa-angle-left"></i>',
@@ -74,6 +75,13 @@ $(document).ready(function() {
       }
     });
   }
+
+  // Adjust table widths when toggling tabs
+  $('a[data-toggle="tab"], a[data-toggle="pill"]').on('shown.bs.tab', function(e) {
+    if ($.fn.DataTable) {
+      $($.fn.dataTable.tables(true)).DataTable().columns.adjust();
+    }
+  });
 
   // Chart handlers with v4 syntax if canvas exists
   var ctxPie = document.getElementById("myPieChart");

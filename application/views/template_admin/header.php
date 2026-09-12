@@ -159,20 +159,20 @@
       background-color: #ffffff !important;
     }
 
-    /* Modern DataTables 2.x Styling */
+    /* Modern DataTables 2.x Styling & Context7 Standards */
     .dt-container {
       font-family: var(--font-main) !important;
       padding-top: 0.5rem;
     }
     .dt-search input {
-      border-radius: 9999px !important;
-      padding: 0.45rem 1.25rem !important;
+      border-radius: 10px !important;
+      padding: 0.45rem 1rem !important;
       border: 1.5px solid #cbd5e1 !important;
       background-color: #f8fafc !important;
       font-size: 0.875rem !important;
       outline: none;
       transition: all 0.2s ease;
-      min-width: 240px;
+      min-width: 220px;
     }
     .dt-search input:focus {
       background-color: #ffffff !important;
@@ -190,6 +190,43 @@
       background: var(--primary-color) !important;
       color: #ffffff !important;
       border-color: var(--primary-color) !important;
+    }
+
+    /* Accessible Keyboard Focus Ring (WCAG 2.1 AA) */
+    a:focus-visible,
+    button:focus-visible,
+    input:focus-visible,
+    select:focus-visible,
+    textarea:focus-visible,
+    [role="button"]:focus-visible,
+    .btn:focus-visible,
+    .collapse-item:focus-visible {
+      outline: 2px solid var(--accent-color) !important;
+      outline-offset: 2px !important;
+    }
+
+    /* Touch-Friendly Action Buttons (Min 36px desktop / 42px mobile) */
+    .table .btn,
+    .table .btn-sm,
+    .btn-group-sm > .btn,
+    .btn-group .btn {
+      min-height: 36px;
+      min-width: 36px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.35rem 0.65rem;
+      border-radius: 8px;
+    }
+    @media (max-width: 768px) {
+      .table .btn,
+      .table .btn-sm,
+      .btn-group-sm > .btn,
+      .btn-group .btn {
+        min-height: 42px;
+        min-width: 42px;
+        padding: 0.45rem 0.75rem;
+      }
     }
 
     /* =========================================================

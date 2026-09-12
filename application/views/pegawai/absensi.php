@@ -39,7 +39,7 @@
 		<div class="col-lg-7">
 			<div class="card shadow mb-4">
 				<div class="card-header py-3 bg-dark text-white">
-					<h6 class="m-0 font-weight-bold"><i class="fas fa-user-check"></i> Status Absensi Hari Ini — <?php echo date('d F Y') ?></h6>
+					<h6 class="m-0 font-weight-bold"><i class="fas fa-user-check mr-2"></i>Status Absensi Hari Ini: <?php echo date('d F Y') ?></h6>
 				</div>
 				<div class="card-body">
 					<?php if ($absensi_hari_ini) : ?>

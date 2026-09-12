@@ -65,7 +65,7 @@
 	<div class="card shadow mb-4">
 		<div class="card-header py-3">
 			<h6 class="m-0 font-weight-bold text-primary">
-				Detail Absensi Harian — <?php echo isset($nama_bulan[$bulan]) ? $nama_bulan[$bulan] : '' ?> <?php echo $tahun ?>
+				Detail Absensi Harian: <?php echo isset($nama_bulan[$bulan]) ? $nama_bulan[$bulan] : '' ?> <?php echo $tahun ?>
 			</h6>
 		</div>
 		<div class="card-body">
