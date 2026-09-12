@@ -22,6 +22,14 @@
       $notif_pinjaman = $q_pinjaman ? (int)$q_pinjaman->total : 0;
       
       $total_notif = $notif_cuti + $notif_lembur + $notif_pinjaman;
+
+      // Active menu detection
+      $seg2 = strtolower((string)$this->uri->segment(2));
+      $seg3 = strtolower((string)$this->uri->segment(3));
+      $is_dashboard = ($seg2 == 'dashboard' || empty($seg2));
+      $is_master = in_array($seg2, array('data_pegawai', 'data_jabatan', 'hari_libur'));
+      $is_transaksi = in_array($seg2, array('absensi_harian', 'data_cuti', 'data_lembur', 'data_absensi', 'data_penggajian', 'pinjaman', 'komponen_gaji', 'potongan_gaji'));
+      $is_laporan = in_array($seg2, array('laporan', 'laporan_gaji', 'laporan_absensi', 'laporan_cuti', 'laporan_lembur', 'laporan_potongan', 'laporan_tahunan', 'slip_gaji', 'laporan_pegawai'));
     ?>
 
     <!-- Sidebar -->
@@ -42,28 +50,28 @@
       <hr class="sidebar-divider my-0" style="border-top-color: rgba(255,255,255,0.06);">
 
       <!-- Nav Item - Dashboard -->
-      <li class="nav-item">
+      <li class="nav-item <?php echo $is_dashboard ? 'active' : '' ?>">
         <a class="nav-link" href="<?php echo base_url('admin/dashboard') ?>">
           <i class="fas fa-fw fa-gauge-high"></i>
           <span>Dashboard</span></a>
       </li>
 
       <!-- Nav Item - Master Data Collapse Menu -->
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+      <li class="nav-item <?php echo $is_master ? 'active' : '' ?>">
+        <a class="nav-link <?php echo $is_master ? '' : 'collapsed' ?>" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="<?php echo $is_master ? 'true' : 'false' ?>" aria-controls="collapseTwo">
           <i class="fa fa-fw fa-database"></i>
           <span>Master Data</span>
         </a>
-        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+        <div id="collapseTwo" class="collapse <?php echo $is_master ? 'show' : '' ?>" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
           <div class="collapse-inner">
             <h6 class="collapse-header">Database Entitas:</h6>
-            <a class="collapse-item" href="<?php echo base_url('admin/data_pegawai') ?>">
+            <a class="collapse-item <?php echo ($seg2 == 'data_pegawai') ? 'active font-weight-bold' : '' ?>" href="<?php echo base_url('admin/data_pegawai') ?>">
               <i class="fas fa-users-cog mr-2 text-primary"></i> Data Pegawai
             </a>
-            <a class="collapse-item" href="<?php echo base_url('admin/data_jabatan') ?>">
+            <a class="collapse-item <?php echo ($seg2 == 'data_jabatan') ? 'active font-weight-bold' : '' ?>" href="<?php echo base_url('admin/data_jabatan') ?>">
               <i class="fas fa-sitemap mr-2 text-info"></i> Data Jabatan
             </a>
-            <a class="collapse-item" href="<?php echo base_url('admin/hari_libur') ?>">
+            <a class="collapse-item <?php echo ($seg2 == 'hari_libur') ? 'active font-weight-bold' : '' ?>" href="<?php echo base_url('admin/hari_libur') ?>">
               <i class="fas fa-calendar-day mr-2 text-warning"></i> Hari Libur Nasional
             </a>
           </div>
@@ -71,88 +79,85 @@
       </li>
 
       <!-- Nav Item - Transaksi Collapse Menu -->
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="false" aria-controls="collapseUtilities">
+      <li class="nav-item <?php echo $is_transaksi ? 'active' : '' ?>">
+        <a class="nav-link <?php echo $is_transaksi ? '' : 'collapsed' ?>" href="#" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="<?php echo $is_transaksi ? 'true' : 'false' ?>" aria-controls="collapseUtilities">
           <i class="fas fa-fw fa-money-bill-transfer"></i>
           <span>Transaksi</span>
         </a>
-        <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+        <div id="collapseUtilities" class="collapse <?php echo $is_transaksi ? 'show' : '' ?>" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
           <div class="collapse-inner">
             <h6 class="collapse-header">Presensi & Kehadiran:</h6>
-            <a class="collapse-item" href="<?php echo base_url('admin/absensi_harian') ?>">
+            <a class="collapse-item <?php echo ($seg2 == 'absensi_harian' && $seg3 != 'rekap' && $seg3 != 'setting') ? 'active font-weight-bold' : '' ?>" href="<?php echo base_url('admin/absensi_harian') ?>">
               <i class="fas fa-desktop mr-2 text-primary"></i> Monitoring Hari Ini
             </a>
-            <a class="collapse-item" href="<?php echo base_url('admin/absensi_harian/rekap') ?>">
+            <a class="collapse-item <?php echo ($seg2 == 'absensi_harian' && $seg3 == 'rekap') ? 'active font-weight-bold' : '' ?>" href="<?php echo base_url('admin/absensi_harian/rekap') ?>">
               <i class="fas fa-clipboard-check mr-2 text-info"></i> Rekap Absensi
             </a>
-            <a class="collapse-item" href="<?php echo base_url('admin/data_cuti') ?>">
+            <a class="collapse-item <?php echo ($seg2 == 'data_cuti' && $seg3 != 'setting') ? 'active font-weight-bold' : '' ?>" href="<?php echo base_url('admin/data_cuti') ?>">
               <i class="fas fa-calendar-check mr-2 text-warning"></i> Pengajuan Cuti / Izin
               <?php if($notif_cuti > 0) { ?>
                 <span class="badge badge-warning ml-auto px-1 font-weight-bold" style="font-size: 0.65rem; border-radius: 4px;"><?php echo $notif_cuti ?></span>
               <?php } ?>
             </a>
-            <a class="collapse-item" href="<?php echo base_url('admin/data_cuti/setting') ?>">
+            <a class="collapse-item <?php echo ($seg2 == 'data_cuti' && $seg3 == 'setting') ? 'active font-weight-bold' : '' ?>" href="<?php echo base_url('admin/data_cuti/setting') ?>">
               <i class="fas fa-sliders-h mr-2 text-secondary"></i> Setting Kuota Cuti
             </a>
-            <a class="collapse-item" href="<?php echo base_url('admin/data_lembur') ?>">
+            <a class="collapse-item <?php echo ($seg2 == 'data_lembur') ? 'active font-weight-bold' : '' ?>" href="<?php echo base_url('admin/data_lembur') ?>">
               <i class="fas fa-business-time mr-2 text-success"></i> Data Lembur
               <?php if($notif_lembur > 0) { ?>
                 <span class="badge badge-info ml-auto px-1 font-weight-bold" style="font-size: 0.65rem; border-radius: 4px;"><?php echo $notif_lembur ?></span>
               <?php } ?>
             </a>
-            <a class="collapse-item" href="<?php echo base_url('admin/absensi_harian/setting') ?>">
+            <a class="collapse-item <?php echo ($seg2 == 'absensi_harian' && $seg3 == 'setting') ? 'active font-weight-bold' : '' ?>" href="<?php echo base_url('admin/absensi_harian/setting') ?>">
               <i class="fas fa-map-marker-alt mr-2 text-danger"></i> Setting Absensi & GPS
             </a>
-            <a class="collapse-item" href="<?php echo base_url('admin/data_absensi') ?>">
+            <a class="collapse-item <?php echo ($seg2 == 'data_absensi') ? 'active font-weight-bold' : '' ?>" href="<?php echo base_url('admin/data_absensi') ?>">
               <i class="fas fa-history mr-2 text-muted"></i> Data Absensi (Lama)
             </a>
 
             <div class="dropdown-divider my-1"></div>
 
             <h6 class="collapse-header">Penggajian & Keuangan:</h6>
-            <a class="collapse-item" href="<?php echo base_url('admin/data_penggajian') ?>">
+            <a class="collapse-item <?php echo ($seg2 == 'data_penggajian') ? 'active font-weight-bold' : '' ?>" href="<?php echo base_url('admin/data_penggajian') ?>">
               <i class="fas fa-money-check-alt mr-2 text-success"></i> Data Gaji Pegawai
             </a>
-            <a class="collapse-item" href="<?php echo base_url('admin/pinjaman') ?>">
+            <a class="collapse-item <?php echo ($seg2 == 'pinjaman') ? 'active font-weight-bold' : '' ?>" href="<?php echo base_url('admin/pinjaman') ?>">
               <i class="fas fa-hand-holding-usd mr-2 text-danger"></i> Pinjaman Karyawan
               <?php if($notif_pinjaman > 0) { ?>
                 <span class="badge badge-danger ml-auto px-1 font-weight-bold" style="font-size: 0.65rem; border-radius: 4px;"><?php echo $notif_pinjaman ?></span>
               <?php } ?>
             </a>
-            <a class="collapse-item" href="<?php echo base_url('admin/komponen_gaji') ?>">
-              <i class="fas fa-layer-group mr-2 text-primary"></i> Komponen Gaji
-            </a>
-            <a class="collapse-item" href="<?php echo base_url('admin/potongan_gaji') ?>">
-              <i class="fas fa-percent mr-2 text-warning"></i> Setting Potongan Gaji
+            <a class="collapse-item <?php echo in_array($seg2, array('komponen_gaji', 'potongan_gaji')) ? 'active font-weight-bold' : '' ?>" href="<?php echo base_url('admin/komponen_gaji') ?>">
+              <i class="fas fa-sliders-h mr-2 text-primary"></i> Komponen & Potongan
             </a>
           </div>
         </div>
       </li>
 
       <!-- Nav Item - Pages Collapse Menu -->
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
+      <li class="nav-item <?php echo $is_laporan ? 'active' : '' ?>">
+        <a class="nav-link <?php echo $is_laporan ? '' : 'collapsed' ?>" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="<?php echo $is_laporan ? 'true' : 'false' ?>" aria-controls="collapsePages">
           <i class="fas fa-fw fa-chart-pie"></i>
           <span>Laporan</span>
         </a>
-        <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+        <div id="collapsePages" class="collapse <?php echo $is_laporan ? 'show' : '' ?>" aria-labelledby="headingPages" data-parent="#accordionSidebar">
           <div class="collapse-inner">
-            <a class="collapse-item font-weight-bold text-primary mb-1" href="<?php echo base_url('admin/laporan') ?>" style="background: rgba(14, 165, 233, 0.08); border-radius: 8px;">
+            <a class="collapse-item font-weight-bold text-primary mb-1 <?php echo ($seg2 == 'laporan') ? 'active' : '' ?>" href="<?php echo base_url('admin/laporan') ?>" style="background: rgba(14, 165, 233, 0.08); border-radius: 8px;">
               <i class="fas fa-th-large mr-2 text-primary"></i> Pusat Laporan Terpadu
             </a>
             <div class="dropdown-divider my-1"></div>
 
             <h6 class="collapse-header">Laporan Transaksi:</h6>
-            <a class="collapse-item" href="<?php echo base_url('admin/laporan_gaji') ?>"><i class="fas fa-file-invoice-dollar mr-2 text-primary"></i> Gaji Bulanan</a>
-            <a class="collapse-item" href="<?php echo base_url('admin/laporan_absensi') ?>"><i class="fas fa-user-check mr-2 text-info"></i> Presensi / Absensi</a>
-            <a class="collapse-item" href="<?php echo base_url('admin/laporan_cuti') ?>"><i class="fas fa-calendar-minus mr-2 text-warning"></i> Cuti & Izin</a>
-            <a class="collapse-item" href="<?php echo base_url('admin/laporan_lembur') ?>"><i class="fas fa-business-time mr-2 text-secondary"></i> Lembur Karyawan</a>
-            <a class="collapse-item" href="<?php echo base_url('admin/laporan_potongan') ?>"><i class="fas fa-percent mr-2 text-danger"></i> Potongan Gaji</a>
+            <a class="collapse-item <?php echo ($seg2 == 'laporan_gaji') ? 'active font-weight-bold' : '' ?>" href="<?php echo base_url('admin/laporan_gaji') ?>"><i class="fas fa-file-invoice-dollar mr-2 text-primary"></i> Gaji Bulanan</a>
+            <a class="collapse-item <?php echo ($seg2 == 'laporan_absensi') ? 'active font-weight-bold' : '' ?>" href="<?php echo base_url('admin/laporan_absensi') ?>"><i class="fas fa-user-check mr-2 text-info"></i> Presensi / Absensi</a>
+            <a class="collapse-item <?php echo ($seg2 == 'laporan_cuti') ? 'active font-weight-bold' : '' ?>" href="<?php echo base_url('admin/laporan_cuti') ?>"><i class="fas fa-calendar-minus mr-2 text-warning"></i> Cuti & Izin</a>
+            <a class="collapse-item <?php echo ($seg2 == 'laporan_lembur') ? 'active font-weight-bold' : '' ?>" href="<?php echo base_url('admin/laporan_lembur') ?>"><i class="fas fa-business-time mr-2 text-secondary"></i> Lembur Karyawan</a>
+            <a class="collapse-item <?php echo ($seg2 == 'laporan_potongan') ? 'active font-weight-bold' : '' ?>" href="<?php echo base_url('admin/laporan_potongan') ?>"><i class="fas fa-percent mr-2 text-danger"></i> Potongan Gaji</a>
             
             <h6 class="collapse-header">Laporan Master & Rekap:</h6>
-            <a class="collapse-item" href="<?php echo base_url('admin/laporan_tahunan') ?>"><i class="fas fa-chart-line mr-2 text-success"></i> Gaji Tahunan</a>
-            <a class="collapse-item" href="<?php echo base_url('admin/slip_gaji') ?>"><i class="fas fa-receipt mr-2 text-dark"></i> Cetak Slip Gaji</a>
-            <a class="collapse-item" href="<?php echo base_url('admin/laporan_pegawai') ?>"><i class="fas fa-address-book mr-2 text-primary"></i> Master Pegawai</a>
+            <a class="collapse-item <?php echo ($seg2 == 'laporan_tahunan') ? 'active font-weight-bold' : '' ?>" href="<?php echo base_url('admin/laporan_tahunan') ?>"><i class="fas fa-chart-line mr-2 text-success"></i> Gaji Tahunan</a>
+            <a class="collapse-item <?php echo ($seg2 == 'slip_gaji') ? 'active font-weight-bold' : '' ?>" href="<?php echo base_url('admin/slip_gaji') ?>"><i class="fas fa-receipt mr-2 text-dark"></i> Cetak Slip Gaji</a>
+            <a class="collapse-item <?php echo ($seg2 == 'laporan_pegawai') ? 'active font-weight-bold' : '' ?>" href="<?php echo base_url('admin/laporan_pegawai') ?>"><i class="fas fa-address-book mr-2 text-primary"></i> Master Pegawai</a>
             <a class="collapse-item" target="_blank" href="<?php echo base_url('admin/data_jabatan/cetak_data_jabatan') ?>"><i class="fas fa-network-wired mr-2 text-info"></i> Standar Jabatan</a>
           </div>
         </div>

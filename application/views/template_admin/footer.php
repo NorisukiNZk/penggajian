@@ -44,7 +44,7 @@
 <script src="https://cdn.datatables.net/2.2.2/js/dataTables.min.js"></script>
 <script>
 $(document).ready(function() {
-  if ($.fn.DataTable && $('#dataTable').length > 0) {
+  if ($.fn.DataTable && $('#dataTable').length > 0 && !$.fn.DataTable.isDataTable('#dataTable')) {
     $('#dataTable').DataTable({
       responsive: true,
       pageLength: 10,
@@ -65,6 +65,13 @@ $(document).ready(function() {
       }
     });
   }
+
+  // Adjust table widths when toggling tabs
+  $('a[data-toggle="tab"], a[data-toggle="pill"]').on('shown.bs.tab', function(e) {
+    if ($.fn.DataTable) {
+      $($.fn.dataTable.tables(true)).DataTable().columns.adjust();
+    }
+  });
 });
 </script>
 

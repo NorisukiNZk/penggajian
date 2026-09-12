@@ -18,17 +18,99 @@ class Komponen_Gaji extends CI_Controller {
 	}
 
 	/**
-	 * Halaman daftar semua komponen gaji
+	 * Halaman terpadu komponen gaji dan setting potongan penalti absensi
 	 */
 	public function index() 
 	{
-		$data['title'] = "Komponen Gaji (Tunjangan & Potongan)";
+		$data['title'] = "Komponen & Potongan Gaji";
 		$data['komponen'] = $this->ModelKomponen->get_all_komponen();
+		$data['pot_gaji'] = $this->ModelPenggajian->get_data('potongan_gaji')->result();
+		$data['active_tab'] = $this->input->get('tab', TRUE) ? $this->input->get('tab', TRUE) : 'komponen';
 
 		$this->load->view('template_admin/header', $data);
 		$this->load->view('template_admin/sidebar');
 		$this->load->view('admin/komponen/data_komponen', $data);
 		$this->load->view('template_admin/footer');
+	}
+
+	/**
+	 * Tambah tarif denda potongan absensi (Alpha)
+	 */
+	public function tambah_potongan_aksi()
+	{
+		$potongan     = $this->input->post('potongan', TRUE);
+		$jml_potongan = $this->input->post('jml_potongan', TRUE);
+
+		if (empty($potongan) || empty($jml_potongan)) {
+			$this->session->set_flashdata('pesan', '<div class="alert alert-danger alert-dismissible fade show" role="alert">
+				<strong>Gagal!</strong> Nama Potongan dan Jumlah wajib diisi.
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+				</button>
+				</div>');
+		} else {
+			$data = array(
+				'potongan'     => $potongan,
+				'jml_potongan' => $jml_potongan,
+			);
+			$this->ModelPenggajian->insert_data($data, 'potongan_gaji');
+			$this->session->set_flashdata('pesan', '<div class="alert alert-success alert-dismissible fade show" role="alert">
+				<strong>Sukses!</strong> Tarif denda absensi berhasil ditambahkan.
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+				</button>
+				</div>');
+		}
+		redirect('admin/komponen_gaji?tab=potongan');
+	}
+
+	/**
+	 * Update tarif denda potongan absensi (Alpha)
+	 */
+	public function update_potongan_aksi()
+	{
+		$id           = $this->input->post('id', TRUE);
+		$potongan     = $this->input->post('potongan', TRUE);
+		$jml_potongan = $this->input->post('jml_potongan', TRUE);
+
+		if (empty($potongan) || empty($jml_potongan)) {
+			$this->session->set_flashdata('pesan', '<div class="alert alert-danger alert-dismissible fade show" role="alert">
+				<strong>Gagal!</strong> Nama Potongan dan Jumlah wajib diisi.
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+				</button>
+				</div>');
+		} else {
+			$data = array(
+				'potongan'     => $potongan,
+				'jml_potongan' => $jml_potongan,
+			);
+			$where = array('id' => $id);
+			$this->ModelPenggajian->update_data('potongan_gaji', $data, $where);
+			$this->session->set_flashdata('pesan', '<div class="alert alert-success alert-dismissible fade show" role="alert">
+				<strong>Sukses!</strong> Tarif denda absensi berhasil diperbarui.
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+				</button>
+				</div>');
+		}
+		redirect('admin/komponen_gaji?tab=potongan');
+	}
+
+	/**
+	 * Hapus tarif denda potongan absensi
+	 */
+	public function delete_potongan($id)
+	{
+		$where = array('id' => $id);
+		$this->ModelPenggajian->delete_data($where, 'potongan_gaji');
+		$this->session->set_flashdata('pesan', '<div class="alert alert-success alert-dismissible fade show" role="alert">
+			<strong>Sukses!</strong> Tarif denda absensi berhasil dihapus.
+			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+			</button>
+			</div>');
+		redirect('admin/komponen_gaji?tab=potongan');
 	}
 
 	/**

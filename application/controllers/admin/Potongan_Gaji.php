@@ -17,13 +17,7 @@ class Potongan_Gaji extends CI_Controller {
 
 	public function index() 
 	{
-		$data['title'] = "Setting Potongan Gaji";
-		$data['pot_gaji'] = $this->ModelPenggajian->get_data('potongan_gaji')->result();
-
-		$this->load->view('template_admin/header', $data);
-		$this->load->view('template_admin/sidebar');
-		$this->load->view('admin/potongan_gaji/data_potonganGaji', $data);
-		$this->load->view('template_admin/footer');
+		redirect('admin/komponen_gaji?tab=potongan');
 	}
 
 	public function tambah_data_aksi() {
@@ -50,7 +44,7 @@ class Potongan_Gaji extends CI_Controller {
 				</button>
 				</div>');
 		}
-		redirect('admin/potongan_gaji');
+		redirect('admin/komponen_gaji?tab=potongan');
 	}
 
 	public function update_data_aksi() {
@@ -83,7 +77,7 @@ class Potongan_Gaji extends CI_Controller {
 				</button>
 				</div>');
 		}
-		redirect('admin/potongan_gaji');
+		redirect('admin/komponen_gaji?tab=potongan');
 	}
 
 	public function _rules() {
@@ -100,7 +94,7 @@ class Potongan_Gaji extends CI_Controller {
 				<span aria-hidden="true">&times;</span>
 				</button>
 				</div>');
-			redirect('admin/potongan_gaji');
+		redirect('admin/komponen_gaji?tab=potongan');
 	}
 
 }
