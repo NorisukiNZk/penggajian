@@ -195,9 +195,11 @@ foreach ($potongan as $p) {
 								$pot_pinjaman = isset($komponen_per_pegawai[$g->nik]) ? (int)$komponen_per_pegawai[$g->nik]['pinjaman']['total'] : 0;
 								$total_gaji = (int)$g->gaji_pokok + (int)$g->tj_transport + (int)$g->uang_makan + $uang_lembur + $tj_lain - $potongan_alpha - $pot_lain - $pot_pinjaman;
 								
-								$photo_url = (!empty($g->photo) && file_exists(FCPATH . 'assets/photo/' . $g->photo)) 
-									? base_url('assets/photo/' . $g->photo) 
-									: base_url('assets/photo/default.png');
+								$photo_url = (!empty($g->photo) && file_exists(FCPATH . 'photo/' . $g->photo)) 
+									? base_url('photo/' . $g->photo) 
+									: ((!empty($g->photo) && file_exists(FCPATH . 'assets/photo/' . $g->photo)) 
+										? base_url('assets/photo/' . $g->photo) 
+										: base_url('assets/img/kpmh.png'));
 							?>
 								<tr>
 									<td class="text-center align-middle"><?php echo $no++; ?></td>

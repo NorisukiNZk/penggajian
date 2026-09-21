@@ -27,45 +27,56 @@
       <!-- Divider -->
       <hr class="sidebar-divider my-0" style="border-top-color: rgba(255,255,255,0.06);">
 
+      <?php
+        $seg2 = strtolower((string)$this->uri->segment(2));
+        $seg3 = strtolower((string)$this->uri->segment(3));
+        $is_dashboard = ($seg2 == 'dashboard' || empty($seg2));
+        $is_absensi = ($seg2 == 'absensi' && $seg3 != 'riwayat');
+        $is_lembur = ($seg2 == 'lembur');
+        $is_riwayat = ($seg2 == 'absensi' && $seg3 == 'riwayat');
+        $is_cuti = ($seg2 == 'cuti');
+        $is_gaji = ($seg2 == 'data_gaji');
+        $is_pinjaman = ($seg2 == 'pinjaman');
+      ?>
+
       <!-- Nav Item - Dashboard -->
-      <li class="nav-item">
+      <li class="nav-item <?php echo $is_dashboard ? 'active' : ''; ?>">
         <a class="nav-link" href="<?php echo base_url('pegawai/dashboard') ?>">
           <i class="fas fa-fw fa-tachometer-alt"></i>
           <span>Dashboard</span></a>
       </li>
 
-
-      <li class="nav-item">
+      <li class="nav-item <?php echo $is_absensi ? 'active' : ''; ?>">
         <a class="nav-link" href="<?php echo base_url('pegawai/absensi') ?>">
           <i class="fas fa-fw fa-clock"></i>
           <span>Absensi</span></a>
       </li>
 
-      <li class="nav-item">
+      <li class="nav-item <?php echo $is_lembur ? 'active' : ''; ?>">
         <a class="nav-link" href="<?php echo base_url('pegawai/lembur') ?>">
-          <i class="fas fa-fw fa-clock"></i>
+          <i class="fas fa-fw fa-business-time"></i>
           <span>Pengajuan Lembur</span></a>
       </li>
 
-      <li class="nav-item">
+      <li class="nav-item <?php echo $is_riwayat ? 'active' : ''; ?>">
         <a class="nav-link" href="<?php echo base_url('pegawai/absensi/riwayat') ?>">
           <i class="fas fa-fw fa-calendar-check"></i>
           <span>Riwayat Absensi</span></a>
       </li>
 
-      <li class="nav-item">
+      <li class="nav-item <?php echo $is_cuti ? 'active' : ''; ?>">
         <a class="nav-link" href="<?php echo base_url('pegawai/cuti') ?>">
           <i class="fas fa-fw fa-file-signature"></i>
           <span>Pengajuan Cuti</span></a>
       </li>
 
-      <li class="nav-item">
+      <li class="nav-item <?php echo $is_gaji ? 'active' : ''; ?>">
         <a class="nav-link" href="<?php echo base_url('pegawai/data_gaji') ?>">
           <i class="fas fa-fw fa-money-check-alt"></i>
           <span>Data Gaji</span></a>
       </li>
 
-      <li class="nav-item">
+      <li class="nav-item <?php echo $is_pinjaman ? 'active' : ''; ?>">
         <a class="nav-link" href="<?php echo base_url('pegawai/pinjaman') ?>">
           <i class="fas fa-fw fa-hand-holding-usd"></i>
           <span>Pinjaman (Kasbon)</span></a>
@@ -112,8 +123,8 @@
             <!-- Nav Item - Alerts Pegawai -->
             <?php 
               $nik_user = $this->session->userdata('nik');
-              $notif_cuti_user = $this->db->query("SELECT * FROM data_cuti WHERE nik='$nik_user' ORDER BY id_cuti DESC LIMIT 2")->result();
-              $notif_pinjaman_user = $this->db->query("SELECT * FROM data_pinjaman WHERE nik='$nik_user' ORDER BY id_pinjaman DESC LIMIT 2")->result();
+              $notif_cuti_user = $this->db->query("SELECT * FROM data_cuti WHERE nik = ? ORDER BY id_cuti DESC LIMIT 2", array($nik_user))->result();
+              $notif_pinjaman_user = $this->db->query("SELECT * FROM data_pinjaman WHERE nik = ? ORDER BY id_pinjaman DESC LIMIT 2", array($nik_user))->result();
               $total_notif_user = count($notif_cuti_user) + count($notif_pinjaman_user);
             ?>
             <li class="nav-item dropdown no-arrow mx-1">

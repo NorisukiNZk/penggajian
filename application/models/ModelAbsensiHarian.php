@@ -165,7 +165,7 @@ class ModelAbsensiHarian extends CI_Model
         }
 
         // 2b. Ambil Hari Libur Nasional di bulan tersebut yang BUKAN hari Minggu
-        $libur_nasional = $this->db->query("SELECT * FROM hari_libur WHERE MONTH(tanggal) = '$bulan' AND YEAR(tanggal) = '$tahun'")->result();
+        $libur_nasional = $this->db->query("SELECT * FROM hari_libur WHERE MONTH(tanggal) = ? AND YEAR(tanggal) = ?", array($bulan, $tahun))->result();
         $jumlah_libur_nasional = 0;
         foreach($libur_nasional as $ln) {
             // Jika jatuhnya bukan hari Minggu, maka tambah pengurang hari wajib
@@ -218,7 +218,8 @@ class ModelAbsensiHarian extends CI_Model
 
             // Hitung terlambat yang jadi alpha tambahan
             $setting = $this->get_setting();
-            $alpha_dari_terlambat = floor($terlambat / $setting->maks_terlambat_jadi_alpha);
+            $maks_terlambat = (!empty($setting->maks_terlambat_jadi_alpha) && (int)$setting->maks_terlambat_jadi_alpha > 0) ? (int)$setting->maks_terlambat_jadi_alpha : 3;
+            $alpha_dari_terlambat = floor($terlambat / $maks_terlambat);
 
             $rekap[] = array(
                 'nik'                  => $p->nik,

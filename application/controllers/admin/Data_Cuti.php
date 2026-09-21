@@ -178,6 +178,15 @@ class Data_Cuti extends CI_Controller {
             $pesan_admin = 'Ditolak: Tidak memenuhi persyaratan atau tidak tersedia backup operasional.';
         }
 
+        // Jika sebelumnya disetujui, bersihkan data absensi izin/cuti yang sempat di-inject
+        if ($cuti->status_cuti == 'Disetujui') {
+            $this->db->where('nik', $cuti->nik);
+            $this->db->where('tanggal >=', $cuti->tanggal_mulai);
+            $this->db->where('tanggal <=', $cuti->tanggal_akhir);
+            $this->db->like('keterangan', 'Cuti');
+            $this->db->delete('absensi_harian');
+        }
+
         $this->db->where('id_cuti', $id);
         $this->db->update('data_cuti', [
             'status_cuti'     => 'Ditolak',
@@ -195,12 +204,23 @@ class Data_Cuti extends CI_Controller {
 
     public function hapus($id) {
         $cuti = $this->db->get_where('data_cuti', ['id_cuti' => $id])->row();
-        if ($cuti && !empty($cuti->file_lampiran) && file_exists('./uploads/cuti/' . $cuti->file_lampiran)) {
-            @unlink('./uploads/cuti/' . $cuti->file_lampiran);
-        }
+        if ($cuti) {
+            // Jika sebelumnya disetujui, bersihkan data absensi izin/cuti yang sempat di-inject
+            if ($cuti->status_cuti == 'Disetujui') {
+                $this->db->where('nik', $cuti->nik);
+                $this->db->where('tanggal >=', $cuti->tanggal_mulai);
+                $this->db->where('tanggal <=', $cuti->tanggal_akhir);
+                $this->db->like('keterangan', 'Cuti');
+                $this->db->delete('absensi_harian');
+            }
 
-        $this->db->where('id_cuti', $id);
-        $this->db->delete('data_cuti');
+            if (!empty($cuti->file_lampiran) && file_exists('./uploads/cuti/' . $cuti->file_lampiran)) {
+                @unlink('./uploads/cuti/' . $cuti->file_lampiran);
+            }
+
+            $this->db->where('id_cuti', $id);
+            $this->db->delete('data_cuti');
+        }
 
         $this->session->set_flashdata('pesan', '<div class="alert alert-success alert-dismissible fade show" role="alert">
             <strong>Data Dihapus!</strong> Data pengajuan cuti telah berhasil dihapus dari sistem.

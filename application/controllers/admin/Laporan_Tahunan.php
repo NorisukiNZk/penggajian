@@ -82,10 +82,13 @@ class Laporan_Tahunan extends CI_Controller {
                     // Hitung Potongan
                     $pot_alpha = $kehadiran->alpha * $alpha_deduction;
                     $pot_dinamis = $this->ModelKomponen->hitung_total_potongan($p->nik, $bulantahun, $p->gaji_pokok);
-                    $total_potongan += ($pot_alpha + $pot_dinamis['total']);
+                    $pinjaman = $this->ModelPenggajian->hitung_potongan_pinjaman($p->nik, $bulan_loop, $tahun);
+                    $pot_pinjaman_total = isset($pinjaman['total']) ? (int)$pinjaman['total'] : 0;
+                    
+                    $total_potongan += ($pot_alpha + $pot_dinamis['total'] + $pot_pinjaman_total);
 
                     // Hitung Bersih Bulan Ini
-                    $bersih_bln = $gaji_bln + $lembur['uang_lembur'] + $tj_dinamis['total'] - ($pot_alpha + $pot_dinamis['total']);
+                    $bersih_bln = $gaji_bln + $lembur['uang_lembur'] + $tj_dinamis['total'] - ($pot_alpha + $pot_dinamis['total'] + $pot_pinjaman_total);
                     $total_bersih += $bersih_bln;
                 }
             }

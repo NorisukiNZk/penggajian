@@ -41,8 +41,8 @@ class Laporan_Lembur extends CI_Controller {
 		$data['lembur'] = $this->db->query("SELECT data_lembur.*, data_pegawai.nama_pegawai, data_pegawai.nik 
             FROM data_lembur 
             INNER JOIN data_pegawai ON data_lembur.nik = data_pegawai.nik 
-            WHERE DATE_FORMAT(data_lembur.tanggal_lembur, '%Y-%m') = '$bulantahun' AND data_lembur.status = 'Disetujui' 
-            ORDER BY data_lembur.tanggal_lembur ASC")->result();
+            WHERE DATE_FORMAT(data_lembur.tanggal_lembur, '%Y-%m') = ? AND data_lembur.status = 'Disetujui' 
+            ORDER BY data_lembur.tanggal_lembur ASC", array($bulantahun))->result();
             
 		$data['bulan'] = $bulan;
 		$data['tahun'] = $tahun;
