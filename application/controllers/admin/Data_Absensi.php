@@ -46,29 +46,42 @@ class Data_Absensi extends CI_Controller {
 	{
 		if($this->input->post('submit', TRUE) == 'submit') {
 			$post = $this->input->post();
+			$simpan = array();
 
-			foreach ($post['bulan'] as $key => $value) {
-				if($post['bulan'][$key] !='' || $post['nik'][$key] !='')
-				{
-					$simpan[] = array(
-						'bulan'			=> $post['bulan'][$key],
-						'nik'			=> $post['nik'][$key],
-						'nama_pegawai'	=> $post['nama_pegawai'][$key],
-						'jenis_kelamin'	=> $post['jenis_kelamin'][$key],
-						'nama_jabatan'	=> $post['nama_jabatan'][$key],
-						'hadir'			=> $post['hadir'][$key],
-						'sakit'			=> $post['sakit'][$key],
-						'alpha'			=> $post['alpha'][$key],
-					);
+			if (!empty($post['bulan']) && is_array($post['bulan'])) {
+				foreach ($post['bulan'] as $key => $value) {
+					if(!empty($post['bulan'][$key]) && !empty($post['nik'][$key]))
+					{
+						$simpan[] = array(
+							'bulan'			=> $post['bulan'][$key],
+							'nik'			=> $post['nik'][$key],
+							'nama_pegawai'	=> $post['nama_pegawai'][$key],
+							'jenis_kelamin'	=> $post['jenis_kelamin'][$key],
+							'nama_jabatan'	=> $post['nama_jabatan'][$key],
+							'hadir'			=> (int)$post['hadir'][$key],
+							'sakit'			=> (int)$post['sakit'][$key],
+							'alpha'			=> (int)$post['alpha'][$key],
+						);
+					}
 				}
 			}
-			$this->ModelPenggajian->insert_batch('data_kehadiran', $simpan);
-			$this->session->set_flashdata('pesan','<div class="alert alert-success alert-dismissible fade show" role="alert">
-				<strong>Data berhasil ditambahkan!</strong>
-				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-				<span aria-hidden="true">&times;</span>
-				</button>
-				</div>');
+
+			if (!empty($simpan)) {
+				$this->ModelPenggajian->insert_batch('data_kehadiran', $simpan);
+				$this->session->set_flashdata('pesan','<div class="alert alert-success alert-dismissible fade show" role="alert">
+					<strong>Data berhasil ditambahkan!</strong>
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+					</button>
+					</div>');
+			} else {
+				$this->session->set_flashdata('pesan','<div class="alert alert-warning alert-dismissible fade show" role="alert">
+					<strong>Tidak ada data yang disimpan!</strong> Semua pegawai pada periode ini sudah memiliki data kehadiran atau tidak ada data yang dipilih.
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+					</button>
+					</div>');
+			}
 			redirect('admin/data_absensi');
 
 		}

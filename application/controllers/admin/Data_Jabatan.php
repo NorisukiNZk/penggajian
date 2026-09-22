@@ -90,6 +90,9 @@ class Data_Jabatan extends CI_Controller {
 			$tj_transport	= $this->input->post('tj_transport');
 			$uang_makan		= $this->input->post('uang_makan');
 
+			// Ambil nama jabatan lama
+			$old = $this->db->get_where('data_jabatan', array('id_jabatan' => $id))->row();
+
 			$data = array(
 				'nama_jabatan' 	=> $nama_jabatan,
 				'gaji_pokok' 	=> $gaji_pokok,
@@ -101,7 +104,18 @@ class Data_Jabatan extends CI_Controller {
 				'id_jabatan' => $id
 			);
 
+			$this->db->trans_start();
+
 			$this->ModelPenggajian->update_data('data_jabatan', $data, $where);
+
+			// Jika nama jabatan diubah, sinkronkan ke data_pegawai dan data_kehadiran agar JOIN payroll tidak terputus
+			if ($old && $old->nama_jabatan != $nama_jabatan) {
+				$this->db->where('jabatan', $old->nama_jabatan)->update('data_pegawai', array('jabatan' => $nama_jabatan));
+				$this->db->where('nama_jabatan', $old->nama_jabatan)->update('data_kehadiran', array('nama_jabatan' => $nama_jabatan));
+			}
+
+			$this->db->trans_complete();
+
 			$this->session->set_flashdata('pesan','<div class="alert alert-success alert-dismissible fade show" role="alert">
 				<strong>Data berhasil diupdate!</strong>
 				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -136,15 +150,34 @@ class Data_Jabatan extends CI_Controller {
 	}
 
 	public function delete_data($id) {
-		$where = array('id_jabatan' => $id);
-		$this->ModelPenggajian->delete_data($where, 'data_jabatan');
-		$this->session->set_flashdata('pesan','<div class="alert alert-danger alert-dismissible fade show" role="alert">
-				<strong>Data berhasil dihapus!</strong>
+		$jabatan = $this->db->get_where('data_jabatan', array('id_jabatan' => $id))->row();
+		if (!$jabatan) {
+			redirect('admin/data_jabatan');
+			return;
+		}
+
+		// Proteksi integritas relasional: periksa apakah jabatan sedang dipakai oleh pegawai aktif
+		$cek_pegawai = $this->db->get_where('data_pegawai', array('jabatan' => $jabatan->nama_jabatan))->num_rows();
+		if ($cek_pegawai > 0) {
+			$this->session->set_flashdata('pesan','<div class="alert alert-danger alert-dismissible fade show" role="alert">
+				<strong>Gagal Menghapus!</strong> Jabatan "<strong>' . htmlspecialchars($jabatan->nama_jabatan, ENT_QUOTES, 'UTF-8') . '</strong>" masih digunakan oleh ' . $cek_pegawai . ' pegawai aktif. Silakan mutasikan jabatan pegawai terkait terlebih dahulu sebelum menghapus master jabatan ini.
 				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 				<span aria-hidden="true">&times;</span>
 				</button>
 				</div>');
 			redirect('admin/data_jabatan');
+			return;
+		}
+
+		$where = array('id_jabatan' => $id);
+		$this->ModelPenggajian->delete_data($where, 'data_jabatan');
+		$this->session->set_flashdata('pesan','<div class="alert alert-success alert-dismissible fade show" role="alert">
+				<strong>Data berhasil dihapus!</strong>
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+				</button>
+				</div>');
+		redirect('admin/data_jabatan');
 	}
 
 	public function cetak_data_jabatan() {

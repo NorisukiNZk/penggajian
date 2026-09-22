@@ -38,6 +38,9 @@ class Laporan_Lembur extends CI_Controller {
 			$bulantahun = $tahun . '-' . $bulan;
 		}
 	
+		$setting = $this->db->get_where('setting_absensi', array('id' => 1))->row();
+		$data['tarif_lembur'] = $setting ? (int)$setting->tarif_lembur_per_jam : 20000;
+
 		$data['lembur'] = $this->db->query("SELECT data_lembur.*, data_pegawai.nama_pegawai, data_pegawai.nik 
             FROM data_lembur 
             INNER JOIN data_pegawai ON data_lembur.nik = data_pegawai.nik 

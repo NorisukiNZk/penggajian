@@ -217,15 +217,89 @@ class Data_Pegawai extends CI_Controller {
 	}
 
 	public function delete_data($id) {
-		$where = array('id_pegawai' => $id);
-		$this->ModelPenggajian->delete_data($where, 'data_pegawai');
-		$this->session->set_flashdata('pesan','<div class="alert alert-danger alert-dismissible fade show" role="alert">
-				<strong>Data berhasil dihapus!</strong>
+		$pegawai = $this->db->get_where('data_pegawai', array('id_pegawai' => $id))->row();
+		if (!$pegawai) {
+			redirect('admin/data_pegawai');
+			return;
+		}
+
+		// Proteksi: cegah admin menghapus akunnya sendiri yang sedang aktif
+		if ($this->session->userdata('id_pegawai') == $id) {
+			$this->session->set_flashdata('pesan','<div class="alert alert-danger alert-dismissible fade show" role="alert">
+				<strong>Gagal!</strong> Anda tidak dapat menghapus akun Anda sendiri yang sedang aktif login.
 				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 				<span aria-hidden="true">&times;</span>
 				</button>
 				</div>');
 			redirect('admin/data_pegawai');
+			return;
+		}
+
+		$nik = $pegawai->nik;
+
+		// Hapus cascading seluruh data terkait dalam transaksi atomik
+		$this->db->trans_start();
+
+		// 1. Bersihkan file berkas cuti
+		$cuti_list = $this->db->get_where('data_cuti', array('nik' => $nik))->result();
+		foreach ($cuti_list as $c) {
+			if (!empty($c->file_lampiran) && file_exists('./uploads/cuti/' . $c->file_lampiran)) {
+				@unlink('./uploads/cuti/' . $c->file_lampiran);
+			}
+		}
+		$this->db->where('nik', $nik)->delete('data_cuti');
+
+		// 2. Bersihkan file berkas pinjaman
+		$pinjaman_list = $this->db->get_where('data_pinjaman', array('nik' => $nik))->result();
+		foreach ($pinjaman_list as $p) {
+			if (!empty($p->file_ktp) && file_exists('./uploads/pinjaman/' . $p->file_ktp)) {
+				@unlink('./uploads/pinjaman/' . $p->file_ktp);
+			}
+			if (!empty($p->file_jaminan) && file_exists('./uploads/pinjaman/' . $p->file_jaminan)) {
+				@unlink('./uploads/pinjaman/' . $p->file_jaminan);
+			}
+		}
+		$this->db->where('nik', $nik)->delete('data_pinjaman');
+
+		// 3. Bersihkan data lembur
+		$this->db->where('nik', $nik)->delete('data_lembur');
+
+		// 4. Bersihkan absensi harian & kehadiran
+		$this->db->where('nik', $nik)->delete('absensi_harian');
+		$this->db->where('nik', $nik)->delete('data_kehadiran');
+
+		// 5. Bersihkan komponen gaji override
+		$this->db->where('nik', $nik)->delete('komponen_gaji_pegawai');
+
+		// 6. Hapus foto pegawai jika bukan avatar default
+		if (!empty($pegawai->photo) && !in_array($pegawai->photo, ['pegawai-default.png', 'default.png', 'default.jpg'])) {
+			if (file_exists('./photo/' . $pegawai->photo)) {
+				@unlink('./photo/' . $pegawai->photo);
+			}
+		}
+
+		// 7. Hapus data pegawai utama
+		$this->db->where('id_pegawai', $id)->delete('data_pegawai');
+
+		$this->db->trans_complete();
+
+		if ($this->db->trans_status() === FALSE) {
+			$this->session->set_flashdata('pesan','<div class="alert alert-danger alert-dismissible fade show" role="alert">
+				<strong>Gagal!</strong> Terjadi kendala teknis saat menghapus data pegawai dan riwayat terkait.
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+				</button>
+				</div>');
+		} else {
+			$this->session->set_flashdata('pesan','<div class="alert alert-success alert-dismissible fade show" role="alert">
+				<strong>Sukses!</strong> Data pegawai beserta seluruh riwayat terkait berhasil dihapus secara bersih.
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+				</button>
+				</div>');
+		}
+
+		redirect('admin/data_pegawai');
 	}
 
 	public function cetak()

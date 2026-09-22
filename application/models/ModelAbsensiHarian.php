@@ -152,35 +152,68 @@ class ModelAbsensiHarian extends CI_Model
         $pegawai_list = $this->db->get('data_pegawai')->result();
         $rekap = array();
 
-        // 1. Hitung Total Hari dalam bulan tersebut (menggunakan date 't' aman dari ekstensi cal_days_in_month)
-        $total_hari = date('t', mktime(0, 0, 0, $bulan, 1, $tahun));
+        $cur_year = (int)date('Y');
+        $cur_month = (int)date('n');
+        $req_year = (int)$tahun;
+        $req_month = (int)$bulan;
+
+        $is_future = ($req_year > $cur_year) || ($req_year == $cur_year && $req_month > $cur_month);
+        $is_current_month = ($req_year == $cur_year && $req_month == $cur_month);
+
+        // 1. Hitung Batas Hari dalam bulan tersebut
+        $total_hari_bulan = (int)date('t', mktime(0, 0, 0, $req_month, 1, $req_year));
         
-        // 2. Hitung jumlah hari Minggu (Libur) dalam bulan tersebut
-        $jumlah_minggu = 0;
-        for ($i = 1; $i <= $total_hari; $i++) {
-            $tanggal = $tahun . '-' . $bulan . '-' . sprintf('%02d', $i);
-            if (date('N', strtotime($tanggal)) == 7) { // 7 = Minggu
-                $jumlah_minggu++;
-            }
+        if ($is_future) {
+            $hari_evaluasi = 0; // Periode masa depan belum berjalan
+        } elseif ($is_current_month) {
+            $hari_evaluasi = min($total_hari_bulan, (int)date('j')); // Hanya evaluasi hingga hari ini
+        } else {
+            $hari_evaluasi = $total_hari_bulan; // Sebulan penuh untuk bulan yang telah lampau
         }
 
-        // 2b. Ambil Hari Libur Nasional di bulan tersebut yang BUKAN hari Minggu
-        $libur_nasional = $this->db->query("SELECT * FROM hari_libur WHERE MONTH(tanggal) = ? AND YEAR(tanggal) = ?", array($bulan, $tahun))->result();
-        $jumlah_libur_nasional = 0;
-        foreach($libur_nasional as $ln) {
-            // Jika jatuhnya bukan hari Minggu, maka tambah pengurang hari wajib
-            if (date('N', strtotime($ln->tanggal)) != 7) {
-                $jumlah_libur_nasional++;
-            }
-        }
-        
-        // 3. Total Hari Kerja Wajib dalam Sebulan (Dikurangi Minggu & Libur Nasional)
-        $hari_kerja_wajib = $total_hari - $jumlah_minggu - $jumlah_libur_nasional;
+        // Ambil Hari Libur Nasional di bulan & tahun tersebut
+        $libur_nasional = $this->db->query("SELECT * FROM hari_libur WHERE MONTH(tanggal) = ? AND YEAR(tanggal) = ?", array($req_month, $req_year))->result();
+
+        // Ambil pengaturan batas toleransi keterlambatan
+        $setting = $this->get_setting();
+        $maks_terlambat = (!empty($setting->maks_terlambat_jadi_alpha) && (int)$setting->maks_terlambat_jadi_alpha > 0) ? (int)$setting->maks_terlambat_jadi_alpha : 3;
 
         foreach ($pegawai_list as $p) {
+            // Hitung hari kerja wajib yang telah berjalan khusus untuk pegawai ini (memperhatikan tanggal_masuk)
+            $hari_kerja_wajib = 0;
+            if ($hari_evaluasi > 0) {
+                for ($i = 1; $i <= $hari_evaluasi; $i++) {
+                    $tanggal = sprintf('%04d-%02d-%02d', $req_year, $req_month, $i);
+
+                    // Jangan bebankan hari sebelum tanggal pegawai resmi mulai bekerja
+                    if (!empty($p->tanggal_masuk) && $p->tanggal_masuk != '0000-00-00' && $tanggal < $p->tanggal_masuk) {
+                        continue;
+                    }
+
+                    // Abaikan hari Minggu
+                    if (date('N', strtotime($tanggal)) == 7) {
+                        continue;
+                    }
+
+                    // Abaikan Hari Libur Nasional
+                    $is_libur = false;
+                    foreach ($libur_nasional as $ln) {
+                        if ($ln->tanggal == $tanggal) {
+                            $is_libur = true;
+                            break;
+                        }
+                    }
+                    if ($is_libur) {
+                        continue;
+                    }
+
+                    $hari_kerja_wajib++;
+                }
+            }
+
             $this->db->where('nik', $p->nik);
-            $this->db->where('MONTH(tanggal)', $bulan);
-            $this->db->where('YEAR(tanggal)', $tahun);
+            $this->db->where('MONTH(tanggal)', $req_month);
+            $this->db->where('YEAR(tanggal)', $req_year);
             $absensi = $this->db->get('absensi_harian')->result();
 
             $hadir = 0;
@@ -203,22 +236,14 @@ class ModelAbsensiHarian extends CI_Model
                     case 'izin':
                         $izin++;
                         break;
-                    // Abaikan status alpha dari database jika ada, karena kita hitung secara matematis
                 }
             }
 
-            // 4. Hitung Alpha Pintar (Hari Kerja Wajib - Hari Masuk/Izin/Sakit)
+            // Hitung Alpha Pintar (Hari Kerja Wajib yang sudah lewat - Kehadiran Sah)
             $total_kehadiran_sah = $hadir + $sakit + $izin;
-            $alpha_hari_kosong = $hari_kerja_wajib - $total_kehadiran_sah;
-            
-            // Antisipasi bug jika pegawai masuk di hari minggu (overtime) sehingga total sah lebih besar dari hari wajib
-            if ($alpha_hari_kosong < 0) {
-                $alpha_hari_kosong = 0;
-            }
+            $alpha_hari_kosong = max(0, $hari_kerja_wajib - $total_kehadiran_sah);
 
-            // Hitung terlambat yang jadi alpha tambahan
-            $setting = $this->get_setting();
-            $maks_terlambat = (!empty($setting->maks_terlambat_jadi_alpha) && (int)$setting->maks_terlambat_jadi_alpha > 0) ? (int)$setting->maks_terlambat_jadi_alpha : 3;
+            // Hitung terlambat yang dikonversi jadi penalti alpha
             $alpha_dari_terlambat = floor($terlambat / $maks_terlambat);
 
             $rekap[] = array(

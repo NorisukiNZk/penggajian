@@ -354,12 +354,17 @@
                 $no = 1;
                 $total_uang = 0;
                 $total_jam = 0;
+                $tarif_per_jam = isset($tarif_lembur) ? (int)$tarif_lembur : 20000;
                 if(!empty($lembur)) :
                     foreach($lembur as $l) : 
-                        $t_mulai = strtotime($l->tanggal_lembur . ' ' . $l->jam_mulai);
-                        $t_selesai = strtotime($l->tanggal_lembur . ' ' . $l->jam_selesai);
-                        $durasi = round(abs($t_selesai - $t_mulai) / 3600, 1);
-                        $uang = $durasi * 40000;
+                        $durasi = (int)$l->durasi_jam;
+                        if ($durasi <= 0) {
+                            $t_mulai = strtotime($l->tanggal_lembur . ' ' . $l->jam_mulai);
+                            $t_selesai = strtotime($l->tanggal_lembur . ' ' . $l->jam_selesai);
+                            if ($t_selesai < $t_mulai) $t_selesai += 86400;
+                            $durasi = round(abs($t_selesai - $t_mulai) / 3600, 1);
+                        }
+                        $uang = $durasi * $tarif_per_jam;
                         
                         $total_jam += $durasi;
                         $total_uang += $uang;

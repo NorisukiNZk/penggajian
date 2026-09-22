@@ -81,8 +81,11 @@ class ModelPenggajian extends CI_model{
 					$jam_sah = round($interval / 3600); // Bulatkan ke jam terdekat
 					$total_jam_aktual += $jam_sah;
 				}
+			} else {
+				// Jika tidak ada data checkout harian (misal lembur hari libur/akhir pekan/tugas dinas luar),
+				// gunakan durasi lembur yang telah diverifikasi dan disetujui secara resmi oleh Manajemen HRD
+				$total_jam_aktual += (int) $lembur->durasi_jam;
 			}
-			// Jika belum absen pulang sama sekali, durasinya dihitung 0
 		}
 
 		$uang_lembur = $total_jam_aktual * $tarif_lembur;
