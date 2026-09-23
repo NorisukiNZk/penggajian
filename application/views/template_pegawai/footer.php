@@ -144,7 +144,7 @@ $(document).ready(function() {
 </script>
 
 
-<!-- Modern SweetAlert2 v11.17+ -->
+<!-- SweetAlert2 v11.17 -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.17.2/dist/sweetalert2.all.min.js"></script>
 <script>
 $(document).ready(function() {
@@ -152,10 +152,54 @@ $(document).ready(function() {
         return document.body.classList.contains('dark-mode');
     }
 
-    // =========================================================
-    // BERSIH & TENANG: Konfirmasi Tindakan Kritis (SweetAlert2)
-    // Flashdata alert tetap tampil tenang sebagai Bootstrap Alert asli di halaman
-    // =========================================================
+    // Configure non-blocking toast notifications
+    const toastConfig = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3500,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+        }
+    });
+
+    // Global helper for triggering toast messages
+    window.showToast = function(icon, title, text) {
+        const isDark = isDarkMode();
+        toastConfig.fire({
+            icon: icon || 'info',
+            title: title || 'Pemberitahuan',
+            text: text || '',
+            background: isDark ? '#1e293b' : '#ffffff',
+            color: isDark ? '#f8fafc' : '#0f172a'
+        });
+    };
+
+    // Auto-detect server flashdata alerts and display as non-blocking toast
+    const $flashAlert = $('.alert.alert-dismissible').first();
+    if ($flashAlert.length) {
+        let icon = 'info';
+        if ($flashAlert.hasClass('alert-success')) icon = 'success';
+        else if ($flashAlert.hasClass('alert-danger')) icon = 'error';
+        else if ($flashAlert.hasClass('alert-warning')) icon = 'warning';
+        else if ($flashAlert.hasClass('alert-info')) icon = 'info';
+
+        const $clone = $flashAlert.clone();
+        $clone.find('.close, button').remove();
+        const fullText = $clone.text().replace(/\s+/g, ' ').trim();
+
+        if (fullText.length > 0) {
+            window.showToast(icon, fullText);
+            // Hide inline alert for concise messages to keep UI clean
+            if (fullText.length <= 160) {
+                $flashAlert.hide();
+            }
+        }
+    }
+
+    // Critical action confirmation handlers
     $(document).on('click', '.btn-hapus', function(e) {
         e.preventDefault();
         const href = $(this).attr('href');

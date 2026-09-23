@@ -726,6 +726,33 @@
       color: #94a3b8 !important;
     }
 
+    /* Modern SweetAlert2 Toast */
+    .swal2-toast {
+      box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.12), 0 8px 10px -6px rgba(15, 23, 42, 0.06) !important;
+      border-radius: 12px !important;
+      padding: 0.75rem 1.15rem !important;
+      font-size: 0.875rem !important;
+      border: 1px solid rgba(15, 23, 42, 0.08) !important;
+    }
+    .swal2-toast .swal2-title {
+      font-size: 0.875rem !important;
+      font-weight: 600 !important;
+      line-height: 1.4 !important;
+      color: #0f172a !important;
+      margin: 0 !important;
+    }
+    .swal2-toast .swal2-timer-progress-bar {
+      height: 3px !important;
+    }
+    body.dark-mode .swal2-toast {
+      background: #1e293b !important;
+      border-color: #334155 !important;
+      box-shadow: 0 14px 28px rgba(0, 0, 0, 0.45) !important;
+    }
+    body.dark-mode .swal2-toast .swal2-title {
+      color: #f8fafc !important;
+    }
+
     /* Modern SweetAlert2 Logout Dialog */
     .swal2-logout-popup {
       border-radius: 20px !important;
