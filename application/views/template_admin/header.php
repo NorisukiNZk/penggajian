@@ -666,7 +666,17 @@
        ========================================================= */
     .swal2-container {
       font-family: var(--font-main) !important;
+    }
+    .swal2-container:not(.swal2-no-backdrop) {
       background-color: rgba(15, 23, 42, 0.45) !important;
+    }
+    .swal2-container.swal2-no-backdrop {
+      background: transparent !important;
+      background-color: transparent !important;
+      pointer-events: none !important;
+    }
+    .swal2-container.swal2-no-backdrop .swal2-popup {
+      pointer-events: auto !important;
     }
 
     .swal2-popup {
@@ -726,31 +736,141 @@
       color: #94a3b8 !important;
     }
 
-    /* Modern SweetAlert2 Toast */
-    .swal2-toast {
-      box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.12), 0 8px 10px -6px rgba(15, 23, 42, 0.06) !important;
-      border-radius: 12px !important;
-      padding: 0.75rem 1.15rem !important;
-      font-size: 0.875rem !important;
-      border: 1px solid rgba(15, 23, 42, 0.08) !important;
+    /* Corporate SweetAlert2 Toast */
+    .swal2-container.swal2-top-end,
+    .swal2-container.swal2-top-right {
+      top: 18px !important;
+      right: 20px !important;
+      padding: 0 !important;
+      background: transparent !important;
+      background-color: transparent !important;
     }
-    .swal2-toast .swal2-title {
-      font-size: 0.875rem !important;
+    .swal2-toast-corporate {
+      background: #ffffff !important;
+      border-radius: 12px !important;
+      padding: 0.65rem 1.1rem !important;
+      box-shadow: 0 10px 25px -4px rgba(15, 23, 42, 0.14), 0 4px 6px -2px rgba(15, 23, 42, 0.05) !important;
+      border: 1px solid rgba(15, 23, 42, 0.08) !important;
+      align-items: center !important;
+      min-height: 48px !important;
+      overflow: hidden !important;
+    }
+    .swal2-toast-corporate .swal2-icon {
+      width: 24px !important;
+      height: 24px !important;
+      min-width: 24px !important;
+      margin: 0 10px 0 0 !important;
+      border: none !important;
+      background: transparent !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      flex-shrink: 0 !important;
+    }
+    .swal2-toast-corporate .swal2-icon .swal2-icon-content {
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      font-size: 1.25rem !important;
+      line-height: 1 !important;
+    }
+    .swal2-toast-corporate .swal2-title {
+      font-size: 0.885rem !important;
       font-weight: 600 !important;
-      line-height: 1.4 !important;
       color: #0f172a !important;
       margin: 0 !important;
+      line-height: 1.4 !important;
+      letter-spacing: -0.01em !important;
     }
-    .swal2-toast .swal2-timer-progress-bar {
-      height: 3px !important;
+    .swal2-toast-corporate .toast-corporate-detail {
+      font-size: 0.8rem !important;
+      color: #64748b !important;
+      margin-top: 2px !important;
+      font-weight: 400 !important;
+      line-height: 1.35 !important;
     }
-    body.dark-mode .swal2-toast {
+    .swal2-toast-corporate .swal2-timer-progress-bar {
+      height: 2.5px !important;
+      background: #10b981 !important;
+    }
+    .swal2-toast-corporate.swal2-toast-error .swal2-timer-progress-bar {
+      background: #ef4444 !important;
+    }
+    .swal2-toast-corporate.swal2-toast-warning .swal2-timer-progress-bar {
+      background: #f59e0b !important;
+    }
+    .swal2-toast-corporate.swal2-toast-info .swal2-timer-progress-bar {
+      background: #0284c7 !important;
+    }
+    html.dark-mode .swal2-toast-corporate,
+    body.dark-mode .swal2-toast-corporate {
       background: #1e293b !important;
       border-color: #334155 !important;
-      box-shadow: 0 14px 28px rgba(0, 0, 0, 0.45) !important;
+      box-shadow: 0 16px 32px rgba(0, 0, 0, 0.45) !important;
     }
-    body.dark-mode .swal2-toast .swal2-title {
+    html.dark-mode .swal2-toast-corporate .swal2-title,
+    body.dark-mode .swal2-toast-corporate .swal2-title {
       color: #f8fafc !important;
+    }
+    html.dark-mode .swal2-toast-corporate .toast-corporate-detail,
+    body.dark-mode .swal2-toast-corporate .toast-corporate-detail {
+      color: #94a3b8 !important;
+    }
+
+    /* Corporate SweetAlert2 Center Modal */
+    .swal2-corporate-modal {
+      border-radius: 18px !important;
+      padding: 1.85rem 1.75rem 1.5rem !important;
+      border: 1px solid #e2e8f0 !important;
+      box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.25) !important;
+      width: 440px !important;
+      background: #ffffff !important;
+    }
+    .swal2-corporate-modal .swal2-icon {
+      margin: 0.25rem auto 1.15rem auto !important;
+      transform: scale(0.88);
+    }
+    .swal2-corporate-modal .swal2-title {
+      font-size: 1.25rem !important;
+      font-weight: 700 !important;
+      color: #0f172a !important;
+      margin-bottom: 0.5rem !important;
+      letter-spacing: -0.015em !important;
+    }
+    .corporate-modal-desc {
+      font-size: 0.915rem !important;
+      color: #64748b !important;
+      line-height: 1.55 !important;
+      margin-bottom: 0.25rem !important;
+    }
+    .swal2-corporate-modal .swal2-actions {
+      gap: 0.75rem !important;
+      margin-top: 1.5rem !important;
+      width: 100% !important;
+      justify-content: center !important;
+    }
+    .swal2-corporate-modal .swal2-actions .btn {
+      min-width: 120px !important;
+      border-radius: 10px !important;
+      font-size: 0.885rem !important;
+      padding: 0.6rem 1.25rem !important;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    }
+    .swal2-corporate-modal .swal2-actions .btn:hover {
+      transform: translateY(-1px) !important;
+    }
+    html.dark-mode .swal2-corporate-modal,
+    body.dark-mode .swal2-corporate-modal {
+      background: #1e293b !important;
+      border-color: #334155 !important;
+    }
+    html.dark-mode .swal2-corporate-modal .swal2-title,
+    body.dark-mode .swal2-corporate-modal .swal2-title {
+      color: #f8fafc !important;
+    }
+    html.dark-mode .corporate-modal-desc,
+    body.dark-mode .corporate-modal-desc {
+      color: #94a3b8 !important;
     }
 
     /* Modern SweetAlert2 Logout Dialog */

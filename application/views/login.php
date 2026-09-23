@@ -23,15 +23,18 @@
   <style>
     :root {
       --font-main: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-      --navy-deep: #07172b;
+      --navy-deep: #061528;
       --navy-main: #0c2b4d;
-      --navy-light: #123d6c;
+      --navy-light: #164070;
       --sky-main: #0284c7;
       --sky-hover: #0369a1;
-      --bg-slate: #f8fafc;
+      --sky-light: #f0f9ff;
+      --slate-bg: #f8fafc;
       --border-color: #e2e8f0;
+      --border-focus: #38bdf8;
       --text-dark: #0f172a;
       --text-muted: #64748b;
+      --emerald-accent: #10b981;
     }
 
     * {
@@ -40,46 +43,91 @@
 
     body {
       font-family: var(--font-main) !important;
-      background-color: var(--bg-slate);
+      background-color: var(--slate-bg);
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(14, 165, 233, 0.08) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(12, 43, 77, 0.08) 0px, transparent 50%),
+        radial-gradient(at 100% 0%, rgba(16, 185, 129, 0.05) 0px, transparent 40%);
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
       margin: 0;
-      padding: 1.5rem 1rem;
+      padding: 2rem 1rem;
       color: var(--text-dark);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .auth-wrapper {
+      width: 100%;
+      max-width: 980px;
+      margin: auto;
     }
 
     .auth-card {
-      width: 100%;
-      max-width: 940px;
       background: #ffffff;
-      border-radius: 16px;
-      border: 1px solid var(--border-color);
-      box-shadow: 0 20px 40px -10px rgba(12, 43, 77, 0.12);
+      border-radius: 22px;
+      border: 1px solid rgba(226, 232, 240, 0.9);
+      box-shadow: 0 25px 60px -15px rgba(12, 43, 77, 0.14), 0 10px 25px -5px rgba(12, 43, 77, 0.04);
       overflow: hidden;
       display: flex;
       flex-wrap: wrap;
     }
 
+    /* Left Brand Panel */
     .brand-panel {
       flex: 1.05;
-      background: linear-gradient(150deg, var(--navy-deep) 0%, var(--navy-main) 60%, var(--navy-light) 100%);
+      background: linear-gradient(155deg, var(--navy-deep) 0%, var(--navy-main) 55%, var(--navy-light) 100%);
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      padding: 3.5rem 2.5rem;
+      justify-content: space-between;
+      padding: 3.5rem 2.75rem;
       color: #ffffff;
       text-align: center;
       position: relative;
     }
 
+    .brand-panel::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(circle at 20% 15%, rgba(14, 165, 233, 0.15), transparent 45%),
+                  radial-gradient(circle at 80% 85%, rgba(16, 185, 129, 0.1), transparent 45%);
+      pointer-events: none;
+    }
+
+    .brand-content {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .brand-logo-wrap {
+      width: 96px;
+      height: 96px;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+    }
+
     .brand-logo {
-      width: 105px;
+      width: 64px;
       height: auto;
-      margin-bottom: 1.25rem;
-      filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.25));
+      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
     }
 
     .brand-badge {
@@ -88,139 +136,262 @@
       background: rgba(14, 165, 233, 0.16);
       border: 1px solid rgba(56, 189, 248, 0.35);
       color: #7dd3fc;
-      padding: 0.3rem 0.85rem;
-      border-radius: 6px;
-      font-size: 0.75rem;
+      padding: 0.35rem 0.95rem;
+      border-radius: 999px;
+      font-size: 0.725rem;
       font-weight: 700;
-      letter-spacing: 0.06em;
-      margin-bottom: 1rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 1.25rem;
+      gap: 0.4rem;
     }
 
-    .brand-panel h1 {
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      background-color: var(--emerald-accent);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--emerald-accent);
+      display: inline-block;
+    }
+
+    .brand-title {
+      font-size: 1.55rem;
       font-weight: 800;
       color: #ffffff;
-      font-size: 1.45rem;
-      letter-spacing: -0.02em;
-      margin-bottom: 0.5rem;
+      letter-spacing: -0.025em;
+      line-height: 1.25;
+      margin-bottom: 0.65rem;
     }
 
-    .brand-panel p {
+    .brand-description {
       color: #94a3b8;
-      font-size: 0.875rem;
+      font-size: 0.885rem;
       line-height: 1.6;
       max-width: 320px;
-      margin: 0 auto 1.75rem auto;
+      margin: 0 auto 2rem auto;
     }
 
-    .brand-features {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      text-align: left;
+    .brand-features-list {
       width: 100%;
-      max-width: 300px;
+      max-width: 330px;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-bottom: 2rem;
     }
 
-    .brand-features li {
+    .brand-feature-item {
       display: flex;
       align-items: center;
-      font-size: 0.825rem;
-      color: #cbd5e1;
-      margin-bottom: 0.75rem;
+      gap: 0.85rem;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 0.75rem 1rem;
+      border-radius: 12px;
+      text-align: left;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
     }
 
-    .brand-features li i {
-      width: 22px;
+    .feature-icon-box {
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      background: rgba(56, 189, 248, 0.18);
       color: #38bdf8;
-      margin-right: 0.5rem;
-      font-size: 0.875rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      flex-shrink: 0;
     }
 
+    .feature-text-group h4 {
+      font-size: 0.825rem;
+      font-weight: 700;
+      color: #f1f5f9;
+      margin: 0 0 2px 0;
+    }
+
+    .feature-text-group p {
+      font-size: 0.725rem;
+      color: #94a3b8;
+      margin: 0;
+      line-height: 1.35;
+    }
+
+    .brand-footer-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.725rem;
+      color: #64748b;
+      background: rgba(255, 255, 255, 0.04);
+      padding: 0.35rem 0.85rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    /* Right Form Container */
     .form-container {
       flex: 1;
-      padding: 3.5rem 3rem;
+      padding: 3.5rem 3.25rem;
       display: flex;
       flex-direction: column;
       justify-content: center;
       background: #ffffff;
     }
 
-    .form-container h2 {
-      font-weight: 800;
-      color: var(--navy-main);
-      font-size: 1.35rem;
-      letter-spacing: -0.02em;
-      margin-bottom: 0.25rem;
+    .form-header-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.725rem;
+      font-weight: 700;
+      color: var(--sky-main);
+      background: var(--sky-light);
+      padding: 0.25rem 0.75rem;
+      border-radius: 6px;
+      margin-bottom: 0.75rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
     }
 
-    .form-container p.subtitle {
+    .auth-title {
+      font-weight: 800;
+      color: var(--navy-main);
+      font-size: 1.5rem;
+      letter-spacing: -0.025em;
+      margin-bottom: 0.35rem;
+    }
+
+    .auth-subtitle {
       color: var(--text-muted);
-      font-size: 0.875rem;
-      margin-bottom: 1.75rem;
+      font-size: 0.885rem;
+      margin-bottom: 1.85rem;
+      line-height: 1.5;
     }
 
     .form-label {
-      font-size: 0.85rem;
+      font-size: 0.84rem;
       font-weight: 700;
       color: #334155;
-      margin-bottom: 0.35rem;
+      margin-bottom: 0.45rem;
       display: block;
     }
 
+    .input-wrapper {
+      position: relative;
+    }
+
     .form-control-modern {
-      border-radius: 10px;
-      padding: 0.75rem 1rem;
-      padding-right: 2.75rem;
+      border-radius: 12px;
+      padding: 0.8rem 1rem 0.8rem 2.85rem;
       border: 1.5px solid var(--border-color);
       background-color: #f8fafc;
       font-size: 0.925rem;
       font-family: var(--font-main);
-      transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+      color: var(--text-dark);
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
       width: 100%;
       outline: none;
-      min-height: 46px;
+      min-height: 48px;
+    }
+
+    .form-control-modern:hover {
+      border-color: #cbd5e1;
+      background-color: #ffffff;
     }
 
     .form-control-modern:focus {
       border-color: var(--sky-main);
-      box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.18);
+      box-shadow: 0 0 0 4px rgba(2, 132, 199, 0.12);
       background-color: #ffffff;
     }
 
-    .input-icon-modern {
+    .input-icon-left {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #94a3b8;
+      font-size: 0.925rem;
+      pointer-events: none;
+      transition: color 0.2s;
+    }
+
+    .form-control-modern:focus ~ .input-icon-left {
+      color: var(--sky-main);
+    }
+
+    .password-toggle-btn {
       position: absolute;
       right: 14px;
       top: 50%;
       transform: translateY(-50%);
       color: #94a3b8;
-      transition: color 0.2s;
+      font-size: 0.95rem;
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 6px;
+      transition: all 0.15s;
     }
 
-    .input-icon-modern.clickable:hover {
+    .password-toggle-btn:hover {
       color: var(--sky-main);
-      cursor: pointer;
+      background: #f1f5f9;
+    }
+
+    .link-forgot {
+      color: var(--sky-main);
+      font-size: 0.825rem;
+      font-weight: 700;
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+
+    .link-forgot:hover {
+      color: var(--sky-hover);
+      text-decoration: underline;
+    }
+
+    .recaptcha-wrapper {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+      overflow: hidden;
+      border-radius: 6px;
     }
 
     .btn-auth-primary {
-      background: linear-gradient(135deg, var(--navy-main) 0%, var(--navy-light) 100%);
+      background: linear-gradient(135deg, var(--navy-main) 0%, #114277 50%, var(--sky-main) 100%);
       color: #ffffff;
-      border-radius: 10px;
+      border-radius: 12px;
       padding: 0.85rem 1.5rem;
       font-weight: 700;
       font-size: 0.95rem;
+      letter-spacing: -0.01em;
       border: none;
-      transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
-      box-shadow: 0 4px 12px rgba(12, 43, 77, 0.2);
-      min-height: 48px;
+      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 8px 20px -4px rgba(12, 43, 77, 0.3);
+      min-height: 50px;
       width: 100%;
       cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
     }
 
     .btn-auth-primary:hover {
-      background: linear-gradient(135deg, var(--navy-light) 0%, #1a5c9f 100%);
-      transform: translateY(-1px);
-      box-shadow: 0 8px 20px rgba(12, 43, 77, 0.28);
+      transform: translateY(-1.5px);
+      box-shadow: 0 12px 28px -4px rgba(2, 132, 199, 0.4);
       color: #ffffff;
+    }
+
+    .btn-auth-primary:active {
+      transform: scale(0.985);
     }
 
     .btn-auth-primary:focus-visible {
@@ -228,77 +399,122 @@
       outline-offset: 3px;
     }
 
-    .demo-accounts-box {
-      background-color: #f1f5f9;
-      border: 1px dashed #cbd5e1;
-      border-radius: 10px;
-      padding: 0.75rem 1rem;
-      margin-top: 1.25rem;
+    .btn-arrow {
+      transition: transform 0.2s ease;
     }
 
-    .demo-chip {
-      background: #ffffff;
-      border: 1px solid #cbd5e1;
-      border-radius: 6px;
-      padding: 0.25rem 0.6rem;
-      font-size: 0.75rem;
-      color: var(--navy-main);
-      font-weight: 600;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      transition: all 0.15s;
+    .btn-auth-primary:hover .btn-arrow {
+      transform: translateX(3px);
     }
 
-    .demo-chip:hover {
-      border-color: var(--sky-main);
-      color: var(--sky-main);
-      background: #f0f9ff;
+    .form-footer-copyright {
+      text-align: center;
+      margin-top: 2rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid #f1f5f9;
+      color: #94a3b8;
+      font-size: 0.785rem;
     }
 
-    @media (max-width: 768px) {
+    /* SweetAlert2 Corporate Modal */
+    .swal2-container {
+      font-family: var(--font-main) !important;
+    }
+    .swal2-corporate-modal {
+      border-radius: 18px !important;
+      padding: 1.85rem 1.75rem 1.5rem !important;
+      border: 1px solid #e2e8f0 !important;
+      box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.25) !important;
+      width: 400px !important;
+      max-width: 90vw !important;
+      background: #ffffff !important;
+    }
+
+    @media (max-width: 860px) {
       .brand-panel { display: none; }
-      .form-container { padding: 2.5rem 1.75rem; }
-      .auth-card { border-radius: 14px; margin: 0.5rem; }
+      .form-container { padding: 2.75rem 2rem; }
+      .auth-card { border-radius: 16px; margin: 0.5rem; }
     }
   </style>
 </head>
 
 <body>
-  <main class="container d-flex justify-content-center align-items-center">
+  <main class="auth-wrapper">
     <div class="auth-card">
       
       <!-- Sisi Kiri: Panel Informasi Klinik -->
       <section class="brand-panel" aria-label="Informasi Klinik">
-        <img src="<?php echo base_url(); ?>assets/img/kpmh.png" alt="Logo Klinik Pratama Hidayatullah" class="brand-logo">
-        <span class="brand-badge"><i class="fas fa-shield-alt mr-1"></i> PORTAL RESMI HRIS</span>
-        <h1>Klinik Pratama</h1>
-        <p>
-          Sistem Informasi Manajemen Kepegawaian dan Penggajian Terpadu Dr. H.M. Hidayatullah
-        </p>
-        <ul class="brand-features">
-          <li><i class="fas fa-lock"></i> Keamanan Data Kepegawaian</li>
-          <li><i class="fas fa-location-dot"></i> Presensi GPS & Radius Klinik</li>
-          <li><i class="fas fa-file-invoice-dollar"></i> Payroll & Slip Gaji Terstandar</li>
-        </ul>
+        <div class="brand-content">
+          <div class="brand-logo-wrap">
+            <img src="<?php echo base_url(); ?>assets/img/kpmh.png" alt="Logo Klinik Pratama Hidayatullah" class="brand-logo">
+          </div>
+          
+          <span class="brand-badge">
+            <span class="status-dot"></span> PORTAL RESMI HRIS
+          </span>
+          
+          <h1 class="brand-title">Klinik Pratama Dr. H.M. Hidayatullah</h1>
+          <p class="brand-description">
+            Sistem Informasi Manajemen Kepegawaian, Presensi GPS, dan Penggajian Terpadu.
+          </p>
+
+          <div class="brand-features-list">
+            <div class="brand-feature-item">
+              <div class="feature-icon-box">
+                <i class="fas fa-shield-alt"></i>
+              </div>
+              <div class="feature-text-group">
+                <h4>Keamanan Terintegrasi</h4>
+                <p>Enkripsi kata sandi BCRYPT & proteksi CSRF</p>
+              </div>
+            </div>
+
+            <div class="brand-feature-item">
+              <div class="feature-icon-box">
+                <i class="fas fa-map-marker-alt"></i>
+              </div>
+              <div class="feature-text-group">
+                <h4>Presensi GPS & Geofencing</h4>
+                <p>Validasi radius kehadiran pegawai presisi</p>
+              </div>
+            </div>
+
+            <div class="brand-feature-item">
+              <div class="feature-icon-box">
+                <i class="fas fa-file-invoice-dollar"></i>
+              </div>
+              <div class="feature-text-group">
+                <h4>Payroll & Slip Gaji</h4>
+                <p>Kalkulasi gaji pokok, tunjangan, & potongan otomatis</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="brand-footer-pill">
+          <i class="fas fa-lock text-info"></i> Sistem Terenkripsi 256-Bit SSL
+        </div>
       </section>
 
       <!-- Sisi Kanan: Form Autentikasi -->
       <section class="form-container" aria-label="Formulir Masuk">
         <div>
-          <h2>Masuk ke Akun Anda</h2>
-          <p class="subtitle">Gunakan kredensial resmi kepegawaian Anda untuk mengakses portal.</p>
+          <span class="form-header-badge">
+            <i class="fas fa-hospital-user"></i> AUTENTIKASI SINGLE SIGN-ON
+          </span>
+          <h2 class="auth-title">Masuk ke Akun Anda</h2>
+          <p class="auth-subtitle">Gunakan kredensial resmi kepegawaian Anda untuk mengakses portal kerja.</p>
         </div>
         
         <?php echo $this->session->flashdata('pesan'); ?>
 
-        <form method="POST" action="<?php echo base_url('login'); ?>" novalidate>
+        <form method="POST" action="<?php echo base_url('login'); ?>" novalidate id="formLogin">
           
           <div class="form-group mb-3">
             <label class="form-label" for="username">Username SSO</label>
-            <div class="position-relative">
-              <input type="text" class="form-control-modern" id="username" name="username" value="<?php echo set_value('username'); ?>" placeholder="Masukkan Username..." required autofocus autocomplete="username">
-              <i class="fas fa-user input-icon-modern" aria-hidden="true"></i>
+            <div class="input-wrapper">
+              <input type="text" class="form-control-modern" id="username" name="username" value="<?php echo set_value('username'); ?>" placeholder="Masukkan Username SSO..." required autofocus autocomplete="username">
+              <i class="fas fa-user input-icon-left" aria-hidden="true"></i>
             </div>
             <?php echo form_error('username', '<div class="text-small text-danger mt-1">', '</div>'); ?>
           </div>
@@ -306,47 +522,33 @@
           <div class="form-group mb-4">
             <div class="d-flex justify-content-between align-items-center mb-1">
               <label class="form-label mb-0" for="password">Kata Sandi</label>
-              <a href="<?php echo base_url('lupa_password'); ?>" class="text-primary small font-weight-bold" style="text-decoration: none;">
+              <a href="<?php echo base_url('lupa_password'); ?>" class="link-forgot">
                 Lupa Kata Sandi?
               </a>
             </div>
-            <div class="position-relative">
-              <input type="password" class="form-control-modern" name="password" id="password" placeholder="Masukkan Password..." required autocomplete="current-password">
-              <i class="fas fa-eye input-icon-modern clickable" id="togglePassword" title="Tampilkan Kata Sandi" aria-label="Tampilkan Kata Sandi" role="button" tabindex="0"></i>
+            <div class="input-wrapper">
+              <input type="password" class="form-control-modern" name="password" id="password" placeholder="Masukkan Kata Sandi..." required autocomplete="current-password">
+              <i class="fas fa-lock input-icon-left" aria-hidden="true"></i>
+              <i class="fas fa-eye password-toggle-btn" id="togglePassword" title="Tampilkan Kata Sandi" aria-label="Tampilkan Kata Sandi" role="button" tabindex="0"></i>
             </div>
             <?php echo form_error('password', '<div class="text-small text-danger mt-1">', '</div>'); ?>
           </div>
           
           <!-- reCAPTCHA Widget -->
-          <div class="form-group mb-4 d-flex justify-content-center">
+          <div class="recaptcha-wrapper">
             <div class="g-recaptcha" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"></div>
           </div>
           
-          <button type="submit" class="btn-auth-primary">
-            Masuk ke Sistem
+          <button type="submit" class="btn-auth-primary" id="btnSubmitLogin">
+            <span>Masuk ke Sistem</span>
+            <i class="fas fa-arrow-right btn-arrow"></i>
           </button>
         
           <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
         </form>
 
-        <!-- Kredensial Cepat untuk Evaluasi & Demo -->
-        <div class="demo-accounts-box">
-          <div class="d-flex align-items-center justify-content-between mb-1">
-            <span class="text-xs font-weight-bold text-muted text-uppercase"><i class="fas fa-key mr-1"></i> Akun Uji Coba:</span>
-            <span class="text-xs text-muted">Klik untuk mengisi otomatis</span>
-          </div>
-          <div class="d-flex flex-wrap gap-2">
-            <button type="button" class="demo-chip mr-2 mb-1" onclick="fillDemo('waffa', '12345')">
-              <i class="fas fa-user-shield mr-1 text-primary"></i> Admin: waffa
-            </button>
-            <button type="button" class="demo-chip mb-1" onclick="fillDemo('anya', '12345')">
-              <i class="fas fa-user-nurse mr-1 text-success"></i> Pegawai: anya
-            </button>
-          </div>
-        </div>
-
-        <div class="text-center mt-4 pt-3 border-top">
-          <small class="text-muted">&copy; <?php echo date('Y'); ?> Klinik Pratama Dr. H.M. Hidayatullah</small>
+        <div class="form-footer-copyright">
+          <small>&copy; <?php echo date('Y'); ?> Klinik Pratama Dr. H.M. Hidayatullah &bull; All Rights Reserved</small>
         </div>
       </section>
 
@@ -356,6 +558,7 @@
   <!-- Scripts -->
   <script src="<?php echo base_url(); ?>assets/vendor/jquery/jquery.min.js"></script>
   <script src="<?php echo base_url(); ?>assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.17.2/dist/sweetalert2.all.min.js"></script>
   
   <script>
     // Toggle visibilitas kata sandi
@@ -381,15 +584,62 @@
       });
     }
 
-    // Isi kredensial otomatis untuk kemudahan uji coba
-    function fillDemo(username, passwordVal) {
-      const u = document.getElementById('username');
-      const p = document.getElementById('password');
-      if (u && p) {
-        u.value = username;
-        p.value = passwordVal;
-        p.focus();
-      }
+    // Sambutan waktu interaktif saat klik login (Pagi / Siang / Sore / Malam)
+    const loginForm = document.getElementById('formLogin');
+    if (loginForm) {
+      loginForm.addEventListener('submit', function(e) {
+        const u = document.getElementById('username');
+        const p = document.getElementById('password');
+        if (!u || !p || !u.value.trim() || !p.value.trim()) {
+          return;
+        }
+
+        const hour = new Date().getHours();
+        let greeting = 'Selamat Malam';
+        let icon = 'fa-moon';
+        let iconColor = '#6366f1';
+
+        if (hour >= 4 && hour < 11) {
+          greeting = 'Selamat Pagi';
+          icon = 'fa-sun';
+          iconColor = '#f59e0b';
+        } else if (hour >= 11 && hour < 15) {
+          greeting = 'Selamat Siang';
+          icon = 'fa-sun';
+          iconColor = '#0ea5e9';
+        } else if (hour >= 15 && hour < 18.5) {
+          greeting = 'Selamat Sore';
+          icon = 'fa-cloud-sun';
+          iconColor = '#f97316';
+        }
+
+        Swal.fire({
+          html: `
+            <div class="py-2 text-center">
+              <div class="mb-3 d-inline-flex align-items-center justify-content-center" style="width: 58px; height: 58px; border-radius: 50%; background: rgba(14, 165, 233, 0.1);">
+                <i class="fas ${icon}" style="font-size: 1.75rem; color: ${iconColor};"></i>
+              </div>
+              <h4 class="font-weight-bold text-gray-900 mb-1" style="font-size: 1.25rem; letter-spacing: -0.01em;">
+                ${greeting}!
+              </h4>
+              <p class="text-muted small mb-3">
+                Memverifikasi kredensial akun Anda ke sistem...
+              </p>
+              <div class="spinner-border text-primary" style="width: 2rem; height: 2rem; border-width: 2.5px;" role="status">
+                <span class="sr-only">Memuat...</span>
+              </div>
+            </div>
+          `,
+          showConfirmButton: false,
+          allowOutsideClick: false,
+          allowEscapeKey: false,
+          customClass: {
+            popup: 'swal2-corporate-modal'
+          },
+          width: 380,
+          background: '#ffffff'
+        });
+      });
     }
   </script>
 </body>

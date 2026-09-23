@@ -78,6 +78,7 @@ class Login extends CI_Controller {
 				$this->session->set_userdata('photo',$cek->photo);
 				$this->session->set_userdata('id_pegawai',$cek->id_pegawai);
 				$this->session->set_userdata('nik',$cek->nik);
+				$this->session->set_flashdata('login_welcome', $cek->nama_pegawai);
 
 				switch ($cek->hak_akses) {
 					case 1 : redirect('admin/dashboard');

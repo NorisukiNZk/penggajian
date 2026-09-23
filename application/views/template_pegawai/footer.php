@@ -149,35 +149,54 @@ $(document).ready(function() {
 <script>
 $(document).ready(function() {
     function isDarkMode() {
-        return document.body.classList.contains('dark-mode');
+        return document.body.classList.contains('dark-mode') || document.documentElement.classList.contains('dark-mode');
     }
 
-    // Configure non-blocking toast notifications
     const toastConfig = Swal.mixin({
         toast: true,
         position: 'top-end',
         showConfirmButton: false,
         timer: 3500,
         timerProgressBar: true,
+        customClass: {
+            popup: 'swal2-toast-corporate'
+        },
         didOpen: (toast) => {
             toast.onmouseenter = Swal.stopTimer;
             toast.onmouseleave = Swal.resumeTimer;
         }
     });
 
-    // Global helper for triggering toast messages
     window.showToast = function(icon, title, text) {
         const isDark = isDarkMode();
+        const type = icon || 'info';
+        let iconHtml = '';
+        if (type === 'success') {
+            iconHtml = '<i class="fas fa-check-circle" style="color: #10b981; font-size: 1.25rem;"></i>';
+        } else if (type === 'error' || type === 'danger') {
+            iconHtml = '<i class="fas fa-times-circle" style="color: #ef4444; font-size: 1.25rem;"></i>';
+        } else if (type === 'warning') {
+            iconHtml = '<i class="fas fa-exclamation-circle" style="color: #f59e0b; font-size: 1.25rem;"></i>';
+        } else {
+            iconHtml = '<i class="fas fa-info-circle" style="color: #0284c7; font-size: 1.25rem;"></i>';
+        }
+
+        const headline = title || 'Pemberitahuan';
+        const detailHtml = text ? `<div class="toast-corporate-detail">${text}</div>` : '';
+
         toastConfig.fire({
-            icon: icon || 'info',
-            title: title || 'Pemberitahuan',
-            text: text || '',
+            iconHtml: iconHtml,
+            title: headline,
+            html: detailHtml || undefined,
+            customClass: {
+                popup: 'swal2-toast-corporate swal2-toast-' + type,
+                icon: 'swal2-toast-icon-clean'
+            },
             background: isDark ? '#1e293b' : '#ffffff',
             color: isDark ? '#f8fafc' : '#0f172a'
         });
     };
 
-    // Auto-detect server flashdata alerts and display as non-blocking toast
     const $flashAlert = $('.alert.alert-dismissible').first();
     if ($flashAlert.length) {
         let icon = 'info';
@@ -192,32 +211,99 @@ $(document).ready(function() {
 
         if (fullText.length > 0) {
             window.showToast(icon, fullText);
-            // Hide inline alert for concise messages to keep UI clean
             if (fullText.length <= 160) {
                 $flashAlert.hide();
             }
         }
     }
 
-    // Critical action confirmation handlers
+    <?php if ($this->session->flashdata('login_welcome')): ?>
+    (function() {
+        const welcomeName = <?php echo json_encode($this->session->flashdata('login_welcome')); ?>;
+        const hour = new Date().getHours();
+        let greeting = 'Selamat Malam';
+        let icon = 'fa-moon';
+        let iconColor = '#6366f1';
+
+        if (hour >= 4 && hour < 11) {
+            greeting = 'Selamat Pagi';
+            icon = 'fa-sun';
+            iconColor = '#f59e0b';
+        } else if (hour >= 11 && hour < 15) {
+            greeting = 'Selamat Siang';
+            icon = 'fa-sun';
+            iconColor = '#0ea5e9';
+        } else if (hour >= 15 && hour < 18.5) {
+            greeting = 'Selamat Sore';
+            icon = 'fa-cloud-sun';
+            iconColor = '#f97316';
+        }
+
+        const isDark = isDarkMode();
+        toastConfig.fire({
+            iconHtml: `<i class="fas ${icon}" style="color: ${iconColor}; font-size: 1.25rem;"></i>`,
+            title: `${greeting}, ${welcomeName}!`,
+            html: `<div class="toast-corporate-detail">Selamat datang kembali di Portal HRIS Klinik Pratama Hidayatullah.</div>`,
+            timer: 4500,
+            customClass: {
+                popup: 'swal2-toast-corporate',
+                icon: 'swal2-toast-icon-clean'
+            },
+            background: isDark ? '#1e293b' : '#ffffff',
+            color: isDark ? '#f8fafc' : '#0f172a'
+        });
+    })();
+    <?php endif; ?>
+
     $(document).on('click', '.btn-hapus', function(e) {
         e.preventDefault();
         const href = $(this).attr('href');
         const nama = $(this).data('nama') || $(this).attr('title') || 'data ini';
+        const isDark = isDarkMode();
 
         Swal.fire({
-            title: 'Konfirmasi Hapus',
-            text: 'Apakah Anda yakin ingin menghapus ' + nama + '? Tindakan ini tidak dapat dibatalkan.',
+            title: 'Hapus Data?',
+            html: `
+                <div class="corporate-modal-desc">
+                    Apakah Anda yakin ingin menghapus <strong class="${isDark ? 'text-white' : 'text-gray-900'}">${nama}</strong>?
+                </div>
+                <div class="small text-danger mt-2 font-weight-medium">
+                    <i class="fas fa-exclamation-triangle mr-1"></i> Tindakan ini permanen dan tidak dapat dibatalkan.
+                </div>
+            `,
             icon: 'warning',
+            iconColor: '#ef4444',
             showCancelButton: true,
-            confirmButtonColor: '#dc3545',
-            cancelButtonColor: '#6c757d',
-            confirmButtonText: 'Ya, Hapus',
-            cancelButtonText: 'Batal',
-            reverseButtons: true
+            confirmButtonText: '<i class="fas fa-trash-alt mr-1"></i> Ya, Hapus',
+            cancelButtonText: '<i class="fas fa-times mr-1"></i> Batal',
+            customClass: {
+                popup: 'swal2-corporate-modal',
+                confirmButton: 'btn btn-danger font-weight-bold shadow-sm',
+                cancelButton: 'btn btn-light border font-weight-bold shadow-sm text-secondary'
+            },
+            buttonsStyling: false,
+            reverseButtons: true,
+            focusCancel: true,
+            background: isDark ? '#1e293b' : '#ffffff',
+            color: isDark ? '#f8fafc' : '#0f172a'
         }).then((result) => {
             if (result.isConfirmed) {
-                document.location.href = href;
+                Swal.fire({
+                    title: 'Memproses...',
+                    text: 'Sedang menghapus data...',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    showConfirmButton: false,
+                    customClass: {
+                        popup: 'swal2-corporate-modal'
+                    },
+                    background: isDark ? '#1e293b' : '#ffffff',
+                    color: isDark ? '#f8fafc' : '#0f172a',
+                    didOpen: () => {
+                        Swal.showLoading();
+                        document.location.href = href;
+                    }
+                });
             }
         });
     });
@@ -229,17 +315,27 @@ $(document).ready(function() {
         const judul = $(this).data('judul') || 'Konfirmasi Tindakan';
         const pesan = $(this).data('pesan') || 'Apakah Anda yakin ingin melanjutkan proses ini?';
         const tipe = $(this).data('tipe') || 'question';
+        const isDark = isDarkMode();
+        const iconColor = tipe === 'warning' ? '#f59e0b' : (tipe === 'danger' || tipe === 'error' ? '#ef4444' : '#0284c7');
 
         Swal.fire({
             title: judul,
-            text: pesan,
+            html: `<div class="corporate-modal-desc">${pesan}</div>`,
             icon: tipe,
+            iconColor: iconColor,
             showCancelButton: true,
-            confirmButtonColor: '#0c2b4d',
-            cancelButtonColor: '#6c757d',
-            confirmButtonText: 'Ya, Lanjutkan',
-            cancelButtonText: 'Batal',
-            reverseButtons: true
+            confirmButtonText: '<i class="fas fa-check mr-1"></i> Ya, Lanjutkan',
+            cancelButtonText: '<i class="fas fa-times mr-1"></i> Batal',
+            customClass: {
+                popup: 'swal2-corporate-modal',
+                confirmButton: 'btn btn-primary font-weight-bold shadow-sm',
+                cancelButton: 'btn btn-light border font-weight-bold shadow-sm text-secondary'
+            },
+            buttonsStyling: false,
+            reverseButtons: true,
+            focusCancel: true,
+            background: isDark ? '#1e293b' : '#ffffff',
+            color: isDark ? '#f8fafc' : '#0f172a'
         }).then((result) => {
             if (result.isConfirmed) {
                 if (href) {
