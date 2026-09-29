@@ -22,7 +22,7 @@
 
         /* Floating Action Bar */
         .print-action-bar {
-            max-width: 1100px;
+            max-width: 860px;
             margin: 0 auto 20px auto;
             background: #ffffff;
             padding: 12px 20px;
@@ -63,12 +63,12 @@
         }
         .btn-close-doc:hover { background: #e2e8f0; }
 
-        /* Kertas Dokumen */
+        /* Kertas Dokumen A4 Portrait */
         .page-container {
-            max-width: 1100px;
+            max-width: 860px;
             margin: 0 auto;
             background: #ffffff;
-            padding: 35px 40px;
+            padding: 30px 28px;
             border-radius: 14px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
         }
@@ -88,23 +88,22 @@
         .report-title-badge { display: inline-block; font-size: 15px; font-weight: 700; color: #0c2b4d; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid #0284c7; padding-bottom: 4px; margin-bottom: 6px; }
         .report-meta-text { font-size: 12px; color: #64748b; font-weight: 500; }
 
-        /* Tabel Data */
-        table.data-table { width: 100%; border-collapse: collapse; margin-bottom: 25px; font-size: 11px; }
-        table.data-table thead th { background-color: #0c2b4d; color: #ffffff; font-weight: 600; text-align: center; padding: 8px 6px; border: 1px solid #0c2b4d; font-size: 10.5px; }
-        table.data-table tbody td { border: 1px solid #cbd5e1; padding: 7px 6px; vertical-align: middle; color: #1e293b; }
+        /* Tabel Data A4 Portrait */
+        table.data-table { width: 100%; border-collapse: collapse; margin-bottom: 22px; font-size: 9px; table-layout: fixed; }
+        table.data-table thead th { background-color: #0c2b4d; color: #ffffff; font-weight: 600; text-align: center; padding: 6px 3px; border: 1px solid #0c2b4d; font-size: 8.5px; letter-spacing: 0.2px; word-wrap: break-word; }
+        table.data-table tbody td { border: 1px solid #cbd5e1; padding: 6px 4px; vertical-align: middle; color: #1e293b; font-size: 9px; word-wrap: break-word; }
         table.data-table tbody tr:nth-child(even) { background-color: #f8fafc; }
         table.data-table tbody td.text-center { text-align: center; }
 
         /* Tanda Tangan */
-        .signature-section { width: 100%; margin-top: 30px; page-break-inside: avoid; }
-        .signature-table { width: 100%; border-collapse: collapse; }
-        .signature-table td { width: 50%; text-align: center; vertical-align: top; padding: 0 30px; }
-        .signature-title { font-size: 11.5px; color: #64748b; margin-bottom: 5px; }
-        .signature-role { font-size: 12px; font-weight: 600; color: #0c2b4d; margin-bottom: 12px; }
-        .qr-wrapper { margin: 6px auto; width: 70px; height: 70px; }
+        .signature-section { width: 100%; margin-top: 25px; page-break-inside: avoid; display: flex; justify-content: flex-end; }
+        .signature-box { width: 280px; text-align: center; }
+        .signature-title { font-size: 11px; color: #475569; margin-bottom: 4px; }
+        .signature-role { font-size: 11.5px; font-weight: 700; color: #0c2b4d; margin-bottom: 6px; }
+        .qr-wrapper { margin: 4px auto; width: 62px; height: 62px; }
         .qr-wrapper img { width: 100%; height: 100%; object-fit: contain; }
-        .signature-name { font-size: 12px; font-weight: 700; color: #0f172a; text-decoration: underline; margin-top: 4px; margin-bottom: 2px; }
-        .signature-nip { font-size: 10.5px; color: #64748b; }
+        .signature-name { font-size: 11.5px; font-weight: 700; color: #0f172a; text-decoration: underline; margin-top: 3px; margin-bottom: 1px; }
+        .signature-nip { font-size: 10px; color: #64748b; }
 
         .watermark {
             position: fixed;
@@ -113,17 +112,19 @@
             transform: translate(-50%, -50%);
             opacity: 0.04;
             z-index: 0;
-            width: 380px;
+            width: 320px;
             pointer-events: none;
         }
 
         @media print {
-            body { background: #ffffff !important; padding: 0 !important; font-size: 10pt; }
+            body { background: #ffffff !important; padding: 0 !important; font-size: 8.5pt; }
             .no-print { display: none !important; }
             .page-container { box-shadow: none !important; padding: 0 !important; max-width: 100% !important; border-radius: 0 !important; }
             table.data-table thead th { background-color: #0c2b4d !important; color: #ffffff !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
             table.data-table tbody tr:nth-child(even) { background-color: #f8fafc !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-            @page { size: landscape; margin: 10mm 12mm; }
+            @page { size: A4 portrait; margin: 10mm 12mm; }
+            .signature-section { display: flex !important; justify-content: flex-end !important; }
+            .signature-box { float: right; }
         }
     </style>
 </head>
@@ -138,7 +139,7 @@
                 <i class="fas fa-calendar-minus text-primary mr-2"></i> Dokumen Rekapitulasi Cuti & Izin Kerja
             </span>
             <span style="margin-left: 15px; font-size: 12px; color: #64748b; background: #f1f5f9; padding: 4px 10px; border-radius: 6px;">
-                Orientasi: Landscape
+                Format: Kertas A4 (Portrait)
             </span>
         </div>
         <div>
@@ -159,8 +160,8 @@
                     <div class="kop-title">Klinik Pratama Dr. H.M. Hidayatullah</div>
                     <div class="kop-subtitle">Pusat Layanan Kesehatan Terpadu, Gigi, Poli Umum & Penunjang Medis</div>
                     <div class="kop-address">
-                        Jl. Pemuda No. 45, Banjarmasin, Kalimantan Selatan 70114 | Telp: (0511) 7654321<br>
-                        Izin Operasional Dinas Kesehatan: No. 445/098/Dinkes-Bjm/2022 &bull; Email: hrd@klinikhidayatullah.com
+                        Jl. A. Yani KM 23 RT 01 RW 02, Kel. Landasan Ulin Barat, Kec. Liang Anggang, Kota Banjarbaru, Kalsel 70724<br>
+                        Izin Operasional Dinas Kesehatan: No. 445/098/Dinkes-Bjb/2022 &bull; Telp: (0511) 4705000 &bull; Email: hrd@klinikhidayatullah.com
                     </div>
                 </td>
             </tr>
@@ -171,14 +172,17 @@
             $bulanIndo = ['01' => 'Januari', '02' => 'Februari', '03' => 'Maret', '04' => 'April', '05' => 'Mei', '06' => 'Juni', '07' => 'Juli', '08' => 'Agustus', '09' => 'September', '10' => 'Oktober', '11' => 'November', '12' => 'Desember'];
             $namaBulan = isset($bulanIndo[$bulan]) ? $bulanIndo[$bulan] : $bulan;
             $bulanRomawi = array(1=>"I","II","III", "IV", "V","VI","VII","VIII","IX","X", "XI","XII");
-            $noSurat = "No: " . date('ymd') . "/LAP-CUTI/KPH/" . $bulanRomawi[date('n')] . "/" . $tahun;
+            $bln_int = (int)$bulan;
+            $romawi = isset($bulanRomawi[$bln_int]) ? $bulanRomawi[$bln_int] : "I";
+            $tahun_periode = !empty($tahun) ? $tahun : date('Y');
+            $noSurat = "No: " . $tahun_periode . sprintf("%02d", $bln_int) . "/LAP-CUTI/KPH/" . $romawi . "/" . $tahun_periode;
         ?>
 
         <!-- Header Laporan -->
         <div class="report-header">
             <div><span class="report-title-badge">Laporan Rekapitulasi Cuti & Izin Pegawai (Disahkan)</span></div>
             <div class="report-meta-text">
-                Periode Validasi: <strong><?php echo $namaBulan . ' ' . $tahun; ?></strong> &bull; <?php echo $noSurat; ?>
+                Periode Validasi: <strong><?php echo $namaBulan . ' ' . $tahun_periode; ?></strong> &bull; <?php echo $noSurat; ?>
             </div>
         </div>
 
@@ -186,14 +190,14 @@
         <table class="data-table">
             <thead>
                 <tr>
-                    <th width="3%">NO</th>
-                    <th width="9%">NIK</th>
-                    <th width="16%">NAMA PEGAWAI</th>
-                    <th width="13%">JABATAN</th>
-                    <th width="10%">JENIS CUTI</th>
-                    <th width="15%">RENTANG TANGGAL</th>
-                    <th width="14%">REKAN PENGGANTI</th>
-                    <th>ALASAN PENGAJUAN</th>
+                    <th style="width: 4%;">NO</th>
+                    <th style="width: 11%;">NIK</th>
+                    <th style="width: 18%;">NAMA PEGAWAI</th>
+                    <th style="width: 14%;">JABATAN</th>
+                    <th style="width: 12%;">JENIS CUTI</th>
+                    <th style="width: 16%;">RENTANG TANGGAL</th>
+                    <th style="width: 13%;">PENGGANTI</th>
+                    <th style="width: 12%;">ALASAN</th>
                 </tr>
             </thead>
             <tbody>
@@ -227,30 +231,17 @@
             </tbody>
         </table>
 
-        <!-- Lembar Tanda Tangan -->
+        <!-- Lembar Tanda Tangan Tunggal -->
         <div class="signature-section">
-            <table class="signature-table">
-                <tr>
-                    <td>
-                        <div class="signature-title">Diverifikasi & Direkap oleh,</div>
-                        <div class="signature-role">Kepala Bagian SDM & Kepegawaian</div>
-                        <div class="qr-wrapper">
-                            <img src="<?php echo base_url('assets/img/qr-dummy.png?v=' . time()) ?>" alt="Validasi Digital">
-                        </div>
-                        <div class="signature-name"><?php echo $this->session->userdata('nama_pegawai') ?? 'Staff SDM'; ?></div>
-                        <div class="signature-nip">Bagian Administrasi Kepegawaian</div>
-                    </td>
-                    <td>
-                        <div class="signature-title">Banjarmasin, <?php echo date('d') . ' ' . $bulanIndo[date('m')] . ' ' . date('Y'); ?></div>
-                        <div class="signature-role">Direktur Utama Klinik Pratama</div>
-                        <div class="qr-wrapper">
-                            <img src="<?php echo base_url('assets/img/qr-dummy.png?v=' . time()) ?>" alt="Validasi Digital">
-                        </div>
-                        <div class="signature-name">Dr. H. Muhammad Hidayatullah</div>
-                        <div class="signature-nip">SIP: 445/098/Dinkes-Bjm/2022</div>
-                    </td>
-                </tr>
-            </table>
+            <div class="signature-box">
+                <div class="signature-title">Banjarbaru, <?php echo date('d') . ' ' . $bulanIndo[date('m')] . ' ' . date('Y'); ?></div>
+                <div class="signature-role">Pimpinan Klinik Pratama</div>
+                <div class="qr-wrapper">
+                    <img src="<?php echo base_url('assets/img/qr-dummy.png?v=' . time()) ?>" alt="Validasi Digital">
+                </div>
+                <div class="signature-name">Dr. H. Muhammad Hidayatullah</div>
+                <div class="signature-nip">SIP: 445/098/Dinkes-Bjb/2022</div>
+            </div>
         </div>
 
     </div>

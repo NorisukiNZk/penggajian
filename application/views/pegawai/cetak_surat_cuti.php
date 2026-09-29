@@ -195,6 +195,10 @@
         }
 
         @media print {
+            @page {
+                size: A4 portrait;
+                margin: 10mm 15mm;
+            }
             .no-print {
                 display: none !important;
             }
@@ -211,9 +215,12 @@
 
     <!-- Tombol Cetak Dokumen -->
     <div class="no-print">
-        <span style="font-size: 13px; color: #475569;">
-            Surat Keterangan Cuti & Pendelegasian Tugas Resmi Klinik Pratama Hidayatullah.
-        </span>
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <span style="font-size: 13px; color: #475569;">
+                Surat Keterangan Cuti & Pendelegasian Tugas Resmi Klinik Pratama Dr. H.M. Hidayatullah.
+            </span>
+            <span class="badge" style="background: #e0f2fe; color: #0369a1; padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 600;">Format: Kertas A4 (Portrait)</span>
+        </div>
         <div>
             <button class="btn-print" onclick="window.print();">
                 🖨️ Cetak / Simpan PDF
@@ -234,9 +241,10 @@
                 <img src="<?php echo base_url('assets/img/kpmh.png'); ?>" alt="Logo Klinik">
             </td>
             <td width="70%" style="text-align: center;">
-                <h1>KLINIK PRATAMA HIDAYATULLAH</h1>
-                <h2>Jl. A. Yani KM 23 RT 01 RW 02, Kel. Landasan Ulin, Kec. Liang Anggang, Banjarbaru</h2>
-                <p><strong>Telp:</strong> (0511) 4705000 &bull; <strong>Email:</strong> hrd@klinikhidayatullah.com &bull; <strong>Web:</strong> klinikhidayatullah.com</p>
+                <h1>KLINIK PRATAMA DR. H.M. HIDAYATULLAH</h1>
+                <h2>Pusat Layanan Kesehatan Terpadu, Gigi, Poli Umum & Penunjang Medis</h2>
+                <p>Jl. A. Yani KM 23 RT 01 RW 02, Kel. Landasan Ulin Barat, Kec. Liang Anggang, Kota Banjarbaru, Kalsel 70724</p>
+                <p><strong>Izin Operasional:</strong> No. 445/098/Dinkes-Bjb/2022 &bull; <strong>Telp:</strong> (0511) 4705000 &bull; <strong>Email:</strong> hrd@klinikhidayatullah.com</p>
             </td>
             <td width="15%" style="text-align: center;"></td>
         </tr>
@@ -372,7 +380,7 @@
 
     <!-- Pernyataan Penutup -->
     <div class="doc-intro">
-        Demikian Surat Keputusan Cuti ini disahkan oleh Direktur Utama dan Manajemen Klinik Pratama Hidayatullah. Pegawai bersangkutan diwajibkan menyelesaikan serah terima tugas dengan baik sebelum hari cuti dan hadir kembali bekerja tepat waktu.
+        Demikian Surat Keputusan Cuti ini disahkan oleh Direktur Utama dan Manajemen Klinik Pratama Dr. H.M. Hidayatullah. Pegawai bersangkutan diwajibkan menyelesaikan serah terima tugas dengan baik sebelum hari cuti dan hadir kembali bekerja tepat waktu.
     </div>
 
     <!-- Tanda Tangan Tiga Kolom: Pemohon, Rekan Pengganti, Direktur Utama -->
@@ -404,7 +412,7 @@
             <img src="<?php echo base_url('assets/img/qr-dummy.png'); ?>" class="qr-code" alt="Validasi Digital">
             <p style="font-size: 9.5px; margin: 0; font-style: italic; color: #4b5563;">Tervalidasi Digital HRIS</p>
             <p class="signature-name">Dr. H. Muhammad Hidayatullah</p>
-            <p style="margin: 2px 0; font-size: 11px; color: #4b5563;">Direktur Utama Klinik Hidayatullah</p>
+            <p style="margin: 2px 0; font-size: 11px; color: #4b5563;">SIP: 445/098/Dinkes-Bjb/2022</p>
         </div>
 
         <div style="clear: both;"></div>

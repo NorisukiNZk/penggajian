@@ -24,7 +24,7 @@
 
         /* Floating Action Bar */
         .print-action-bar {
-            max-width: 1050px;
+            max-width: 860px;
             margin: 0 auto 20px auto;
             background: #ffffff;
             padding: 12px 20px;
@@ -67,7 +67,7 @@
 
         /* Kertas Dokumen Cetak */
         .page-container {
-            max-width: 1050px;
+            max-width: 860px;
             margin: 0 auto;
             background: #ffffff;
             padding: 35px 40px;
@@ -185,31 +185,28 @@
         }
 
         /* Tanda Tangan */
+        /* Tanda Tangan */
         .signature-section {
             width: 100%;
             margin-top: 30px;
             page-break-inside: avoid;
+            display: flex;
+            justify-content: flex-end;
         }
-        .signature-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        .signature-table td {
-            width: 50%;
+        .signature-box {
+            width: 280px;
             text-align: center;
-            vertical-align: top;
-            padding: 0 30px;
         }
         .signature-title {
             font-size: 11.5px;
-            color: #64748b;
+            color: #475569;
             margin-bottom: 4px;
         }
         .signature-role {
             font-size: 12px;
-            font-weight: 600;
+            font-weight: 700;
             color: #0c2b4d;
-            margin-bottom: 10px;
+            margin-bottom: 6px;
         }
         .qr-wrapper {
             margin: 6px auto;
@@ -246,6 +243,10 @@
         }
 
         @media print {
+            @page {
+                size: A4 portrait;
+                margin: 10mm 12mm;
+            }
             body {
                 background-color: #ffffff;
                 padding: 0;
@@ -260,6 +261,13 @@
                 border-radius: 0;
                 padding: 15px 25px;
             }
+            .signature-section {
+                display: flex !important;
+                justify-content: flex-end !important;
+            }
+            .signature-box {
+                float: right;
+            }
         }
     </style>
 </head>
@@ -269,8 +277,9 @@
 
     <!-- Floating Action Bar -->
     <div class="print-action-bar">
-        <div>
+        <div style="display: flex; align-items: center; gap: 10px;">
             <span style="font-weight: 700; color: #0c2b4d; font-size: 14px;"><i class="fas fa-address-book text-primary mr-2"></i> Pratinjau Master Data Pegawai</span>
+            <span class="badge" style="background: #e0f2fe; color: #0369a1; padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 600;">Format: Kertas A4 (Portrait)</span>
         </div>
         <div style="display: flex; gap: 10px;">
             <button onclick="window.print();" class="btn-print"><i class="fas fa-print"></i> Cetak / Simpan PDF</button>
@@ -293,10 +302,10 @@
                 </td>
                 <td class="kop-text">
                     <h1 class="kop-title">KLINIK PRATAMA DR. H.M. HIDAYATULLAH</h1>
-                    <div class="kop-subtitle">Pusat Layanan Medis, Rawat Jalan & Penunjang Kesehatan Terpadu</div>
+                    <div class="kop-subtitle">Pusat Layanan Kesehatan Terpadu, Gigi, Poli Umum & Penunjang Medis</div>
                     <div class="kop-address">
-                        Jl. Pemuda No. 45, Banjarmasin, Kalimantan Selatan 70114 | Telp: (0511) 7654321<br>
-                        Izin Operasional Dinkes: No. 445/098/Dinkes-Bjm/2022 • Email: hrd@klinikhidayatullah.com
+                        Jl. A. Yani KM 23 RT 01 RW 02, Kel. Landasan Ulin Barat, Kec. Liang Anggang, Kota Banjarbaru, Kalsel 70724<br>
+                        Izin Operasional: No. 445/098/Dinkes-Bjb/2022 &bull; Telp: (0511) 4705000 &bull; Email: hrd@klinikhidayatullah.com
                     </div>
                 </td>
                 <td style="width: 90px;"></td>
@@ -350,30 +359,17 @@
             </tbody>
         </table>
 
-        <!-- Blok Tanda Tangan -->
+        <!-- Blok Tanda Tangan Tunggal -->
         <div class="signature-section">
-            <table class="signature-table">
-                <tr>
-                    <td>
-                        <div class="signature-title">Mengetahui & Memeriksa,</div>
-                        <div class="signature-role">Kepala Bagian SDM & Personalia</div>
-                        <div class="qr-wrapper">
-                            <img src="<?php echo base_url('assets/img/qr-dummy.png?v=' . time()) ?>" alt="Validasi Digital">
-                        </div>
-                        <div class="signature-name">Ahmad Fauzi, S.E.</div>
-                        <div class="signature-nip">NIK: 201901004</div>
-                    </td>
-                    <td>
-                        <div class="signature-title">Banjarmasin, <?php echo date('d') . ' ' . $bulanIndo[date('m')] . ' ' . date('Y'); ?></div>
-                        <div class="signature-role">Direktur Utama Klinik</div>
-                        <div class="qr-wrapper">
-                            <img src="<?php echo base_url('assets/img/qr-dummy.png?v=' . time()) ?>" alt="Validasi Digital">
-                        </div>
-                        <div class="signature-name">Dr. H. Muhammad Hidayatullah</div>
-                        <div class="signature-nip">SIP: 445/098/Dinkes-Bjm/2022</div>
-                    </td>
-                </tr>
-            </table>
+            <div class="signature-box">
+                <div class="signature-title">Banjarbaru, <?php echo date('d') . ' ' . $bulanIndo[date('m')] . ' ' . date('Y'); ?></div>
+                <div class="signature-role">Pimpinan Klinik Pratama</div>
+                <div class="qr-wrapper">
+                    <img src="<?php echo base_url('assets/img/qr-dummy.png?v=' . time()) ?>" alt="Validasi Digital">
+                </div>
+                <div class="signature-name">Dr. H. Muhammad Hidayatullah</div>
+                <div class="signature-nip">SIP: 445/098/Dinkes-Bjb/2022</div>
+            </div>
         </div>
     </div>
 

@@ -102,11 +102,10 @@
         .badge-alpha { background: rgba(239, 68, 68, 0.15); color: #dc2626; }
 
         /* Tanda Tangan */
-        .signature-section { width: 100%; margin-top: 30px; page-break-inside: avoid; }
-        .signature-table { width: 100%; border-collapse: collapse; }
-        .signature-table td { width: 50%; text-align: center; vertical-align: top; padding: 0 20px; }
-        .signature-title { font-size: 11.5px; color: #64748b; margin-bottom: 5px; }
-        .signature-role { font-size: 12px; font-weight: 600; color: #0c2b4d; margin-bottom: 12px; }
+        .signature-section { width: 100%; margin-top: 30px; page-break-inside: avoid; display: flex; justify-content: flex-end; }
+        .signature-box { width: 280px; text-align: center; }
+        .signature-title { font-size: 11.5px; color: #475569; margin-bottom: 5px; }
+        .signature-role { font-size: 12px; font-weight: 700; color: #0c2b4d; margin-bottom: 6px; }
         .qr-wrapper { margin: 6px auto; width: 70px; height: 70px; }
         .qr-wrapper img { width: 100%; height: 100%; object-fit: contain; }
         .signature-name { font-size: 12px; font-weight: 700; color: #0f172a; text-decoration: underline; margin-top: 4px; margin-bottom: 2px; }
@@ -129,7 +128,9 @@
             .page-container { box-shadow: none !important; padding: 0 !important; max-width: 100% !important; border-radius: 0 !important; }
             table.data-table thead th { background-color: #0c2b4d !important; color: #ffffff !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
             table.data-table tbody tr:nth-child(even) { background-color: #f8fafc !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-            @page { size: portrait; margin: 12mm 15mm; }
+            @page { size: A4 portrait; margin: 10mm 12mm; }
+            .signature-section { display: flex !important; justify-content: flex-end !important; }
+            .signature-box { float: right; }
         }
     </style>
 </head>
@@ -144,7 +145,7 @@
                 <i class="fas fa-calendar-check text-primary mr-2"></i> Dokumen Rekapitulasi Presensi Pegawai
             </span>
             <span style="margin-left: 15px; font-size: 12px; color: #64748b; background: #f1f5f9; padding: 4px 10px; border-radius: 6px;">
-                Orientasi: Portrait
+                Format: Kertas A4 (Portrait)
             </span>
         </div>
         <div>
@@ -166,8 +167,8 @@
                     <div class="kop-title">Klinik Pratama Dr. H.M. Hidayatullah</div>
                     <div class="kop-subtitle">Pusat Layanan Kesehatan Terpadu, Gigi, Poli Umum & Penunjang Medis</div>
                     <div class="kop-address">
-                        Jl. Pemuda No. 45, Banjarmasin, Kalimantan Selatan 70114 | Telp: (0511) 7654321<br>
-                        Izin Operasional Dinas Kesehatan: No. 445/098/Dinkes-Bjm/2022 &bull; Email: hrd@klinikhidayatullah.com
+                        Jl. A. Yani KM 23 RT 01 RW 02, Kel. Landasan Ulin Barat, Kec. Liang Anggang, Kota Banjarbaru, Kalsel 70724<br>
+                        Izin Operasional Dinas Kesehatan: No. 445/098/Dinkes-Bjb/2022 &bull; Telp: (0511) 4705000 &bull; Email: hrd@klinikhidayatullah.com
                     </div>
                 </td>
             </tr>
@@ -178,14 +179,17 @@
             $bulanIndo = ['01' => 'Januari', '02' => 'Februari', '03' => 'Maret', '04' => 'April', '05' => 'Mei', '06' => 'Juni', '07' => 'Juli', '08' => 'Agustus', '09' => 'September', '10' => 'Oktober', '11' => 'November', '12' => 'Desember'];
             $namaBulan = isset($bulanIndo[$bulan]) ? $bulanIndo[$bulan] : $bulan;
             $bulanRomawi = array(1=>"I","II","III", "IV", "V","VI","VII","VIII","IX","X", "XI","XII");
-            $noSurat = "No: " . date('ymd') . "/LAP-ABS/KPH/" . $bulanRomawi[date('n')] . "/" . $tahun;
+            $bln_int = (int)$bulan;
+            $romawi = isset($bulanRomawi[$bln_int]) ? $bulanRomawi[$bln_int] : "I";
+            $tahun_periode = !empty($tahun) ? $tahun : date('Y');
+            $noSurat = "No: " . $tahun_periode . sprintf("%02d", $bln_int) . "/LAP-ABS/KPH/" . $romawi . "/" . $tahun_periode;
         ?>
 
         <!-- Header Laporan -->
         <div class="report-header">
             <div><span class="report-title-badge">Laporan Rekapitulasi Presensi & Kehadiran Staf</span></div>
             <div class="report-meta-text">
-                Periode Evaluasi: <strong><?php echo $namaBulan . ' ' . $tahun; ?></strong> &bull; <?php echo $noSurat; ?>
+                Periode Evaluasi: <strong><?php echo $namaBulan . ' ' . $tahun_periode; ?></strong> &bull; <?php echo $noSurat; ?>
             </div>
         </div>
 
@@ -233,30 +237,17 @@
             </tfoot>
         </table>
 
-        <!-- Lembar Tanda Tangan -->
+        <!-- Lembar Tanda Tangan Tunggal -->
         <div class="signature-section">
-            <table class="signature-table">
-                <tr>
-                    <td>
-                        <div class="signature-title">Diverifikasi oleh,</div>
-                        <div class="signature-role">Kepala Bagian SDM & Presensi</div>
-                        <div class="qr-wrapper">
-                            <img src="<?php echo base_url('assets/img/qr-dummy.png?v=' . time()) ?>" alt="Validasi Digital">
-                        </div>
-                        <div class="signature-name"><?php echo $this->session->userdata('nama_pegawai') ?? 'Staff SDM'; ?></div>
-                        <div class="signature-nip">Bagian Administrasi Kepegawaian</div>
-                    </td>
-                    <td>
-                        <div class="signature-title">Banjarmasin, <?php echo date('d') . ' ' . $bulanIndo[date('m')] . ' ' . date('Y'); ?></div>
-                        <div class="signature-role">Direktur Utama Klinik Pratama</div>
-                        <div class="qr-wrapper">
-                            <img src="<?php echo base_url('assets/img/qr-dummy.png?v=' . time()) ?>" alt="Validasi Digital">
-                        </div>
-                        <div class="signature-name">Dr. H. Muhammad Hidayatullah</div>
-                        <div class="signature-nip">SIP: 445/098/Dinkes-Bjm/2022</div>
-                    </td>
-                </tr>
-            </table>
+            <div class="signature-box">
+                <div class="signature-title">Banjarbaru, <?php echo date('d') . ' ' . $bulanIndo[date('m')] . ' ' . date('Y'); ?></div>
+                <div class="signature-role">Pimpinan Klinik Pratama</div>
+                <div class="qr-wrapper">
+                    <img src="<?php echo base_url('assets/img/qr-dummy.png?v=' . time()) ?>" alt="Validasi Digital">
+                </div>
+                <div class="signature-name">Dr. H. Muhammad Hidayatullah</div>
+                <div class="signature-nip">SIP: 445/098/Dinkes-Bjb/2022</div>
+            </div>
         </div>
 
     </div>

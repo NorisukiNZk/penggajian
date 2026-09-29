@@ -195,6 +195,10 @@
         }
 
         @media print {
+            @page {
+                size: A4 portrait;
+                margin: 15mm 20mm;
+            }
             .no-print {
                 display: none !important;
             }
@@ -211,9 +215,12 @@
 
     <!-- Tombol Cetak Dokumen -->
     <div class="no-print">
-        <span style="font-size: 13px; color: #475569;">
-            Dokumen sah Surat Perjanjian Pinjaman Karyawan (SPPK) & Surat Kuasa Potong Gaji. Gunakan tombol untuk mencetak.
-        </span>
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <span style="font-size: 13px; color: #475569;">
+                Dokumen sah Surat Perjanjian Pinjaman Karyawan (SPPK) & Surat Kuasa Potong Gaji.
+            </span>
+            <span class="badge" style="background: #e0f2fe; color: #0369a1; padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 600;">Format: Kertas A4 (Portrait)</span>
+        </div>
         <div>
             <button class="btn-print" onclick="window.print();">
                 🖨️ Cetak / Simpan PDF
@@ -234,9 +241,10 @@
                 <img src="<?php echo base_url('assets/img/kpmh.png'); ?>" alt="Logo Klinik">
             </td>
             <td width="70%" style="text-align: center;">
-                <h1>KLINIK PRATAMA HIDAYATULLAH</h1>
-                <h2>Jl. A. Yani KM 23 RT 01 RW 02, Kel. Landasan Ulin, Kec. Liang Anggang, Banjarbaru</h2>
-                <p><strong>Telp:</strong> (0511) 4705000 &bull; <strong>Email:</strong> hrd@klinikhidayatullah.com &bull; <strong>Web:</strong> klinikhidayatullah.com</p>
+                <h1>KLINIK PRATAMA DR. H.M. HIDAYATULLAH</h1>
+                <h2>Pusat Layanan Kesehatan Terpadu, Gigi, Poli Umum & Penunjang Medis</h2>
+                <p>Jl. A. Yani KM 23 RT 01 RW 02, Kel. Landasan Ulin Barat, Kec. Liang Anggang, Kota Banjarbaru, Kalsel 70724</p>
+                <p><strong>Izin Operasional:</strong> No. 445/098/Dinkes-Bjb/2022 &bull; <strong>Telp:</strong> (0511) 4705000 &bull; <strong>Email:</strong> hrd@klinikhidayatullah.com</p>
             </td>
             <td width="15%" style="text-align: center;"></td>
         </tr>
@@ -269,7 +277,7 @@
 
     <!-- Pembuka -->
     <p class="legal-text">
-        Pada hari ini, <strong><?php echo date('d', strtotime($tgl_ref)) . ' ' . $bulanIndo[date('m', strtotime($tgl_ref))] . ' ' . date('Y', strtotime($tgl_ref)); ?></strong>, bertempat di Kantor Manajemen Klinik Pratama Hidayatullah Banjarbaru, telah dibuat dan disepakati perjanjian pinjaman fasilitas kasbon kerja oleh dan antara:
+        Pada hari ini, <strong><?php echo date('d', strtotime($tgl_ref)) . ' ' . $bulanIndo[date('m', strtotime($tgl_ref))] . ' ' . date('Y', strtotime($tgl_ref)); ?></strong>, bertempat di Kantor Manajemen Klinik Pratama Dr. H.M. Hidayatullah Banjarbaru, telah dibuat dan disepakati perjanjian pinjaman fasilitas kasbon kerja oleh dan antara:
     </p>
 
     <!-- Pihak Pertama -->
@@ -278,7 +286,7 @@
             <td class="label-col">I. Pihak Pertama (Pemberi Pinjaman)</td>
             <td class="separator">:</td>
             <td class="value-col">
-                <strong>KLINIK PRATAMA HIDAYATULLAH</strong>, diwakili oleh <strong>Dr. H. Muhammad Hidayatullah</strong> selaku Pimpinan Klinik, berkedudukan di Banjarbaru, bertindak untuk dan atas nama Manajemen Klinik.
+                <strong>KLINIK PRATAMA DR. H.M. HIDAYATULLAH</strong>, diwakili oleh <strong>Dr. H. Muhammad Hidayatullah</strong> selaku Pimpinan Klinik, berkedudukan di Banjarbaru, bertindak untuk dan atas nama Manajemen Klinik.
             </td>
         </tr>
         <tr>
@@ -367,7 +375,7 @@
             <img src="<?php echo base_url('assets/img/qr-dummy.png'); ?>" class="qr-code" alt="Validasi Digital">
             <p style="font-size: 9.5px; margin-top: -3px; font-style: italic; color: #4b5563;">Tervalidasi Sistem HRIS Terpadu</p>
             <p class="signature-name">Dr. H. Muhammad Hidayatullah</p>
-            <p style="margin: 2px 0; font-size: 11.5px; color: #4b5563;">Pimpinan Klinik Pratama Hidayatullah</p>
+            <p style="margin: 2px 0; font-size: 11.5px; color: #4b5563;">SIP: 445/098/Dinkes-Bjb/2022</p>
         </div>
 
         <div style="clear: both;"></div>

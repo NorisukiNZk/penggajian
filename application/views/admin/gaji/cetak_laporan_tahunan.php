@@ -24,7 +24,7 @@
 
         /* Floating Action Bar */
         .print-action-bar {
-            max-width: 1100px;
+            max-width: 860px;
             margin: 0 auto 20px auto;
             background: #ffffff;
             padding: 12px 20px;
@@ -65,12 +65,12 @@
         }
         .btn-close-doc:hover { background: #e2e8f0; }
 
-        /* Kertas Dokumen Cetak */
+        /* Kertas Dokumen Cetak A4 Portrait */
         .page-container {
-            max-width: 1100px;
+            max-width: 860px;
             margin: 0 auto;
             background: #ffffff;
-            padding: 35px 40px;
+            padding: 30px 32px;
             border-radius: 14px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
             position: relative;
@@ -205,27 +205,23 @@
             width: 100%;
             margin-top: 30px;
             page-break-inside: avoid;
+            display: flex;
+            justify-content: flex-end;
         }
-        .signature-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        .signature-table td {
-            width: 50%;
+        .signature-box {
+            width: 280px;
             text-align: center;
-            vertical-align: top;
-            padding: 0 30px;
         }
         .signature-title {
             font-size: 11.5px;
-            color: #64748b;
+            color: #475569;
             margin-bottom: 4px;
         }
         .signature-role {
             font-size: 12px;
-            font-weight: 600;
+            font-weight: 700;
             color: #0c2b4d;
-            margin-bottom: 10px;
+            margin-bottom: 6px;
         }
         .qr-wrapper {
             margin: 6px auto;
@@ -276,6 +272,17 @@
                 border-radius: 0;
                 padding: 15px 25px;
             }
+            @page {
+                size: A4 portrait;
+                margin: 10mm 12mm;
+            }
+            .signature-section {
+                display: flex !important;
+                justify-content: flex-end !important;
+            }
+            .signature-box {
+                float: right;
+            }
         }
     </style>
 </head>
@@ -285,8 +292,9 @@
 
     <!-- Floating Action Bar -->
     <div class="print-action-bar">
-        <div>
+        <div class="d-flex align-items-center">
             <span style="font-weight: 700; color: #0c2b4d; font-size: 14px;"><i class="fas fa-chart-line text-success mr-2"></i> Pratinjau Rekapitulasi Gaji Tahunan (Kompilasi)</span>
+            <span style="margin-left: 12px; font-size: 12px; color: #64748b; background: #f1f5f9; padding: 3px 8px; border-radius: 6px;">Format: Kertas A4 (Portrait)</span>
         </div>
         <div style="display: flex; gap: 10px;">
             <button onclick="window.print();" class="btn-print"><i class="fas fa-print"></i> Cetak / Simpan PDF</button>
@@ -297,7 +305,7 @@
     <?php
     $bulanIndo = ['01' => 'Januari', '02' => 'Februari', '03' => 'Maret', '04' => 'April', '05' => 'Mei', '06' => 'Juni', '07' => 'Juli', '08' => 'Agustus', '09' => 'September', '10' => 'Oktober', '11' => 'November', '12' => 'Desember'];
     $bulanRomawi = array(1=>"I","II","III", "IV", "V","VI","VII","VIII","IX","X", "XI","XII");
-    $noSurat = "Nomor : " . date('ymd') . "/THN-KPMH/" . $bulanRomawi[date('n')] . "/" . date('Y');
+    $noSurat = "Nomor : " . $tahun . "/THN-KPMH/XII/" . $tahun;
     ?>
 
     <div class="page-container">
@@ -311,8 +319,8 @@
                     <h1 class="kop-title">KLINIK PRATAMA DR. H.M. HIDAYATULLAH</h1>
                     <div class="kop-subtitle">Pusat Layanan Medis, Rawat Jalan & Penunjang Kesehatan Terpadu</div>
                     <div class="kop-address">
-                        Jl. Pemuda No. 45, Banjarmasin, Kalimantan Selatan 70114 | Telp: (0511) 7654321<br>
-                        Izin Operasional Dinkes: No. 445/098/Dinkes-Bjm/2022 • Email: hrd@klinikhidayatullah.com
+                        Jl. A. Yani KM 23 RT 01 RW 02, Kel. Landasan Ulin Barat, Kec. Liang Anggang, Kota Banjarbaru, Kalsel 70724<br>
+                        Izin Operasional Dinkes: No. 445/098/Dinkes-Bjb/2022 • Telp: (0511) 4705000 • Email: hrd@klinikhidayatullah.com
                     </div>
                 </td>
                 <td style="width: 90px;"></td>
@@ -397,30 +405,17 @@
             <?php endif; ?>
         </table>
 
-        <!-- Blok Tanda Tangan -->
+        <!-- Blok Tanda Tangan Tunggal -->
         <div class="signature-section">
-            <table class="signature-table">
-                <tr>
-                    <td>
-                        <div class="signature-title">Mengetahui & Memeriksa,</div>
-                        <div class="signature-role">Kepala Bagian Keuangan & Akuntansi</div>
-                        <div class="qr-wrapper">
-                            <img src="<?php echo base_url('assets/img/qr-dummy.png?v=' . time()) ?>" alt="Validasi Digital">
-                        </div>
-                        <div class="signature-name">Hj. Siti Mariam, S.E., M.Ak.</div>
-                        <div class="signature-nip">NIK: 201802003</div>
-                    </td>
-                    <td>
-                        <div class="signature-title">Banjarmasin, <?php echo date('d') . ' ' . $bulanIndo[date('m')] . ' ' . date('Y'); ?></div>
-                        <div class="signature-role">Direktur Utama Klinik</div>
-                        <div class="qr-wrapper">
-                            <img src="<?php echo base_url('assets/img/qr-dummy.png?v=' . time()) ?>" alt="Validasi Digital">
-                        </div>
-                        <div class="signature-name">Dr. H. Muhammad Hidayatullah</div>
-                        <div class="signature-nip">SIP: 445/098/Dinkes-Bjm/2022</div>
-                    </td>
-                </tr>
-            </table>
+            <div class="signature-box">
+                <div class="signature-title">Banjarbaru, <?php echo date('d') . ' ' . $bulanIndo[date('m')] . ' ' . date('Y'); ?></div>
+                <div class="signature-role">Pimpinan Klinik Pratama</div>
+                <div class="qr-wrapper">
+                    <img src="<?php echo base_url('assets/img/qr-dummy.png?v=' . time()) ?>" alt="Validasi Digital">
+                </div>
+                <div class="signature-name">Dr. H. Muhammad Hidayatullah</div>
+                <div class="signature-nip">SIP: 445/098/Dinkes-Bjb/2022</div>
+            </div>
         </div>
     </div>
 

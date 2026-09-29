@@ -300,6 +300,10 @@
                 padding: 15px 25px;
                 margin-bottom: 0;
             }
+            @page {
+                size: A4 portrait;
+                margin: 10mm 15mm;
+            }
         }
     </style>
 </head>
@@ -309,8 +313,9 @@
 
     <!-- Floating Action Bar -->
     <div class="print-action-bar">
-        <div>
+        <div class="d-flex align-items-center">
             <span style="font-weight: 700; color: #0c2b4d; font-size: 14px;"><i class="fas fa-receipt text-success mr-2"></i> Pratinjau Slip Gaji Resmi Pegawai</span>
+            <span style="margin-left: 12px; font-size: 12px; color: #64748b; background: #f1f5f9; padding: 3px 8px; border-radius: 6px;">Format: Kertas A4 (Portrait)</span>
         </div>
         <div style="display: flex; gap: 10px;">
             <button onclick="window.print();" class="btn-print"><i class="fas fa-print"></i> Cetak / Simpan PDF</button>
@@ -342,7 +347,9 @@
         
         $bulanAngka = substr($ps->bulan, 0, 2);
         $tahunAngka = substr($ps->bulan, 2, 4);
-        $noSurat = "Nomor : " . date('ymd') . "/SLIP-KPMH/" . $bulanRomawi[date('n')] . "/" . date('Y');
+        $bln_int = (int)$bulanAngka;
+        $romawi = isset($bulanRomawi[$bln_int]) ? $bulanRomawi[$bln_int] : "I";
+        $noSurat = "Nomor : " . $tahunAngka . sprintf("%02d", $bln_int) . "/SLIP-KPMH/" . $romawi . "/" . $tahunAngka;
         ?>
 
         <div class="page-container">
@@ -356,8 +363,8 @@
                         <h1 class="kop-title">KLINIK PRATAMA DR. H.M. HIDAYATULLAH</h1>
                         <div class="kop-subtitle">Pusat Layanan Medis, Rawat Jalan & Penunjang Kesehatan Terpadu</div>
                         <div class="kop-address">
-                            Jl. Pemuda No. 45, Banjarmasin, Kalimantan Selatan 70114 | Telp: (0511) 7654321<br>
-                            Izin Operasional Dinkes: No. 445/098/Dinkes-Bjm/2022 • Email: hrd@klinikhidayatullah.com
+                            Jl. A. Yani KM 23 RT 01 RW 02, Kel. Landasan Ulin Barat, Kec. Liang Anggang, Kota Banjarbaru, Kalsel 70724<br>
+                            Izin Operasional Dinkes: No. 445/098/Dinkes-Bjb/2022 • Telp: (0511) 4705000 • Email: hrd@klinikhidayatullah.com
                         </div>
                     </td>
                     <td style="width: 80px;"></td>
@@ -496,13 +503,13 @@
                             <div class="signature-nip">NIK: <?php echo htmlspecialchars($ps->nik, ENT_QUOTES, 'UTF-8'); ?></div>
                         </td>
                         <td>
-                            <div class="signature-title">Banjarmasin, <?php echo date('d') . ' ' . $bulanIndo[date('m')] . ' ' . date('Y'); ?></div>
+                            <div class="signature-title">Banjarbaru, <?php echo date('d') . ' ' . $bulanIndo[date('m')] . ' ' . date('Y'); ?></div>
                             <div class="signature-role">Direktur Utama Klinik Pratama</div>
                             <div class="qr-wrapper">
                                 <img src="<?php echo base_url('assets/img/qr-dummy.png?v=' . time()) ?>" alt="Validasi Digital">
                             </div>
                             <div class="signature-name">Dr. H. Muhammad Hidayatullah</div>
-                            <div class="signature-nip">SIP: 445/098/Dinkes-Bjm/2022</div>
+                            <div class="signature-nip">SIP: 445/098/Dinkes-Bjb/2022</div>
                         </td>
                     </tr>
                 </table>
