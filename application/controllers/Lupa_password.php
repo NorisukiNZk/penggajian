@@ -28,40 +28,36 @@ class Lupa_password extends CI_Controller {
 			$userIp = $this->input->ip_address();
 			$secretKey = "6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe"; // Google Test Secret Key
 
-			// Izinkan akun demo pada localhost jika reCAPTCHA tidak dicentang (untuk keperluan automated demo/testing)
-			$isDemoAccount = in_array($username, ['waffa', 'anya']) && in_array($userIp, ['127.0.0.1', '::1']);
+			// Verifikasi reCAPTCHA Wajib (Anti-Bot)
+			if (empty($recaptchaResponse)) {
+				$this->session->set_flashdata('pesan', '<div class="alert alert-danger alert-dismissible fade show" role="alert">
+				<strong>Peringatan!</strong> Silakan centang kotak verifikasi reCAPTCHA terlebih dahulu.
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+				</button>
+				</div>');
+				redirect('lupa_password');
+				return;
+			}
 
-			if (!$isDemoAccount) {
-				if (empty($recaptchaResponse)) {
-					$this->session->set_flashdata('pesan', '<div class="alert alert-danger alert-dismissible fade show" role="alert">
-					<strong>Peringatan!</strong> Silakan centang kotak verifikasi reCAPTCHA terlebih dahulu.
-					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-					</button>
-					</div>');
-					redirect('lupa_password');
-					return;
-				}
+			$url = "https://www.google.com/recaptcha/api/siteverify?secret=" . $secretKey . "&response=" . $recaptchaResponse . "&remoteip=" . $userIp;
+			$ch = curl_init();
+			curl_setopt($ch, CURLOPT_URL, $url);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+			curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+			$output = curl_exec($ch);
+			curl_close($ch);
 
-				$url = "https://www.google.com/recaptcha/api/siteverify?secret=" . $secretKey . "&response=" . $recaptchaResponse . "&remoteip=" . $userIp;
-				$ch = curl_init();
-				curl_setopt($ch, CURLOPT_URL, $url);
-				curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-				curl_setopt($ch, CURLOPT_TIMEOUT, 5);
-				$output = curl_exec($ch);
-				curl_close($ch);
-
-				$status = json_decode($output, true);
-				if (!$status || empty($status['success'])) {
-					$this->session->set_flashdata('pesan', '<div class="alert alert-danger alert-dismissible fade show" role="alert">
-					<strong>Verifikasi Gagal!</strong> Verifikasi reCAPTCHA tidak valid. Silakan coba kembali.
-					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-					</button>
-					</div>');
-					redirect('lupa_password');
-					return;
-				}
+			$status = json_decode($output, true);
+			if (!$status || empty($status['success'])) {
+				$this->session->set_flashdata('pesan', '<div class="alert alert-danger alert-dismissible fade show" role="alert">
+				<strong>Verifikasi Gagal!</strong> Verifikasi reCAPTCHA tidak valid. Silakan coba kembali.
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+				</button>
+				</div>');
+				redirect('lupa_password');
+				return;
 			}
 
 			// Verifikasi data unik kepegawaian

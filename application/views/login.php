@@ -590,8 +590,49 @@
       loginForm.addEventListener('submit', function(e) {
         const u = document.getElementById('username');
         const p = document.getElementById('password');
-        if (!u || !p || !u.value.trim() || !p.value.trim()) {
-          return;
+
+        if (!u || !u.value.trim()) {
+          e.preventDefault();
+          if (u) u.focus();
+          Swal.fire({
+            icon: 'warning',
+            title: 'Username Diperlukan',
+            text: 'Silakan masukkan Username SSO Anda terlebih dahulu.',
+            confirmButtonText: 'Mengerti',
+            confirmButtonColor: '#0284c7',
+            customClass: { popup: 'swal2-corporate-modal' }
+          });
+          return false;
+        }
+
+        if (!p || !p.value.trim()) {
+          e.preventDefault();
+          if (p) p.focus();
+          Swal.fire({
+            icon: 'warning',
+            title: 'Kata Sandi Diperlukan',
+            text: 'Silakan masukkan kata sandi akun Anda terlebih dahulu.',
+            confirmButtonText: 'Mengerti',
+            confirmButtonColor: '#0284c7',
+            customClass: { popup: 'swal2-corporate-modal' }
+          });
+          return false;
+        }
+
+        const captchaResponse = (typeof grecaptcha !== 'undefined') ? grecaptcha.getResponse() : '';
+        if (!captchaResponse) {
+          e.preventDefault();
+          Swal.fire({
+            icon: 'warning',
+            title: 'Verifikasi reCAPTCHA Wajib',
+            text: 'Silakan centang kotak verifikasi "I\'m not a robot" terlebih dahulu sebelum masuk.',
+            confirmButtonText: 'Mengerti',
+            confirmButtonColor: '#0284c7',
+            customClass: {
+              popup: 'swal2-corporate-modal'
+            }
+          });
+          return false;
         }
 
         const hour = new Date().getHours();

@@ -405,6 +405,20 @@
       font-size: 0.785rem;
     }
 
+    /* SweetAlert2 Corporate Modal */
+    .swal2-container {
+      font-family: var(--font-main) !important;
+    }
+    .swal2-corporate-modal {
+      border-radius: 18px !important;
+      padding: 1.85rem 1.75rem 1.5rem !important;
+      border: 1px solid #e2e8f0 !important;
+      box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.25) !important;
+      width: 400px !important;
+      max-width: 90vw !important;
+      background: #ffffff !important;
+    }
+
     @media (max-width: 860px) {
       .brand-panel { display: none; }
       .form-container { padding: 2.75rem 2rem; }
@@ -526,5 +540,87 @@
   <!-- Scripts -->
   <script src="<?php echo base_url(); ?>assets/vendor/jquery/jquery.min.js"></script>
   <script src="<?php echo base_url(); ?>assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.17.2/dist/sweetalert2.all.min.js"></script>
+
+  <script>
+    const formRecovery = document.getElementById('formRecovery');
+    if (formRecovery) {
+      formRecovery.addEventListener('submit', function(e) {
+        const u = document.getElementById('username');
+        const nik = document.getElementById('nik');
+
+        if (!u || !u.value.trim()) {
+          e.preventDefault();
+          if (u) u.focus();
+          Swal.fire({
+            icon: 'warning',
+            title: 'Username SSO Diperlukan',
+            text: 'Silakan masukkan Username SSO Anda terlebih dahulu.',
+            confirmButtonText: 'Mengerti',
+            confirmButtonColor: '#0284c7',
+            customClass: { popup: 'swal2-corporate-modal' }
+          });
+          return false;
+        }
+
+        if (!nik || !nik.value.trim()) {
+          e.preventDefault();
+          if (nik) nik.focus();
+          Swal.fire({
+            icon: 'warning',
+            title: 'NIK Diperlukan',
+            text: 'Silakan masukkan Nomor Induk Kependudukan (NIK) pegawai.',
+            confirmButtonText: 'Mengerti',
+            confirmButtonColor: '#0284c7',
+            customClass: { popup: 'swal2-corporate-modal' }
+          });
+          return false;
+        }
+
+        const captchaResponse = (typeof grecaptcha !== 'undefined') ? grecaptcha.getResponse() : '';
+        if (!captchaResponse) {
+          e.preventDefault();
+          Swal.fire({
+            icon: 'warning',
+            title: 'Verifikasi reCAPTCHA Wajib',
+            text: 'Silakan centang kotak verifikasi "I\'m not a robot" terlebih dahulu.',
+            confirmButtonText: 'Mengerti',
+            confirmButtonColor: '#0284c7',
+            customClass: {
+              popup: 'swal2-corporate-modal'
+            }
+          });
+          return false;
+        }
+
+        Swal.fire({
+          html: `
+            <div class="py-2 text-center">
+              <div class="mb-3 d-inline-flex align-items-center justify-content-center" style="width: 58px; height: 58px; border-radius: 50%; background: rgba(14, 165, 233, 0.1);">
+                <i class="fas fa-user-shield" style="font-size: 1.75rem; color: #0284c7;"></i>
+              </div>
+              <h4 class="font-weight-bold text-gray-900 mb-1" style="font-size: 1.25rem; letter-spacing: -0.01em;">
+                Memvalidasi Data...
+              </h4>
+              <p class="text-muted small mb-3">
+                Memeriksa kecocokan data SSO & NIK ke pangkalan data klinik...
+              </p>
+              <div class="spinner-border text-primary" style="width: 2rem; height: 2rem; border-width: 2.5px;" role="status">
+                <span class="sr-only">Memuat...</span>
+              </div>
+            </div>
+          `,
+          showConfirmButton: false,
+          allowOutsideClick: false,
+          allowEscapeKey: false,
+          customClass: {
+            popup: 'swal2-corporate-modal'
+          },
+          width: 380,
+          background: '#ffffff'
+        });
+      });
+    }
+  </script>
 </body>
 </html>
