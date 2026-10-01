@@ -42,25 +42,63 @@
 		</div>
 	</div>
 
-	<!-- Info Setting -->
-	<div class="alert alert-warning">
-		<i class="fas fa-info-circle"></i>
-		<strong>Aturan:</strong> Terlambat <?php echo $setting->maks_terlambat_jadi_alpha ?>x dalam 1 bulan = dianggap 1 hari Alpha (otomatis terhitung di kolom "Alpha dari Terlambat")
+	<!-- Ringkasan Komposisi Hari Kerja Efektif & Sinkronisasi -->
+	<div class="row mb-3">
+		<div class="col-xl-3 col-md-6 mb-2">
+			<div class="card border-left-info shadow-xs py-2 px-3 h-100">
+				<div class="text-xs font-weight-bold text-info text-uppercase mb-1">Total Hari Kalender</div>
+				<div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo isset($stat_hari) ? $stat_hari['total_hari'] : date('t', mktime(0,0,0,(int)$bulan,1,(int)$tahun)) ?> Hari</div>
+				<small class="text-muted">Bulan <?php echo $nama_bulan[$bulan] . ' ' . $tahun ?></small>
+			</div>
+		</div>
+		<div class="col-xl-3 col-md-6 mb-2">
+			<div class="card border-left-secondary shadow-xs py-2 px-3 h-100">
+				<div class="text-xs font-weight-bold text-secondary text-uppercase mb-1">Libur Resmi (Minggu + Libur)</div>
+				<div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo isset($stat_hari) ? ($stat_hari['jumlah_minggu'] + $stat_hari['jumlah_libur']) : 0 ?> Hari Libur</div>
+				<small class="text-muted"><?php echo isset($stat_hari) ? $stat_hari['jumlah_minggu'] : 0 ?> Minggu + <?php echo isset($stat_hari) ? $stat_hari['jumlah_libur'] : 0 ?> Tanggal Merah</small>
+			</div>
+		</div>
+		<div class="col-xl-3 col-md-6 mb-2">
+			<div class="card border-left-primary shadow-xs py-2 px-3 h-100">
+				<div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Hari Kerja Efektif Wajib</div>
+				<div class="h5 mb-0 font-weight-bold text-primary"><?php echo isset($stat_hari) ? $stat_hari['hari_kerja_efektif'] : 0 ?> Hari Kerja</div>
+				<small class="text-muted">Batas maksimal alpha jika nihil absen</small>
+			</div>
+		</div>
+		<div class="col-xl-3 col-md-6 mb-2">
+			<div class="card border-left-success shadow-xs py-2 px-3 h-100">
+				<div class="text-xs font-weight-bold text-success text-uppercase mb-1">Status Sinkronisasi Gaji</div>
+				<div class="h6 mb-0 font-weight-bold text-success"><i class="fas fa-check-circle mr-1"></i> Realtime Otomatis</div>
+				<small class="text-muted">Tersinkron langsung ke data penggajian</small>
+			</div>
+		</div>
+	</div>
+
+	<!-- Info Setting & Aturan -->
+	<div class="alert alert-light border shadow-xs d-flex align-items-center py-2 px-3 mb-4" style="border-radius: 10px;">
+		<i class="fas fa-info-circle text-primary fa-lg mr-3"></i>
+		<div class="small">
+			<strong>Aturan Evaluasi Kehadiran:</strong> Pegawai yang tidak hadir pada hari kerja efektif dihitung <strong>Alpha</strong>. Terlambat <?php echo $setting->maks_terlambat_jadi_alpha ?>x dalam sebulan dikonversi setara 1 hari Alpha. Hari Minggu dan Tanggal Merah <strong>tidak dihitung Alpha</strong> karena merupakan hak libur resmi.
+		</div>
 	</div>
 
 	<!-- Tabel Rekap -->
 	<div class="card shadow mb-4">
 		<div class="card-header py-3 d-flex justify-content-between align-items-center">
-			<h6 class="m-0 font-weight-bold text-primary">Rekap Bulan <?php echo $nama_bulan[$bulan] ?> <?php echo $tahun ?></h6>
-			<form method="POST" action="<?php echo base_url('admin/absensi_harian/sinkron_gaji') ?>" class="d-inline">
-				<input type="hidden" name="bulan" value="<?php echo $bulan ?>">
-				<input type="hidden" name="tahun" value="<?php echo $tahun ?>">
-				<button type="button" class="btn btn-success btn-sm btn-konfirmasi" data-judul="Sinkronisasi Data Absensi?" data-pesan="Data rekap absensi bulan ini akan disinkronkan ke Data Kehadiran untuk perhitungan gaji. Lanjutkan?" data-tipe="question" data-warna="#1cc88a" data-btn-teks="<i class='fas fa-sync'></i> Ya, Sinkronkan!">
-					<i class="fas fa-sync"></i> Sinkron ke Gaji
-				</button>
-			
-<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" style="display: none">
-</form>
+			<h6 class="m-0 font-weight-bold text-primary">Rekapitulasi Kehadiran <?php echo $nama_bulan[$bulan] ?> <?php echo $tahun ?></h6>
+			<div class="d-flex align-items-center">
+				<span class="badge badge-light border text-success px-3 py-2 mr-2 font-weight-bold shadow-xs">
+					<i class="fas fa-bolt text-warning mr-1"></i> Realtime Sync Aktif
+				</span>
+				<form method="POST" action="<?php echo base_url('admin/absensi_harian/sinkron_gaji') ?>" class="d-inline">
+					<input type="hidden" name="bulan" value="<?php echo $bulan ?>">
+					<input type="hidden" name="tahun" value="<?php echo $tahun ?>">
+					<button type="button" class="btn btn-outline-success btn-sm btn-konfirmasi" data-judul="Sinkronisasi Paksa?" data-pesan="Data absensi harian akan disinkronkan ulang ke Data Kehadiran untuk penggajian. Lanjutkan?" data-tipe="question" data-warna="#1cc88a" data-btn-teks="<i class='fas fa-sync'></i> Ya, Sinkronkan!">
+						<i class="fas fa-sync"></i> Refresh Sinkron
+					</button>
+					<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" style="display: none">
+				</form>
+			</div>
 		</div>
 		<div class="card-body">
 			<div class="table-responsive">

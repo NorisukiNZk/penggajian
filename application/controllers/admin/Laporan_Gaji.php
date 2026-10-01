@@ -42,6 +42,9 @@ class Laporan_Gaji extends CI_Controller {
 			$tahun = date('Y');
 			$bulantahun = $bulan . $tahun;
 		}
+
+		// Otomatis sinkronkan absensi harian ke data_kehadiran secara realtime
+		$this->ModelAbsensiHarian->sinkron_ke_kehadiran($bulan, $tahun);
 	
 		// Mengambil data potongan gaji
 		$data['potongan'] = $this->ModelPenggajian->get_data('potongan_gaji')->result();

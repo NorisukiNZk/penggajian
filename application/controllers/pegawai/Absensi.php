@@ -71,6 +71,9 @@ class Absensi extends CI_Controller {
 		$absensi = $this->ModelAbsensiHarian->get_absensi_hari_ini($nik);
 		$status_text = ($absensi->status == 'tepat_waktu') ? 'Tepat Waktu ✅' : 'Terlambat ⚠️';
 
+		// Otomatis sinkronkan absensi harian ke data_kehadiran untuk payroll realtime
+		$this->ModelAbsensiHarian->sinkron_ke_kehadiran(date('m'), date('Y'));
+
 		$this->session->set_flashdata('pesan','<div class="alert alert-success alert-dismissible fade show" role="alert">
 			<strong>Absen masuk berhasil!</strong> Jam: ' . $absensi->jam_masuk . ' | Status: ' . $status_text . '
 			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -124,6 +127,9 @@ class Absensi extends CI_Controller {
 			redirect('pegawai/absensi');
 			return;
 		}
+
+		// Otomatis sinkronkan absensi harian ke data_kehadiran untuk payroll realtime
+		$this->ModelAbsensiHarian->sinkron_ke_kehadiran(date('m'), date('Y'));
 
 		$this->session->set_flashdata('pesan','<div class="alert alert-success alert-dismissible fade show" role="alert">
 			<strong>Absen pulang berhasil!</strong> Jam: ' . date('H:i:s') . '

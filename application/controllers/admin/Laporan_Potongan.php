@@ -37,6 +37,9 @@ class Laporan_Potongan extends CI_Controller {
 			$tahun = date('Y');
 			$bulantahun = $bulan . $tahun;
 		}
+
+		// Otomatis sinkronkan absensi harian ke data_kehadiran secara realtime
+		$this->ModelAbsensiHarian->sinkron_ke_kehadiran($bulan, $tahun);
 	
         // Ambil data potongan alpha master
         $data['potongan_master'] = $this->ModelPenggajian->get_data('potongan_gaji')->result();

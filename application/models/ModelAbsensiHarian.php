@@ -265,6 +265,65 @@ class ModelAbsensiHarian extends CI_Model
     }
 
     /**
+     * Mengambil statistik komposisi hari kalender vs hari kerja efektif bulanan
+     */
+    public function get_statistik_hari_kerja($bulan, $tahun)
+    {
+        $req_year = (int)$tahun;
+        $req_month = (int)$bulan;
+        $cur_year = (int)date('Y');
+        $cur_month = (int)date('n');
+
+        $is_future = ($req_year > $cur_year) || ($req_year == $cur_year && $req_month > $cur_month);
+        $is_current_month = ($req_year == $cur_year && $req_month == $cur_month);
+        $total_hari_bulan = (int)date('t', mktime(0, 0, 0, $req_month, 1, $req_year));
+
+        if ($is_future) {
+            $hari_evaluasi = 0;
+        } elseif ($is_current_month) {
+            $hari_evaluasi = min($total_hari_bulan, (int)date('j'));
+        } else {
+            $hari_evaluasi = $total_hari_bulan;
+        }
+
+        $libur_nasional = $this->db->query("SELECT * FROM hari_libur WHERE MONTH(tanggal) = ? AND YEAR(tanggal) = ?", array($req_month, $req_year))->result();
+
+        $jumlah_minggu = 0;
+        $jumlah_libur = 0;
+        $hari_kerja_efektif = 0;
+
+        for ($i = 1; $i <= $total_hari_bulan; $i++) {
+            $tanggal = sprintf('%04d-%02d-%02d', $req_year, $req_month, $i);
+            if (date('N', strtotime($tanggal)) == 7) {
+                $jumlah_minggu++;
+            } else {
+                $is_libur = false;
+                foreach ($libur_nasional as $ln) {
+                    if ($ln->tanggal == $tanggal) {
+                        $is_libur = true;
+                        break;
+                    }
+                }
+                if ($is_libur) {
+                    $jumlah_libur++;
+                } else {
+                    $hari_kerja_efektif++;
+                }
+            }
+        }
+
+        return array(
+            'total_hari'          => $total_hari_bulan,
+            'jumlah_minggu'       => $jumlah_minggu,
+            'jumlah_libur'        => $jumlah_libur,
+            'hari_kerja_efektif'  => $hari_kerja_efektif,
+            'hari_evaluasi'       => $hari_evaluasi,
+            'is_current_month'    => $is_current_month,
+            'is_future'           => $is_future
+        );
+    }
+
+    /**
      * Sinkronisasi data absensi harian ke tabel data_kehadiran (untuk kompatibilitas gaji)
      */
     public function sinkron_ke_kehadiran($bulan, $tahun)

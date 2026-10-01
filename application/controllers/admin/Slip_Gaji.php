@@ -37,6 +37,10 @@ class Slip_Gaji extends CI_Controller {
 	$tahun = $this->input->post('tahun', TRUE) ? $this->input->post('tahun', TRUE) : $this->input->get('tahun', TRUE);
 	$bulantahun = $bulan . $tahun;
 
+	if (!empty($bulan) && !empty($tahun)) {
+		$this->ModelAbsensiHarian->sinkron_ke_kehadiran($bulan, $tahun);
+	}
+
 	if (!empty($nik)) {
 		$data['print_slip'] = $this->db->query("SELECT data_pegawai.nik,data_pegawai.nama_pegawai,data_jabatan.nama_jabatan,data_jabatan.gaji_pokok,data_jabatan.tj_transport,data_jabatan.uang_makan,data_kehadiran.alpha,data_kehadiran.bulan FROM data_pegawai INNER JOIN data_kehadiran ON data_kehadiran.nik=data_pegawai.nik
 			INNER JOIN data_jabatan ON data_jabatan.nama_jabatan=data_pegawai.jabatan

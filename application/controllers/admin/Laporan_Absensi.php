@@ -41,6 +41,9 @@ class Laporan_Absensi extends CI_Controller {
 			$tahun = date('Y');
 			$bulantahun = $bulan . $tahun;
 		}
+
+		// Otomatis sinkronkan absensi harian ke data_kehadiran secara realtime
+		$this->ModelAbsensiHarian->sinkron_ke_kehadiran($bulan, $tahun);
 	
 		// Mengambil data kehadiran berdasarkan bulan dan tahun
 		$data['lap_kehadiran'] = $this->db->query("SELECT * FROM data_kehadiran WHERE bulan=? ORDER BY nama_pegawai ASC", array($bulantahun))->result();

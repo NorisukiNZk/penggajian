@@ -30,6 +30,9 @@ class Data_Absensi extends CI_Controller {
 			$bulantahun = $bulan.$tahun;
 		}
 
+		// Otomatis sinkronkan absensi harian ke data_kehadiran secara realtime
+		$this->ModelAbsensiHarian->sinkron_ke_kehadiran($bulan, $tahun);
+
 		$data['absensi'] = $this->db->query("SELECT data_kehadiran.*, data_pegawai.nama_pegawai, data_pegawai.jenis_kelamin, data_pegawai.jabatan
 			FROM data_kehadiran
 			INNER JOIN data_pegawai ON data_kehadiran.nik= data_pegawai.nik

@@ -19,6 +19,10 @@ class Data_Gaji extends CI_Controller {
 	{
 		$data['title'] = "Data Gaji";
 		$nik=$this->session->userdata('nik');
+
+		// Otomatis sinkronkan absensi harian ke data_kehadiran secara realtime
+		$this->ModelAbsensiHarian->sinkron_ke_kehadiran(date('m'), date('Y'));
+
 		$data['potongan'] = $this->ModelPenggajian->get_data('potongan_gaji')->result();
 		$data['gaji'] = $this->db->query("SELECT data_pegawai.nama_pegawai,data_pegawai.nik,
 			data_jabatan.gaji_pokok,data_jabatan.tj_transport,data_jabatan.uang_makan,

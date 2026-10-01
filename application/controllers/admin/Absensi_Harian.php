@@ -43,9 +43,13 @@ class Absensi_Harian extends CI_Controller {
 		$bulan = $this->input->get('bulan', TRUE) != '' ? $this->input->get('bulan', TRUE) : date('m');
 		$tahun = $this->input->get('tahun', TRUE) != '' ? $this->input->get('tahun', TRUE) : date('Y');
 
+		// Otomatis sinkronkan absensi harian ke data_kehadiran secara realtime
+		$this->ModelAbsensiHarian->sinkron_ke_kehadiran($bulan, $tahun);
+
 		$data['bulan'] = $bulan;
 		$data['tahun'] = $tahun;
 		$data['rekap'] = $this->ModelAbsensiHarian->get_rekap_bulanan($bulan, $tahun);
+		$data['stat_hari'] = $this->ModelAbsensiHarian->get_statistik_hari_kerja($bulan, $tahun);
 		$data['setting'] = $this->ModelAbsensiHarian->get_setting();
 
 		$this->load->view('template_admin/header', $data);
@@ -157,6 +161,9 @@ class Absensi_Harian extends CI_Controller {
 
 		$this->ModelAbsensiHarian->update_status($id, $status, $keterangan);
 
+		// Otomatis sinkronkan perubahan ke data_kehadiran untuk payroll realtime
+		$this->ModelAbsensiHarian->sinkron_ke_kehadiran($bulan, $tahun);
+
 		$this->session->set_flashdata('pesan','<div class="alert alert-success alert-dismissible fade show" role="alert">
 			<strong>Status absensi berhasil diubah!</strong>
 			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -192,6 +199,9 @@ class Absensi_Harian extends CI_Controller {
 				'keterangan' => $keterangan ? $keterangan : 'Input manual oleh admin'
 			);
 			$this->db->insert('absensi_harian', $data);
+
+			// Otomatis sinkronkan penambahan ke data_kehadiran untuk payroll realtime
+			$this->ModelAbsensiHarian->sinkron_ke_kehadiran($bulan, $tahun);
 
 			$this->session->set_flashdata('pesan','<div class="alert alert-success alert-dismissible fade show" role="alert">
 				<strong>Data absensi berhasil ditambahkan!</strong>

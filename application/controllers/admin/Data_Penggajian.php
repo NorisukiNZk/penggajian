@@ -33,6 +33,9 @@ class Data_Penggajian extends CI_Controller {
 		$data['tahun'] = $tahun;
 		$data['bulantahun'] = $bulantahun;
 
+		// Otomatis sinkronkan absensi harian ke data_kehadiran secara realtime
+		$this->ModelAbsensiHarian->sinkron_ke_kehadiran($bulan, $tahun);
+
 		$data['potongan'] = $this->ModelPenggajian->get_data('potongan_gaji')->result();
 		$data['gaji'] = $this->db->query("SELECT data_pegawai.nik,data_pegawai.nama_pegawai,
 			data_pegawai.jenis_kelamin,data_pegawai.photo,data_jabatan.nama_jabatan,data_jabatan.gaji_pokok,
@@ -110,6 +113,10 @@ class Data_Penggajian extends CI_Controller {
 		
 		$data['bulan'] = $bulan;
 		$data['tahun'] = $tahun;
+
+		// Otomatis sinkronkan absensi harian ke data_kehadiran secara realtime
+		$this->ModelAbsensiHarian->sinkron_ke_kehadiran($bulan, $tahun);
+
 		$data['potongan'] = $this->ModelPenggajian->get_data('potongan_gaji')->result();
 		$data['cetak_gaji'] = $this->db->query("SELECT data_pegawai.nik,data_pegawai.nama_pegawai,
 			data_pegawai.jenis_kelamin,data_jabatan.nama_jabatan,data_jabatan.gaji_pokok,
