@@ -291,6 +291,7 @@
     $bulanIndo = ['01' => 'Januari', '02' => 'Februari', '03' => 'Maret', '04' => 'April', '05' => 'Mei', '06' => 'Juni', '07' => 'Juli', '08' => 'Agustus', '09' => 'September', '10' => 'Oktober', '11' => 'November', '12' => 'Desember'];
     $bulanRomawi = array(1=>"I","II","III", "IV", "V","VI","VII","VIII","IX","X", "XI","XII");
     $noSurat = "Nomor : " . date('ymd') . "/SDM-KPMH/" . $bulanRomawi[date('n')] . "/" . date('Y');
+    $filter_jabatan = isset($filter_jabatan) && !empty($filter_jabatan) ? $filter_jabatan : 'Semua Jabatan';
     ?>
 
     <div class="page-container">

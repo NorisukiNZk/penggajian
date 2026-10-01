@@ -1,8 +1,15 @@
 <!-- Begin Page Content -->
 <div class="container-fluid">
-	<div class="d-sm-flex align-items-center justify-content-between mb-4">
-		<h1 class="h3 mb-0 text-gray-800"><?php echo $title ?></h1>
-		<span class="badge badge-primary" style="font-size: 16px;"><i class="fas fa-calendar-day"></i> <?php echo $tanggal ?></span>
+	<div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
+		<div>
+			<h1 class="h3 mb-1 font-weight-bold text-gray-800" style="letter-spacing: -0.02em;"><?php echo $title ?></h1>
+			<p class="text-muted small mb-0">Pantau kehadiran harian pegawai secara real-time pada hari ini.</p>
+		</div>
+		<div class="mt-3 mt-md-0">
+			<span class="badge badge-light border px-3 py-2 text-dark font-weight-bold shadow-xs">
+				<i class="fas fa-calendar-day text-primary mr-1"></i> <?php echo $tanggal ?>
+			</span>
+		</div>
 	</div>
 
 	<?php echo $this->session->flashdata('pesan') ?>

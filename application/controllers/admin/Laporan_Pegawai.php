@@ -25,9 +25,7 @@ class Laporan_Pegawai extends CI_Controller {
 	}
 
 	public function cetak_laporan_pegawai() {
-		$data['title'] = "Cetak Laporan Pegawai";
-	
-		$jabatan = $this->input->post('jabatan', TRUE);
+		$jabatan = $this->input->get_post('jabatan', TRUE);
 	
 		if (!empty($jabatan) && $jabatan != 'semua') {
             $data['pegawai'] = $this->db->query("SELECT * FROM data_pegawai WHERE jabatan=? ORDER BY nama_pegawai ASC", array($jabatan))->result();

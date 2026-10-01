@@ -27,7 +27,7 @@ class Laporan_Tahunan extends CI_Controller {
 	public function cetak_laporan_tahunan() {
 		$data['title'] = "Cetak Laporan Gaji Tahunan";
 	
-		$tahun = $this->input->post('tahun', TRUE);
+		$tahun = $this->input->get_post('tahun', TRUE);
 	
 		if (empty($tahun)) {
 			$tahun = date('Y');

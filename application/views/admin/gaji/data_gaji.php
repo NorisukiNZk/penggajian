@@ -27,12 +27,12 @@ foreach ($potongan as $p) {
 ?>
 
 <div class="container-fluid">
-	<div class="d-sm-flex align-items-center justify-content-between mb-4">
+	<div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
 		<div>
-			<h1 class="h3 mb-1 text-gray-800 font-weight-bold"><?php echo $title; ?></h1>
+			<h1 class="h3 mb-1 font-weight-bold text-gray-800" style="letter-spacing: -0.02em;"><?php echo $title; ?></h1>
 			<p class="text-muted small mb-0">Manajemen penggajian bulanan, rincian komponen penerimaan, potongan, dan cetak slip gaji pegawai.</p>
 		</div>
-		<div class="mt-3 mt-sm-0">
+		<div class="mt-3 mt-md-0">
 			<span class="badge badge-light border px-3 py-2 text-dark font-weight-bold shadow-xs">
 				<i class="fas fa-calendar-alt text-primary mr-1"></i> Periode: <?php echo $nama_bulan . ' ' . $tahun; ?>
 			</span>

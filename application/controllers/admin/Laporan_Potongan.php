@@ -27,8 +27,8 @@ class Laporan_Potongan extends CI_Controller {
 	public function cetak_laporan_potongan() {
 		$data['title'] = "Cetak Laporan Potongan Gaji";
 	
-		$bulan = $this->input->post('bulan', TRUE);
-		$tahun = $this->input->post('tahun', TRUE);
+		$bulan = $this->input->get_post('bulan', TRUE);
+		$tahun = $this->input->get_post('tahun', TRUE);
 	
 		if (!empty($bulan) && !empty($tahun)) {
 			$bulantahun = $bulan . $tahun;

@@ -53,6 +53,11 @@
       -moz-osx-font-smoothing: grayscale;
     }
 
+    h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+      font-family: var(--font-main) !important;
+      letter-spacing: -0.02em;
+    }
+
     /* Modern Card Overhaul */
     .card {
       border: 1px solid #eef2f6 !important;

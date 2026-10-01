@@ -2,8 +2,14 @@
 <div class="container-fluid">
 
     <!-- Page Heading -->
-    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800 font-weight-bold" style="letter-spacing: 1px;"><i class="fas fa-money-check-alt mr-2 text-primary"></i> <?php echo $title ?></h1>
+    <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
+        <div>
+            <h1 class="h3 mb-1 font-weight-bold text-gray-800" style="letter-spacing: -0.02em;"><?php echo $title ?></h1>
+            <p class="text-muted small mb-0">Cetak slip rincian penerimaan dan potongan gaji perorangan pegawai.</p>
+        </div>
+        <a href="<?php echo base_url('admin/laporan') ?>" class="btn btn-sm btn-secondary shadow-sm mt-3 mt-md-0">
+            <i class="fas fa-arrow-left fa-sm mr-1"></i> Kembali ke Pusat Laporan
+        </a>
     </div>
 
     <div class="row justify-content-center">

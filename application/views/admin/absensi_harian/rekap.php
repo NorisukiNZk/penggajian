@@ -1,7 +1,10 @@
 <!-- Begin Page Content -->
 <div class="container-fluid">
-	<div class="d-sm-flex align-items-center justify-content-between mb-4">
-		<h1 class="h3 mb-0 text-gray-800"><?php echo $title ?></h1>
+	<div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
+		<div>
+			<h1 class="h3 mb-1 font-weight-bold text-gray-800" style="letter-spacing: -0.02em;"><?php echo $title ?></h1>
+			<p class="text-muted small mb-0">Rekapitulasi log absensi harian seluruh pegawai per periode bulan dan tahun.</p>
+		</div>
 	</div>
 
 	<?php echo $this->session->flashdata('pesan') ?>

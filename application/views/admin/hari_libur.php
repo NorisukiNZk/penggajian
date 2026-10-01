@@ -1,10 +1,13 @@
 <!-- Begin Page Content -->
 <div class="container-fluid">
 
-  <div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800"><?php echo $title?></h1>
-    <a href="<?php echo base_url('admin/hari_libur/sync_api') ?>" class="btn btn-sm btn-info shadow-sm btn-konfirmasi" data-judul="Sync API Hari Libur?" data-pesan="Proses ini akan menarik data kalender libur nasional via internet. Lanjutkan?" data-tipe="info" data-warna="#36b9cc" data-btn-teks="<i class='fas fa-sync'></i> Ya, Sinkronkan!">
-      <i class="fas fa-sync fa-sm text-white-50"></i> Sync Data API Nasional
+  <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
+    <div>
+      <h1 class="h3 mb-1 font-weight-bold text-gray-800" style="letter-spacing: -0.02em;"><?php echo $title?></h1>
+      <p class="text-muted small mb-0">Kelola kalender hari libur nasional dan cuti bersama operasional klinik.</p>
+    </div>
+    <a href="<?php echo base_url('admin/hari_libur/sync_api') ?>" class="btn btn-sm btn-info shadow-sm btn-konfirmasi mt-3 mt-md-0" data-judul="Sync API Hari Libur?" data-pesan="Proses ini akan menarik data kalender libur nasional via internet. Lanjutkan?" data-tipe="info" data-warna="#36b9cc" data-btn-teks="<i class='fas fa-sync'></i> Ya, Sinkronkan!">
+      <i class="fas fa-sync fa-sm text-white mr-1"></i> Sync Data API Nasional
     </a>
   </div>
 

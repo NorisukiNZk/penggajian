@@ -2,16 +2,12 @@
 <div class="container-fluid">
 
     <!-- Page Heading -->
-    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
         <div>
-            <h1 class="h3 mb-1 text-gray-800 font-weight-bold" style="letter-spacing: -0.02em;">
-                <i class="fas fa-print text-primary mr-2"></i><?php echo $title; ?>
-            </h1>
-            <p class="text-muted small mb-0">
-                Pusat kendali arsip terpadu untuk mengekspor, memfilter, dan mencetak seluruh laporan operasional & penggajian Klinik Pratama Dr. H.M. Hidayatullah.
-            </p>
+            <h1 class="h3 mb-1 font-weight-bold text-gray-800" style="letter-spacing: -0.02em;"><?php echo $title; ?></h1>
+            <p class="text-muted small mb-0">Pusat kendali arsip terpadu untuk memfilter, mencetak, dan mengekspor seluruh laporan operasional klinik.</p>
         </div>
-        <div class="mt-2 mt-sm-0">
+        <div class="mt-3 mt-md-0">
             <span class="badge badge-light border px-3 py-2 font-weight-bold text-primary shadow-sm" style="border-radius: 10px; font-size: 0.85rem;">
                 <i class="fas fa-calendar-alt mr-1"></i> Periode Aktif: <?php echo date('F Y'); ?>
             </span>

@@ -5,12 +5,12 @@
   <?php echo $this->session->flashdata('pesan'); ?>
 
   <!-- Page Heading Header -->
-  <div class="d-sm-flex align-items-center justify-content-between mb-4">
+  <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
     <div>
-      <h1 class="h3 mb-1 text-gray-800 font-weight-bold"><?php echo $title; ?></h1>
+      <h1 class="h3 mb-1 font-weight-bold text-gray-800" style="letter-spacing: -0.02em;"><?php echo $title; ?></h1>
       <p class="text-muted small mb-0">Riwayat penerimaan remunerasi, tunjangan, lembur, potongan dan slip gaji resmi Anda.</p>
     </div>
-    <div class="mt-3 mt-sm-0">
+    <div class="mt-3 mt-md-0">
       <span class="badge badge-primary px-3 py-2 shadow-sm" style="font-size: 12px; border-radius: 8px;">
         <i class="fas fa-shield-alt mr-1"></i> Data Remunerasi Terverifikasi
       </span>

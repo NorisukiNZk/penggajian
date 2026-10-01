@@ -2,15 +2,13 @@
 <div class="container-fluid">
 
     <!-- Page Heading -->
-    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
         <div>
-            <h1 class="h3 mb-1 text-gray-800 font-weight-bold">
-                <i class="fas fa-sliders-h text-primary mr-2"></i><?php echo $title ?>
-            </h1>
+            <h1 class="h3 mb-1 font-weight-bold text-gray-800" style="letter-spacing: -0.02em;"><?php echo $title ?></h1>
             <p class="text-muted small mb-0">Kelola dan tentukan batas kuota hak cuti pegawai secara dinamis (tahunan, bulanan, atau kombinasi).</p>
         </div>
-        <div>
-            <a href="<?php echo base_url('admin/data_cuti') ?>" class="btn btn-sm btn-outline-secondary shadow-sm">
+        <div class="mt-3 mt-md-0">
+            <a href="<?php echo base_url('admin/data_cuti') ?>" class="btn btn-sm btn-secondary shadow-sm">
                 <i class="fas fa-arrow-left fa-sm mr-1"></i> Kembali ke Daftar Cuti
             </a>
         </div>

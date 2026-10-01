@@ -305,6 +305,7 @@ class Data_Pegawai extends CI_Controller {
 	public function cetak()
 	{
 		$data['title'] = "Laporan Data Pegawai";
+		$data['filter_jabatan'] = "Semua Jabatan";
 		$data['pegawai'] = $this->ModelPenggajian->get_data('data_pegawai')->result();
 
 		// Load view untuk cetak resmi dengan Kop, Watermark & QR Code

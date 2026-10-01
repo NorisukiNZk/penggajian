@@ -1,6 +1,14 @@
 <!-- Begin Page Content -->
 <div class="container-fluid mb-5">
 
+  <!-- Page Heading -->
+  <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
+    <div>
+      <h1 class="h3 mb-1 font-weight-bold text-gray-800" style="letter-spacing: -0.02em;"><?php echo $title ?></h1>
+      <p class="text-muted small mb-0">Perbarui kata sandi akun Anda secara berkala untuk menjaga keamanan data.</p>
+    </div>
+  </div>
+
   <div class="row justify-content-center mt-4">
     <div class="col-lg-5 col-md-7">
       

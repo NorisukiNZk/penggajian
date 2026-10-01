@@ -1,7 +1,15 @@
 <!-- Begin Page Content -->
 <div class="container-fluid">
-	<div class="d-sm-flex align-items-center justify-content-between mb-4">
-		<h1 class="h3 mb-0 text-gray-800"><?php echo $title ?></h1>
+	<div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
+		<div>
+			<h1 class="h3 mb-1 font-weight-bold text-gray-800" style="letter-spacing: -0.02em;"><?php echo $title ?></h1>
+			<p class="text-muted small mb-0">Definisikan pos tunjangan penambah atau potongan pengurang penghasilan.</p>
+		</div>
+		<div class="mt-3 mt-md-0">
+			<a href="<?php echo base_url('admin/komponen_gaji') ?>" class="btn btn-sm btn-secondary shadow-sm">
+				<i class="fas fa-arrow-left mr-1"></i> Kembali
+			</a>
+		</div>
 	</div>
 
 	<div class="card shadow mb-4">

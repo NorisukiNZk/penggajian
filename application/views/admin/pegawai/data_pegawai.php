@@ -1,23 +1,20 @@
 <div class="container-fluid">
-  <div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800"><?php echo $title ?></h1>
+  <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
+    <div>
+      <h1 class="h3 mb-1 font-weight-bold text-gray-800" style="letter-spacing: -0.02em;"><?php echo $title ?></h1>
+      <p class="text-muted small mb-0">Manajemen data induk kepegawaian, klasifikasi jabatan, dan hak akses sistem.</p>
+    </div>
+    <div class="mt-3 mt-md-0">
+      <a class="btn btn-sm btn-primary shadow-sm mr-2" href="<?php echo base_url('admin/data_pegawai/cetak'); ?>">
+        <i class="fas fa-print mr-1"></i> Cetak
+      </a>
+      <a class="btn btn-sm btn-success shadow-sm" href="<?php echo base_url('admin/data_pegawai/tambah_data') ?>">
+        <i class="fas fa-plus mr-1"></i> Tambah Pegawai
+      </a>
+    </div>
   </div>
 
-  <!-- Tombol Cetak -->
-  <a class="btn btn-sm btn-primary mb-3" href="<?php echo base_url('admin/data_pegawai/cetak'); ?>">
-    <i class="fas fa-print"></i> Cetak
-  </a>
-
-  <a class="btn btn-sm btn-success mb-3" href="<?php echo base_url('admin/data_pegawai/tambah_data') ?>">
-    <i class="fas fa-plus"></i> Tambah Pegawai
-  </a>
-
   <?php echo $this->session->flashdata('pesan') ?>
-</div>
-
-
-
-<div class="container-fluid">
   <div class="card shadow mb-4">
     <div class="card-body">
       <div class="table-responsive">

@@ -26,8 +26,8 @@ class Laporan_Cuti extends CI_Controller {
 	public function cetak_laporan_cuti() {
 		$data['title'] = "Cetak Laporan Cuti Pegawai";
 	
-		$bulan = $this->input->post('bulan', TRUE);
-		$tahun = $this->input->post('tahun', TRUE);
+		$bulan = $this->input->get_post('bulan', TRUE);
+		$tahun = $this->input->get_post('tahun', TRUE);
 	
 		if(empty($bulan) || empty($tahun)) {
 			$bulan = date('m');

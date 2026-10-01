@@ -2,14 +2,12 @@
 <div class="container-fluid">
 
     <!-- Header & Action Button -->
-    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
         <div>
-            <h1 class="h3 mb-1 font-weight-bold text-gray-800">
-                <i class="fas fa-hand-holding-dollar text-primary mr-2"></i><?php echo $title; ?>
-            </h1>
+            <h1 class="h3 mb-1 font-weight-bold text-gray-800" style="letter-spacing: -0.02em;"><?php echo $title; ?></h1>
             <p class="text-muted small mb-0">Kelola fasilitas kasbon & pinjaman resmi pegawai Klinik Pratama Hidayatullah.</p>
         </div>
-        <div class="mt-3 mt-sm-0">
+        <div class="mt-3 mt-md-0">
             <a href="<?php echo base_url('pegawai/pinjaman/tambah'); ?>" class="btn btn-primary btn-sm px-3 py-2 font-weight-bold shadow-sm rounded-pill">
                 <i class="fas fa-plus-circle mr-1"></i> Ajukan Pinjaman Baru
             </a>

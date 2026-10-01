@@ -1,12 +1,16 @@
 <div class="container-fluid">
 
-    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800"><?php echo $title?></h1>
+    <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
+        <div>
+            <h1 class="h3 mb-1 font-weight-bold text-gray-800" style="letter-spacing: -0.02em;"><?php echo $title?></h1>
+            <p class="text-muted small mb-0">Kelola master parameter potongan gaji tetap dan ketidakhadiran pegawai.</p>
+        </div>
+        <button class="btn btn-sm btn-success shadow-sm mt-3 mt-md-0" data-toggle="modal" data-target="#tambahModal">
+            <i class="fas fa-plus fa-sm mr-1"></i> Tambah Data
+        </button>
     </div>
 
     <?php echo $this->session->flashdata('pesan') ?>
-
-    <button class="btn btn-sm btn-success mb-3" data-toggle="modal" data-target="#tambahModal"><i class="fas fa-plus"></i> Tambah Data</button>
 
     <div class="card shadow mb-4">
         <div class="card-body">
