@@ -109,7 +109,7 @@
               <?php } ?>
             </a>
             <a class="collapse-item <?php echo ($seg2 == 'absensi_harian' && $seg3 == 'setting') ? 'active font-weight-bold' : '' ?>" href="<?php echo base_url('admin/absensi_harian/setting') ?>">
-              <i class="fas fa-map-marker-alt mr-2 text-danger"></i> Setting Absensi & GPS
+              <i class="fas fa-business-time mr-2 text-primary"></i> Setting Aturan Absensi
             </a>
             <a class="collapse-item <?php echo ($seg2 == 'data_absensi') ? 'active font-weight-bold' : '' ?>" href="<?php echo base_url('admin/data_absensi') ?>">
               <i class="fas fa-history mr-2 text-muted"></i> Data Absensi (Lama)
