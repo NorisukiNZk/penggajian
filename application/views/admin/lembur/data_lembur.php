@@ -3,7 +3,7 @@
 	<div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
 		<div>
 			<h1 class="h3 mb-1 font-weight-bold text-gray-800" style="letter-spacing: -0.02em;"><?php echo $title ?></h1>
-			<p class="text-muted small mb-0">Verifikasi dan persetujuan pengajuan lembur kerja pegawai.</p>
+			<p class="text-muted small mb-0">Verifikasi dan persetujuan pengajuan lembur pegawai.</p>
 		</div>
 	</div>
 
@@ -11,7 +11,7 @@
 
 	<div class="card shadow mb-4">
 		<div class="card-header py-3 bg-primary text-white">
-			<h6 class="m-0 font-weight-bold"><i class="fas fa-tasks"></i> Menunggu Persetujuan & Riwayat</h6>
+			<h6 class="m-0 font-weight-bold"><i class="fas fa-tasks"></i> Menunggu Persetujuan & Riwayat </h6>
 		</div>
 		<div class="card-body">
 			<div class="table-responsive">
