@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo $title; ?> - <?php echo htmlspecialchars($cuti->nama_pegawai, ENT_QUOTES, 'UTF-8'); ?></title>
+    <link rel="icon" type="image/png" href="<?php echo base_url('assets/img/kpmh.png'); ?>">
+    <link rel="shortcut icon" type="image/png" href="<?php echo base_url('assets/img/kpmh.png'); ?>">
     <style type="text/css">
         body {
             font-family: 'Times New Roman', Times, serif;
@@ -409,7 +411,9 @@
         <div class="signature-col">
             <p style="margin: 0;">Banjarbaru, <?php echo date('d') . ' ' . $bulanIndo[date('m')] . ' ' . date('Y'); ?></p>
             <p style="margin: 2px 0;">Mengesahkan & Menyetujui,</p>
-            <img src="<?php echo base_url('assets/img/qr-dummy.png'); ?>" class="qr-code" alt="Validasi Digital">
+            <div style="margin: 6px 0;">
+                <?php echo render_qr_dokumen('cuti', $cuti->id_cuti, '', 74); ?>
+            </div>
             <p style="font-size: 9.5px; margin: 0; font-style: italic; color: #4b5563;">Tervalidasi Digital HRIS</p>
             <p class="signature-name">Dr. H. Muhammad Hidayatullah</p>
             <p style="margin: 2px 0; font-size: 11px; color: #4b5563;">SIP: 445/098/Dinkes-Bjb/2022</p>

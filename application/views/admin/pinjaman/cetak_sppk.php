@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo $title; ?> - <?php echo htmlspecialchars($p->nama_pegawai, ENT_QUOTES, 'UTF-8'); ?></title>
+    <link rel="icon" type="image/png" href="<?php echo base_url('assets/img/kpmh.png'); ?>">
+    <link rel="shortcut icon" type="image/png" href="<?php echo base_url('assets/img/kpmh.png'); ?>">
     <style type="text/css">
         body {
             font-family: 'Times New Roman', Times, serif;
@@ -372,7 +374,9 @@
         <div class="signature-col-right">
             <p>Banjarbaru, <?php echo date('d', strtotime($tgl_ref)) . ' ' . $bulanIndo[date('m', strtotime($tgl_ref))] . ' ' . date('Y', strtotime($tgl_ref)); ?></p>
             <p style="margin-top: -5px;">Pihak Pertama (Pemberi Pinjaman),</p>
-            <img src="<?php echo base_url('assets/img/qr-dummy.png'); ?>" class="qr-code" alt="Validasi Digital">
+            <div style="margin: 8px 0;">
+                <?php echo render_qr_dokumen('sppk', $p->id_pinjaman, '', 78); ?>
+            </div>
             <p style="font-size: 9.5px; margin-top: -3px; font-style: italic; color: #4b5563;">Tervalidasi Sistem HRIS Terpadu</p>
             <p class="signature-name">Dr. H. Muhammad Hidayatullah</p>
             <p style="margin: 2px 0; font-size: 11.5px; color: #4b5563;">SIP: 445/098/Dinkes-Bjb/2022</p>

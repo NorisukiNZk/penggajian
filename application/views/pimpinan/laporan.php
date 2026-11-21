@@ -42,7 +42,10 @@
             </select>
           </div>
         </div>
-        <button type="submit" class="btn btn-exec-primary btn-sm btn-block"><i class="fas fa-print"></i> Cetak Laporan Gaji</button>
+        <div class="d-flex flex-column" style="gap: 0.45rem;">
+          <button type="submit" class="btn btn-exec-primary btn-sm btn-block"><i class="fas fa-print"></i> Cetak Laporan Gaji</button>
+          <button type="submit" formaction="<?php echo base_url('pimpinan/laporan/export_gaji_csv'); ?>" formtarget="_self" class="btn btn-exec-outline btn-sm btn-block"><i class="fas fa-file-csv"></i> Unduh Excel (CSV)</button>
+        </div>
       </form>
     </div>
 
@@ -126,7 +129,10 @@
             </select>
           </div>
         </div>
-        <button type="submit" class="btn btn-exec-primary btn-sm btn-block"><i class="fas fa-print"></i> Cetak Laporan Absensi</button>
+        <div class="d-flex flex-column" style="gap: 0.45rem;">
+          <button type="submit" class="btn btn-exec-primary btn-sm btn-block"><i class="fas fa-print"></i> Cetak Laporan Absensi</button>
+          <button type="submit" formaction="<?php echo base_url('pimpinan/laporan/export_absensi_csv'); ?>" formtarget="_self" class="btn btn-exec-outline btn-sm btn-block"><i class="fas fa-file-csv"></i> Unduh Excel (CSV)</button>
+        </div>
       </form>
     </div>
 
@@ -155,7 +161,10 @@
             </select>
           </div>
         </div>
-        <button type="submit" class="btn btn-exec-primary btn-sm btn-block"><i class="fas fa-print"></i> Cetak Laporan Cuti</button>
+        <div class="d-flex flex-column" style="gap: 0.45rem;">
+          <button type="submit" class="btn btn-exec-primary btn-sm btn-block"><i class="fas fa-print"></i> Cetak Laporan Cuti</button>
+          <button type="submit" formaction="<?php echo base_url('pimpinan/laporan/export_cuti_csv'); ?>" formtarget="_self" class="btn btn-exec-outline btn-sm btn-block"><i class="fas fa-file-csv"></i> Unduh Excel (CSV)</button>
+        </div>
       </form>
     </div>
 
@@ -184,7 +193,10 @@
             </select>
           </div>
         </div>
-        <button type="submit" class="btn btn-exec-primary btn-sm btn-block"><i class="fas fa-print"></i> Cetak Laporan Lembur</button>
+        <div class="d-flex flex-column" style="gap: 0.45rem;">
+          <button type="submit" class="btn btn-exec-primary btn-sm btn-block"><i class="fas fa-print"></i> Cetak Laporan Lembur</button>
+          <button type="submit" formaction="<?php echo base_url('pimpinan/laporan/export_lembur_csv'); ?>" formtarget="_self" class="btn btn-exec-outline btn-sm btn-block"><i class="fas fa-file-csv"></i> Unduh Excel (CSV)</button>
+        </div>
       </form>
     </div>
   </div>
@@ -248,7 +260,10 @@
             <?php endforeach; ?>
           </select>
         </div>
-        <button type="submit" class="btn btn-exec-primary btn-sm btn-block"><i class="fas fa-print"></i> Cetak Daftar Pegawai</button>
+        <div class="d-flex flex-column" style="gap: 0.45rem;">
+          <button type="submit" class="btn btn-exec-primary btn-sm btn-block"><i class="fas fa-print"></i> Cetak Daftar Pegawai</button>
+          <button type="submit" formaction="<?php echo base_url('pimpinan/laporan/export_pegawai_csv'); ?>" formtarget="_self" class="btn btn-exec-outline btn-sm btn-block"><i class="fas fa-file-csv"></i> Unduh Excel (CSV)</button>
+        </div>
       </form>
     </div>
 

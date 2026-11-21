@@ -5,6 +5,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <head>
 <meta charset="utf-8">
 <title>404 Page Not Found</title>
+<link rel="icon" type="image/png" href="<?php echo function_exists('base_url') ? base_url('assets/img/kpmh.png') : '/penggajian/assets/img/kpmh.png'; ?>">
 <style type="text/css">
 
 ::selection { background-color: #E13300; color: white; }

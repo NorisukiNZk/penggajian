@@ -283,4 +283,187 @@ class Laporan extends CI_Controller {
 
 		$this->load->view('admin/jabatan/cetak_data_jabatan', $data);
 	}
+
+	// =====================================================================
+	// EKSPOR CSV SIAP BUKA DI EXCEL (UTF-8 BOM + FORMULA INJECTION GUARD)
+	// =====================================================================
+	private function _csv_safe($value) {
+		$str = (string)$value;
+		if ($str !== '' && in_array($str[0], array('=', '+', '-', '@', "\t", "\r"))) {
+			return "'" . $str;
+		}
+		return $str;
+	}
+
+	private function _output_csv($filename, $headers, $rows) {
+		header('Content-Type: text/csv; charset=UTF-8');
+		header('Content-Disposition: attachment; filename="' . $filename . '"');
+		header('Pragma: no-cache');
+		header('Expires: 0');
+
+		$out = fopen('php://output', 'w');
+		fwrite($out, "\xEF\xBB\xBF");
+		fputcsv($out, $headers);
+		foreach ($rows as $row) {
+			$safe = array();
+			foreach ($row as $cell) {
+				$safe[] = $this->_csv_safe($cell);
+			}
+			fputcsv($out, $safe);
+		}
+		fclose($out);
+		exit;
+	}
+
+	public function export_gaji_csv() {
+		$bulan = $this->input->get_post('bulan', TRUE) ?: date('m');
+		$tahun = $this->input->get_post('tahun', TRUE) ?: date('Y');
+		$bulantahun = $bulan . $tahun;
+
+		$this->ModelAbsensiHarian->sinkron_ke_kehadiran($bulan, $tahun);
+		$potongan_master = $this->ModelPenggajian->get_data('potongan_gaji')->result();
+		$alpha_deduction = 0;
+		foreach ($potongan_master as $pm) {
+			if (strtolower($pm->potongan) === 'alpha') {
+				$alpha_deduction = (float)$pm->jml_potongan;
+			}
+		}
+
+		$list = $this->db->query("
+			SELECT data_pegawai.nik, data_pegawai.nama_pegawai, data_jabatan.nama_jabatan,
+				   data_jabatan.gaji_pokok, data_jabatan.tj_transport, data_jabatan.uang_makan, data_kehadiran.alpha
+			FROM data_pegawai
+			INNER JOIN data_kehadiran ON data_kehadiran.nik = data_pegawai.nik
+			INNER JOIN data_jabatan ON data_jabatan.nama_jabatan = data_pegawai.jabatan
+			WHERE data_kehadiran.bulan = ?
+			GROUP BY data_pegawai.nik
+			ORDER BY data_pegawai.nama_pegawai ASC
+		", array($bulantahun))->result();
+
+		$rows = array();
+		$no = 1;
+		foreach ($list as $g) {
+			$tj   = $this->ModelKomponen->hitung_total_tunjangan($g->nik, $bulantahun, $g->gaji_pokok);
+			$pot  = $this->ModelKomponen->hitung_total_potongan($g->nik, $bulantahun, $g->gaji_pokok);
+			$lemb = $this->ModelPenggajian->hitung_uang_lembur($g->nik, $bulan, $tahun);
+			$pinj = $this->ModelPenggajian->hitung_potongan_pinjaman($g->nik, $bulan, $tahun);
+
+			$total_tunj = (float)$g->tj_transport + (float)$g->uang_makan + (float)$tj['total'];
+			$total_pot  = ((float)$g->alpha * $alpha_deduction) + (float)$pot['total'] + (float)$pinj['total'];
+			$thp        = (float)$g->gaji_pokok + $total_tunj + (float)$lemb['uang_lembur'] - $total_pot;
+
+			$rows[] = array(
+				$no++,
+				$g->nik,
+				$g->nama_pegawai,
+				$g->nama_jabatan,
+				$g->gaji_pokok,
+				$total_tunj,
+				$lemb['uang_lembur'],
+				$total_pot,
+				$thp
+			);
+		}
+
+		$this->_output_csv(
+			'Laporan_Gaji_' . $bulan . '_' . $tahun . '.csv',
+			array('No', 'NIK', 'Nama Pegawai', 'Jabatan', 'Gaji Pokok', 'Total Tunjangan', 'Uang Lembur', 'Total Potongan', 'Take Home Pay'),
+			$rows
+		);
+	}
+
+	public function export_absensi_csv() {
+		$bulan = $this->input->get_post('bulan', TRUE) ?: date('m');
+		$tahun = $this->input->get_post('tahun', TRUE) ?: date('Y');
+		$bulantahun = $bulan . $tahun;
+
+		$this->ModelAbsensiHarian->sinkron_ke_kehadiran($bulan, $tahun);
+		$list = $this->db->query("SELECT * FROM data_kehadiran WHERE bulan = ? ORDER BY nama_pegawai ASC", array($bulantahun))->result();
+
+		$rows = array();
+		$no = 1;
+		foreach ($list as $a) {
+			$rows[] = array($no++, $a->nik, $a->nama_pegawai, $a->nama_jabatan, $a->hadir, $a->sakit, $a->alpha);
+		}
+
+		$this->_output_csv(
+			'Laporan_Absensi_' . $bulan . '_' . $tahun . '.csv',
+			array('No', 'NIK', 'Nama Pegawai', 'Jabatan', 'Hadir', 'Sakit', 'Alpha'),
+			$rows
+		);
+	}
+
+	public function export_cuti_csv() {
+		$bulan = $this->input->get_post('bulan', TRUE) ?: date('m');
+		$tahun = $this->input->get_post('tahun', TRUE) ?: date('Y');
+
+		$list = $this->db->query("
+			SELECT c.*, p.nama_pegawai, p.jabatan
+			FROM data_cuti c
+			INNER JOIN data_pegawai p ON c.nik = p.nik
+			WHERE MONTH(c.tanggal_mulai) = ? AND YEAR(c.tanggal_mulai) = ? AND c.status_cuti = 'Disetujui'
+			ORDER BY c.tanggal_mulai ASC
+		", array($bulan, $tahun))->result();
+
+		$rows = array();
+		$no = 1;
+		foreach ($list as $c) {
+			$rows[] = array($no++, $c->nik, $c->nama_pegawai, $c->jabatan, $c->jenis_cuti, $c->tanggal_mulai, $c->tanggal_akhir, $c->alasan, $c->status_cuti);
+		}
+
+		$this->_output_csv(
+			'Laporan_Cuti_' . $bulan . '_' . $tahun . '.csv',
+			array('No', 'NIK', 'Nama Pegawai', 'Jabatan', 'Jenis Cuti', 'Tanggal Mulai', 'Tanggal Akhir', 'Alasan', 'Status'),
+			$rows
+		);
+	}
+
+	public function export_lembur_csv() {
+		$bulan = $this->input->get_post('bulan', TRUE) ?: date('m');
+		$tahun = $this->input->get_post('tahun', TRUE) ?: date('Y');
+		$setting = $this->db->get_where('setting_absensi', array('id' => 1))->row();
+		$tarif   = $setting ? (int)$setting->tarif_lembur_per_jam : 20000;
+
+		$list = $this->db->query("
+			SELECT l.*, p.nama_pegawai, p.jabatan
+			FROM data_lembur l
+			INNER JOIN data_pegawai p ON l.nik = p.nik
+			WHERE DATE_FORMAT(l.tanggal_lembur, '%Y-%m') = ? AND l.status = 'Disetujui'
+			ORDER BY l.tanggal_lembur ASC
+		", array($tahun . '-' . $bulan))->result();
+
+		$rows = array();
+		$no = 1;
+		foreach ($list as $l) {
+			$rows[] = array($no++, $l->nik, $l->nama_pegawai, $l->jabatan, $l->tanggal_lembur, $l->jam_mulai, $l->jam_selesai, $l->durasi_jam, (int)$l->durasi_jam * $tarif, $l->keterangan);
+		}
+
+		$this->_output_csv(
+			'Laporan_Lembur_' . $bulan . '_' . $tahun . '.csv',
+			array('No', 'NIK', 'Nama Pegawai', 'Jabatan', 'Tanggal', 'Jam Mulai', 'Jam Selesai', 'Durasi (Jam)', 'Total Kompensasi', 'Keterangan'),
+			$rows
+		);
+	}
+
+	public function export_pegawai_csv() {
+		$jabatan = $this->input->get_post('jabatan', TRUE);
+		if (!empty($jabatan) && $jabatan !== 'semua') {
+			$list = $this->db->query("SELECT * FROM data_pegawai WHERE jabatan = ? ORDER BY nama_pegawai ASC", array($jabatan))->result();
+		} else {
+			$list = $this->db->query("SELECT * FROM data_pegawai ORDER BY nama_pegawai ASC")->result();
+		}
+
+		$rows = array();
+		$no = 1;
+		foreach ($list as $p) {
+			$role = ($p->hak_akses == '1') ? 'Admin' : (($p->hak_akses == '3') ? 'Pimpinan' : 'Pegawai');
+			$rows[] = array($no++, $p->nik, $p->nama_pegawai, $p->jenis_kelamin, $p->jabatan, $p->tanggal_masuk, $p->status, $role);
+		}
+
+		$this->_output_csv(
+			'Data_Pegawai_Klinik.csv',
+			array('No', 'NIK', 'Nama Pegawai', 'Jenis Kelamin', 'Jabatan', 'Tanggal Masuk', 'Status', 'Hak Akses'),
+			$rows
+		);
+	}
 }

@@ -140,9 +140,12 @@
           </div>
         </div>
 
-        <div class="pt-3 mt-2 border-top">
-          <a href="<?php echo base_url('pegawai/ganti_password'); ?>" class="btn btn-light btn-sm btn-block">
-            <i class="fas fa-shield-halved"></i> Perbarui Kata Sandi Akun
+        <div class="pt-3 mt-2 border-top d-flex flex-wrap" style="gap: 0.5rem;">
+          <button type="button" class="btn btn-light btn-sm flex-grow-1" data-toggle="modal" data-target="#modalGantiFoto">
+            <i class="fas fa-camera"></i> Ganti Foto
+          </button>
+          <a href="<?php echo base_url('pegawai/ganti_password'); ?>" class="btn btn-light btn-sm flex-grow-1">
+            <i class="fas fa-shield-halved"></i> Kata Sandi
           </a>
         </div>
       <?php else : ?>
@@ -246,6 +249,38 @@
   </div>
 </section>
 
+<!-- Modal Ganti Foto Profil Mandiri -->
+<?php if ($profil) : ?>
+<div class="modal fade" id="modalGantiFoto" tabindex="-1" role="dialog" aria-labelledby="modalGantiFotoTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <form method="POST" action="<?php echo base_url('pegawai/dashboard/update_foto'); ?>" enctype="multipart/form-data">
+      <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
+      <div class="modal-content" style="background: var(--emp-surface); color: var(--emp-ink); border: 1px solid var(--emp-border);">
+        <div class="modal-header" style="border-bottom: 1px solid var(--emp-border);">
+          <h5 class="modal-title font-weight-bold" id="modalGantiFotoTitle">Perbarui Foto Profil</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Tutup" style="color: var(--emp-ink);"><span>&times;</span></button>
+        </div>
+        <div class="modal-body text-center">
+          <img id="previewFotoProfil"
+               src="<?php echo base_url('photo/' . $profil->photo); ?>"
+               alt="Pratinjau foto profil"
+               style="width: 112px; height: 112px; border-radius: 50%; object-fit: cover; border: 2px solid var(--emp-border-strong);"
+               class="mb-3">
+          <div class="form-group text-left mb-0">
+            <label for="inputFotoProfil" class="small font-weight-bold">Pilih Foto Baru (JPG / PNG, maks. 2 MB)</label>
+            <input type="file" id="inputFotoProfil" name="photo" class="form-control-file border p-2 rounded" accept="image/jpeg,image/png,image/jpg" required>
+          </div>
+        </div>
+        <div class="modal-footer" style="border-top: 1px solid var(--emp-border);">
+          <button type="button" class="btn btn-light btn-sm" data-dismiss="modal">Batal</button>
+          <button type="submit" class="btn btn-primary btn-sm"><i class="fas fa-upload"></i> Simpan Foto</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<?php endif; ?>
+
 <script>
 (function() {
   function syncHeroClock() {
@@ -259,5 +294,19 @@
   }
   syncHeroClock();
   setInterval(syncHeroClock, 1000);
+
+  var fileInput = document.getElementById('inputFotoProfil');
+  var previewImg = document.getElementById('previewFotoProfil');
+  if (fileInput && previewImg) {
+    fileInput.addEventListener('change', function() {
+      if (this.files && this.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+          previewImg.src = e.target.result;
+        };
+        reader.readAsDataURL(this.files[0]);
+      }
+    });
+  }
 })();
 </script>

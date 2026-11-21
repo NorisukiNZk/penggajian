@@ -53,3 +53,19 @@ Setiap peran memiliki pekerjaan utama dan frekuensi penggunaan yang berbeda, seh
 - **Alasan Keputusan Utama (R-31)**:
   - Gaya editorial tanpa sidebar dipilih agar Pimpinan langsung membaca ringkasan dan mengambil keputusan persetujuan tanpa tersesat di menu operasional HRD.
   - Pasangan serif (`Source Serif 4`) dan kertas gading hangat memisahkan nuansa pengambilan keputusan strategis dari antarmuka operasional Admin maupun harian Pegawai.
+
+---
+
+## 4. Halaman Depan / Landing Page (`landing_page.php`)
+
+- **Design Read**: Gerbang resmi sistem HRIS Klinik Pratama Dr. H.M. Hidayatullah Banjarbaru, bergaya editorial-klinis yang menjembatani tiga portal peran berbeda (Admin, Pegawai, Pimpinan).
+- **Dial**: `ENERGY 2 / RHYTHM 3 / MOTION 1`
+- **Titik Fokus Utama**: Penjelasan satu sistem dengan tiga ruang kerja peran berbeda, disertai switcher interaktif pratinjau 3 portal dan akses langsung ke Login serta Verifikasi Dokumen QR.
+- **Tipografi**: `Source Serif 4` untuk judul editorial dan angka ledger; `Plus Jakarta Sans` untuk isi, kontrol tab, dan navigasi.
+- **Palet Warna (Terverifikasi WCAG AA >= 4.5:1)**:
+  - Light Mode: Ground `#F6F4EF`, Surface `#FFFDF9`, Ink `#141D26`, Muted `#525E6B`, Primary Navy `#18293D`, Secondary Clinical Emerald `#0F5132`, Accent Bronze `#854D0E`.
+  - Dark Mode: Ground `#0F141B`, Surface `#171F2A`, Ink `#F1EFEA`, Muted `#A4B0BD`, Primary Slate `#26415E`, Secondary Emerald `#34D399`, Accent Gold `#E0A449`.
+- **Alasan Keputusan Utama (R-31 & R-22)**:
+  - Pratinjau arsitektur 3 portal interaktif diletakkan di pusat halaman agar pembeda proyek langsung terlihat.
+  - Ilustrasi aset proyek (`payroll.svg`, `administrator.svg`, `others-fitur.svg`) disertakan atas permintaan pemilik proyek dalam bingkai matte archival `.lp-illus-frame` yang menjaga keterbacaan di Light maupun Dark Mode dan terhubung langsung pada konteks Hero/Payroll, Panel Admin HRD, serta Panel Kolaborasi & FAQ.
+

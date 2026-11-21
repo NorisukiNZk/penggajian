@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo $title; ?> - Tahun <?php echo $tahun; ?></title>
+    <link rel="icon" type="image/png" href="<?php echo base_url('assets/img/kpmh.png'); ?>">
+    <link rel="shortcut icon" type="image/png" href="<?php echo base_url('assets/img/kpmh.png'); ?>">
     <!-- Google Fonts & FontAwesome -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -411,7 +413,7 @@
                 <div class="signature-title">Banjarbaru, <?php echo date('d') . ' ' . $bulanIndo[date('m')] . ' ' . date('Y'); ?></div>
                 <div class="signature-role">Pimpinan Klinik Pratama</div>
                 <div class="qr-wrapper">
-                    <img src="<?php echo base_url('assets/img/qr-dummy.png?v=' . time()) ?>" alt="Validasi Digital">
+                    <?php echo render_qr_dokumen('lap_tahun', 'KLINIK', $tahun, 78); ?>
                 </div>
                 <div class="signature-name">Dr. H. Muhammad Hidayatullah</div>
                 <div class="signature-nip">SIP: 445/098/Dinkes-Bjb/2022</div>

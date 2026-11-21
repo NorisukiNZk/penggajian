@@ -155,10 +155,36 @@
   </div>
 </section>
 
-<!-- BAND 3: Asymmetric 8/4 Split: 6-Month Attendance Question Chart + Composition & Holidays -->
+<!-- BAND 3: Asymmetric 8/4 Split: 6-Month Attendance & Payroll Question Charts + Composition & Holidays -->
 <div class="row">
   <div class="col-lg-8 mb-4">
-    <div class="exec-panel h-100">
+    <!-- Grafik 1: Tren Pengeluaran Payroll 6 Bulan -->
+    <div class="exec-panel mb-4">
+      <div class="exec-panel-header">
+        <div>
+          <h2 class="exec-panel-title">Bagaimana tren pengeluaran payroll dalam 6 bulan terakhir?</h2>
+          <div class="small text-muted">Akumulasi total gaji bersih (take home pay), uang lembur, dan potongan dari periode payroll tercatat.</div>
+        </div>
+        <a href="<?php echo base_url('pimpinan/laporan'); ?>" class="small font-weight-bold" style="color: var(--exec-accent);">
+          Cetak & Ekspor Laporan
+        </a>
+      </div>
+      <div class="exec-panel-body">
+        <?php if ($payroll_labels === '[]') : ?>
+          <div class="py-5 text-center text-muted">
+            <div class="font-weight-bold mb-1">Belum ada data historis payroll bulanan</div>
+            <p class="small mb-0">Grafik akan tampil otomatis setelah data kehadiran dan penggajian bulanan tercatat.</p>
+          </div>
+        <?php else : ?>
+          <div style="position: relative; height: 270px;">
+            <canvas id="execPayrollChart" aria-label="Grafik tren pengeluaran payroll 6 bulan terakhir"></canvas>
+          </div>
+        <?php endif; ?>
+      </div>
+    </div>
+
+    <!-- Grafik 2: Tren Kehadiran 6 Bulan -->
+    <div class="exec-panel">
       <div class="exec-panel-header">
         <div>
           <h2 class="exec-panel-title">Bagaimana tren kehadiran staf dalam 6 bulan terakhir?</h2>
@@ -175,7 +201,7 @@
             <p class="small mb-0">Grafik akan terisi otomatis setelah data kehadiran bulanan disinkronkan oleh HRD.</p>
           </div>
         <?php else : ?>
-          <div style="position: relative; height: 290px;">
+          <div style="position: relative; height: 260px;">
             <canvas id="execAttendanceChart" aria-label="Grafik tren kehadiran 6 bulan terakhir"></canvas>
           </div>
         <?php endif; ?>
@@ -232,59 +258,128 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  var canvas = document.getElementById('execAttendanceChart');
-  if (!canvas || typeof Chart === 'undefined') return;
+  if (typeof Chart === 'undefined') return;
 
-  var isDark = document.documentElement.classList.contains('dark-mode');
+  var isDark    = document.documentElement.classList.contains('dark-mode');
   var tickColor = isDark ? '#A4B0BD' : '#525E6B';
   var gridColor = isDark ? 'rgba(164, 176, 189, 0.14)' : 'rgba(82, 94, 107, 0.12)';
 
-  new Chart(canvas, {
-    type: 'bar',
-    data: {
-      labels: <?php echo $label_bulan; ?>,
-      datasets: [
-        {
-          label: 'Hadir',
-          data: <?php echo $trend_hadir; ?>,
-          backgroundColor: '#18293D',
-          borderRadius: 4
-        },
-        {
-          label: 'Sakit',
-          data: <?php echo $trend_sakit; ?>,
-          backgroundColor: '#854D0E',
-          borderRadius: 4
-        },
-        {
-          label: 'Alpha',
-          data: <?php echo $trend_alpha; ?>,
-          backgroundColor: '#991B1B',
-          borderRadius: 4
-        }
-      ]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          position: 'bottom',
-          labels: { color: tickColor, boxWidth: 12, padding: 16 }
-        }
+  // Chart 1: Tren Pengeluaran Payroll 6 Bulan
+  var payrollCanvas = document.getElementById('execPayrollChart');
+  if (payrollCanvas) {
+    new Chart(payrollCanvas, {
+      type: 'bar',
+      data: {
+        labels: <?php echo $payroll_labels; ?>,
+        datasets: [
+          {
+            label: 'Total Gaji Bersih',
+            data: <?php echo $payroll_bersih; ?>,
+            backgroundColor: isDark ? '#3B5B7D' : '#18293D',
+            borderRadius: 4
+          },
+          {
+            label: 'Total Lembur',
+            data: <?php echo $payroll_lembur; ?>,
+            backgroundColor: isDark ? '#34D399' : '#0F5132',
+            borderRadius: 4
+          },
+          {
+            label: 'Total Potongan',
+            data: <?php echo $payroll_potongan; ?>,
+            backgroundColor: isDark ? '#E0A449' : '#854D0E',
+            borderRadius: 4
+          }
+        ]
       },
-      scales: {
-        x: {
-          ticks: { color: tickColor },
-          grid: { display: false }
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'bottom',
+            labels: { color: tickColor, boxWidth: 12, padding: 14 }
+          },
+          tooltip: {
+            callbacks: {
+              label: function(ctx) {
+                var val = ctx.parsed.y || 0;
+                return ctx.dataset.label + ': Rp ' + new Intl.NumberFormat('id-ID').format(val);
+              }
+            }
+          }
         },
-        y: {
-          beginAtZero: true,
-          ticks: { color: tickColor },
-          grid: { color: gridColor }
+        scales: {
+          x: {
+            ticks: { color: tickColor },
+            grid: { display: false }
+          },
+          y: {
+            beginAtZero: true,
+            ticks: {
+              color: tickColor,
+              callback: function(value) {
+                if (value >= 1000000) return 'Rp ' + (value / 1000000).toFixed(1) + ' jt';
+                return 'Rp ' + new Intl.NumberFormat('id-ID').format(value);
+              }
+            },
+            grid: { color: gridColor }
+          }
         }
       }
-    }
-  });
+    });
+  }
+
+  // Chart 2: Tren Kehadiran 6 Bulan
+  var canvas = document.getElementById('execAttendanceChart');
+  if (canvas) {
+    new Chart(canvas, {
+      type: 'bar',
+      data: {
+        labels: <?php echo $label_bulan; ?>,
+        datasets: [
+          {
+            label: 'Hadir',
+            data: <?php echo $trend_hadir; ?>,
+            backgroundColor: isDark ? '#3B5B7D' : '#18293D',
+            borderRadius: 4
+          },
+          {
+            label: 'Sakit',
+            data: <?php echo $trend_sakit; ?>,
+            backgroundColor: isDark ? '#E0A449' : '#854D0E',
+            borderRadius: 4
+          },
+          {
+            label: 'Alpha',
+            data: <?php echo $trend_alpha; ?>,
+            backgroundColor: '#991B1B',
+            borderRadius: 4
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'bottom',
+            labels: { color: tickColor, boxWidth: 12, padding: 14 }
+          }
+        },
+        scales: {
+          x: {
+            ticks: { color: tickColor },
+            grid: { display: false }
+          },
+          y: {
+            beginAtZero: true,
+            ticks: { color: tickColor },
+            grid: { color: gridColor }
+          }
+        }
+      }
+    });
+  }
 });
 </script>

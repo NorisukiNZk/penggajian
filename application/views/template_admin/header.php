@@ -17,6 +17,9 @@
 
   <title><?php echo isset($title) ? $title : 'Dashboard'; ?> | HRIS Klinik Hidayatullah</title>
 
+  <link rel="icon" type="image/png" href="<?php echo base_url('assets/img/kpmh.png'); ?>">
+  <link rel="shortcut icon" type="image/png" href="<?php echo base_url('assets/img/kpmh.png'); ?>">
+
   <!-- Google Fonts: Plus Jakarta Sans (Modern Clean UI) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
