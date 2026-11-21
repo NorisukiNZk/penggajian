@@ -11,7 +11,15 @@ WHERE NOT EXISTS (
     SELECT 1 FROM `hak_akses` WHERE `hak_akses` = 3
 );
 
--- 2. (Opsional) Tambahkan akun demo Pimpinan / Direktur Utama jika belum ada
+-- 2. Tambahkan master jabatan Direktur agar relasi gaji & monitoring Pimpinan sinkron
+INSERT INTO `data_jabatan` (`nama_jabatan`, `gaji_pokok`, `tj_transport`, `uang_makan`)
+SELECT 'Direktur', '6000000', '800000', '500000'
+FROM DUAL
+WHERE NOT EXISTS (
+    SELECT 1 FROM `data_jabatan` WHERE `nama_jabatan` = 'Direktur'
+);
+
+-- 3. (Opsional) Tambahkan akun demo Pimpinan / Direktur Utama jika belum ada
 -- Username : pimpinan
 -- Password : pimpinan123  (BCRYPT hash)
 INSERT INTO `data_pegawai` (`nik`, `nama_pegawai`, `username`, `password`, `jenis_kelamin`, `jabatan`, `tanggal_masuk`, `status`, `photo`, `hak_akses`)

@@ -68,7 +68,6 @@ class Laporan extends CI_Controller {
 		$data['bulan'] = $bulan;
 		$data['tahun'] = $tahun;
 
-		$this->load->view('template_admin/header', $data);
 		$this->load->view('admin/gaji/cetak_gaji', $data);
 	}
 
@@ -137,7 +136,6 @@ class Laporan extends CI_Controller {
 		$data['tahun'] = $tahun;
 		$data['rekap'] = $rekap_tahunan;
 
-		$this->load->view('template_admin/header', $data);
 		$this->load->view('admin/gaji/cetak_laporan_tahunan', $data);
 	}
 
@@ -152,7 +150,6 @@ class Laporan extends CI_Controller {
 		$data['bulan'] = $bulan;
 		$data['tahun'] = $tahun;
 
-		$this->load->view('template_admin/header', $data);
 		$this->load->view('admin/absensi/cetak_absensi', $data);
 	}
 
@@ -173,7 +170,6 @@ class Laporan extends CI_Controller {
 		$this->db->order_by('data_cuti.tanggal_mulai', 'ASC');
 		$data['laporan_cuti'] = $this->db->get()->result();
 
-		$this->load->view('template_admin/header', $data);
 		$this->load->view('admin/cuti/cetak_laporan_cuti', $data);
 	}
 
@@ -197,7 +193,6 @@ class Laporan extends CI_Controller {
 		$data['bulan'] = $bulan;
 		$data['tahun'] = $tahun;
 
-		$this->load->view('template_admin/header', $data);
 		$this->load->view('admin/lembur/cetak_laporan_lembur', $data);
 	}
 
@@ -226,7 +221,6 @@ class Laporan extends CI_Controller {
 		$data['bulan'] = $bulan;
 		$data['tahun'] = $tahun;
 
-		$this->load->view('template_admin/header', $data);
 		$this->load->view('admin/potongan_gaji/cetak_laporan_potongan', $data);
 	}
 
@@ -267,7 +261,6 @@ class Laporan extends CI_Controller {
 			);
 		}
 
-		$this->load->view('template_admin/header', $data);
 		$this->load->view('admin/gaji/cetak_slip_gaji', $data);
 	}
 
@@ -281,7 +274,6 @@ class Laporan extends CI_Controller {
 			$data['filter_jabatan'] = 'Semua Jabatan';
 		}
 
-		$this->load->view('template_admin/header', $data);
 		$this->load->view('admin/pegawai/cetak_laporan_pegawai', $data);
 	}
 

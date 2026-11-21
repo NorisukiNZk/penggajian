@@ -706,6 +706,19 @@ html.dark-mode .emp-attendance-hero {
   }
 }
 
+.emp-metric-strip-3 {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+}
+
+@media (min-width: 520px) {
+  .emp-metric-strip-3 {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+}
+
 .emp-metric-tile {
   background-color: var(--emp-surface);
   border: 1px solid var(--emp-border);

@@ -1,211 +1,188 @@
-<!-- Begin Page Content -->
-<div class="container-fluid">
-	<div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
-		<div>
-			<h1 class="h3 mb-1 font-weight-bold text-gray-800" style="letter-spacing: -0.02em;"><?php echo $title ?></h1>
-			<p class="text-muted small mb-0">Catat kehadiran kerja harian dan pantau status absensi Anda secara langsung.</p>
-		</div>
-	</div>
+<?php
+  $jam_sekarang = date('H:i:s');
+?>
 
-	<?php echo $this->session->flashdata('pesan') ?>
+<section class="emp-page-head">
+  <div>
+    <h1 class="emp-page-title"><?php echo htmlspecialchars($title, ENT_QUOTES, 'UTF-8'); ?></h1>
+    <p class="emp-page-sub">Catat kehadiran masuk dan pulang shift kerja Anda serta pantau ringkasan bulan berjalan.</p>
+  </div>
+  <a href="<?php echo base_url('pegawai/absensi/riwayat'); ?>" class="btn btn-light btn-sm">
+    <i class="fas fa-calendar-check"></i> Riwayat Absensi
+  </a>
+</section>
 
-	<div class="row">
-		<!-- Jam Real-Time -->
-		<div class="col-lg-5">
-			<div class="card shadow mb-4">
-				<div class="card-header py-3 bg-primary text-white">
-					<h6 class="m-0 font-weight-bold"><i class="fas fa-clock"></i> Jam Sekarang</h6>
-				</div>
-				<div class="card-body text-center">
-					<div id="jam-realtime" style="font-size: 48px; font-weight: bold; color: #4e73df;"></div>
-					<p class="text-muted mb-0" id="tanggal-realtime" style="font-size: 16px;"></p>
-					<hr>
-					<div class="row text-center">
-						<div class="col-4">
-							<small class="text-muted">Jam Masuk</small><br>
-							<span class="font-weight-bold text-success"><?php echo date('H:i', strtotime($setting->jam_masuk)) ?></span>
-						</div>
-						<div class="col-4">
-							<small class="text-muted">Toleransi</small><br>
-							<span class="font-weight-bold text-warning"><?php echo $setting->toleransi_menit ?> menit</span>
-						</div>
-						<div class="col-4">
-							<small class="text-muted">Jam Pulang</small><br>
-							<span class="font-weight-bold text-info"><?php echo date('H:i', strtotime($setting->jam_pulang)) ?></span>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
+<?php echo $this->session->flashdata('pesan'); ?>
 
-		<!-- Status Absensi Hari Ini -->
-		<div class="col-lg-7">
-			<div class="card shadow mb-4">
-				<div class="card-header py-3 bg-dark text-white">
-					<h6 class="m-0 font-weight-bold"><i class="fas fa-user-check mr-2"></i>Status Absensi Hari Ini: <?php echo date('d F Y') ?></h6>
-				</div>
-				<div class="card-body">
-					<?php if ($absensi_hari_ini) : ?>
-						<!-- Sudah absen masuk -->
-						<div class="row mb-3">
-							<div class="col-6">
-								<div class="card border-left-success">
-									<div class="card-body py-3">
-										<div class="text-xs font-weight-bold text-success text-uppercase">Absen Masuk</div>
-										<div class="h4 mb-0 font-weight-bold"><?php echo date('H:i:s', strtotime($absensi_hari_ini->jam_masuk)) ?></div>
-										<span class="badge badge-<?php echo ($absensi_hari_ini->status == 'tepat_waktu') ? 'success' : 'warning' ?>">
-											<?php echo ($absensi_hari_ini->status == 'tepat_waktu') ? 'Tepat Waktu' : 'Terlambat' ?>
-										</span>
-									</div>
-								</div>
-							</div>
-							<div class="col-6">
-								<div class="card border-left-info">
-									<div class="card-body py-3">
-										<div class="text-xs font-weight-bold text-info text-uppercase">Absen Pulang</div>
-										<?php if ($absensi_hari_ini->jam_pulang) : ?>
-											<div class="h4 mb-0 font-weight-bold"><?php echo date('H:i:s', strtotime($absensi_hari_ini->jam_pulang)) ?></div>
-											<span class="badge badge-info">Sudah Pulang</span>
-										<?php else : ?>
-											<div class="h4 mb-0 font-weight-bold text-muted">--:--:--</div>
-											<span class="badge badge-secondary">Belum Absen Pulang</span>
-										<?php endif; ?>
-									</div>
-								</div>
-							</div>
-						</div>
+<div class="row mb-4">
+  <!-- Jam Real-Time & Jadwal Shift -->
+  <div class="col-lg-5 mb-3 mb-lg-0">
+    <div class="emp-attendance-hero h-100 d-flex flex-column justify-content-between">
+      <div>
+        <div class="emp-hero-label">Waktu Server Lokal (WITA)</div>
+        <div id="jam-realtime" class="emp-attendance-clock mt-2">--:--:--</div>
+        <div id="tanggal-realtime" class="small mt-1" style="color: #CCFBF1;">Memuat tanggal...</div>
+      </div>
 
-						<?php if ($absensi_hari_ini->keterangan) : ?>
-							<div class="alert alert-info py-2 mb-3">
-								<small><i class="fas fa-info-circle"></i> <?php echo $absensi_hari_ini->keterangan ?></small>
-							</div>
-						<?php endif; ?>
+      <div class="row text-center mt-4 pt-3" style="border-top: 1px solid rgba(255,255,255,0.2);">
+        <div class="col-4">
+          <div class="small" style="color: #CCFBF1;">Jam Masuk</div>
+          <div class="font-weight-bold tabular-nums text-white mt-1"><?php echo date('H:i', strtotime($setting->jam_masuk)); ?></div>
+        </div>
+        <div class="col-4">
+          <div class="small" style="color: #CCFBF1;">Toleransi</div>
+          <div class="font-weight-bold tabular-nums text-white mt-1"><?php echo (int)$setting->toleransi_menit; ?> mnt</div>
+        </div>
+        <div class="col-4">
+          <div class="small" style="color: #CCFBF1;">Jam Pulang</div>
+          <div class="font-weight-bold tabular-nums text-white mt-1"><?php echo date('H:i', strtotime($setting->jam_pulang)); ?></div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-						<!-- Tombol Absen Pulang -->
-						<?php 
-						$jam_sekarang = date('H:i:s');
-						if (!$absensi_hari_ini->jam_pulang) : ?>
-							<?php if ($jam_sekarang >= $setting->mulai_absen_pulang) : ?>
-								<a href="<?php echo base_url('pegawai/absensi/absen_pulang') ?>" class="btn btn-info btn-lg btn-block btn-konfirmasi" data-judul="Absen Pulang?" data-pesan="Apakah Anda yakin ingin melakukan Absen Pulang sekarang?" data-tipe="question" data-warna="#36b9cc" data-btn-teks="<i class='fas fa-sign-out-alt'></i> Ya, Pulang!">
-									<i class="fas fa-sign-out-alt fa-2x"></i><br>
-									<span style="font-size: 20px;">ABSEN PULANG</span>
-								</a>
-							<?php else : ?>
-								<button class="btn btn-secondary btn-lg btn-block text-white" disabled style="cursor: not-allowed; opacity: 0.7;">
-									<i class="fas fa-lock fa-2x mb-2"></i><br>
-									<span style="font-size: 20px; font-weight: bold;">BELUM WAKTUNYA PULANG</span><br>
-									<small>Gerbang dibuka jam <?php echo date('H:i', strtotime($setting->mulai_absen_pulang)) ?></small>
-								</button>
-							<?php endif; ?>
-						<?php else : ?>
-							<div class="alert alert-success text-center py-3 mb-0">
-								<i class="fas fa-check-circle fa-2x mb-2"></i><br>
-								<strong>Absensi hari ini sudah lengkap!</strong>
-							</div>
-						<?php endif; ?>
+  <!-- Status & Tombol Presensi Hari Ini -->
+  <div class="col-lg-7">
+    <div class="emp-card h-100 p-4 d-flex flex-column justify-content-between">
+      <div>
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 pb-3 mb-3 border-bottom">
+          <h2 class="h6 font-weight-bold m-0">Status Presensi Hari Ini</h2>
+          <span class="small text-muted tabular-nums"><?php echo date('d M Y'); ?></span>
+        </div>
 
-					<?php else : ?>
-						<!-- Belum absen -->
-						<div class="text-center mb-3">
-							<p class="text-muted">Anda belum melakukan absen masuk hari ini.</p>
-						</div>
-						<?php 
-						$jam_sekarang = date('H:i:s');
-						if ($jam_sekarang >= $setting->mulai_absen_masuk && $jam_sekarang <= $setting->batas_terlambat_berat) : ?>
-							<a href="<?php echo base_url('pegawai/absensi/absen_masuk') ?>" class="btn btn-success btn-lg btn-block py-4 btn-konfirmasi" data-judul="Absen Masuk?" data-pesan="Catat kehadiran kerja Anda hari ini?" data-tipe="question" data-warna="#1cc88a" data-btn-teks="<i class='fas fa-sign-in-alt'></i> Ya, Absen Masuk!">
-								<i class="fas fa-sign-in-alt fa-3x mb-2"></i><br>
-								<span style="font-size: 24px; font-weight: bold;">ABSEN MASUK</span>
-							</a>
-						<?php elseif ($jam_sekarang < $setting->mulai_absen_masuk) : ?>
-							<button class="btn btn-secondary btn-lg btn-block py-4 text-white" disabled style="cursor: not-allowed; opacity: 0.7;">
-								<i class="fas fa-lock fa-3x mb-2"></i><br>
-								<span style="font-size: 24px; font-weight: bold;">BELUM WAKTUNYA MASUK</span><br>
-								<small>Gerbang absen masuk dibuka jam <?php echo date('H:i', strtotime($setting->mulai_absen_masuk)) ?></small>
-							</button>
-						<?php else : ?>
-							<button class="btn btn-danger btn-lg btn-block py-4 text-white" disabled style="cursor: not-allowed; opacity: 0.7;">
-								<i class="fas fa-times-circle fa-3x mb-2"></i><br>
-								<span style="font-size: 24px; font-weight: bold;">GERBANG ABSEN DITUTUP</span><br>
-								<small>Melewati batas maksimal keterlambatan (<?php echo date('H:i', strtotime($setting->batas_terlambat_berat)) ?>)</small>
-							</button>
-						<?php endif; ?>
-					<?php endif; ?>
-				</div>
-			</div>
-		</div>
-	</div>
+        <?php if ($absensi_hari_ini) : ?>
+          <div class="row mb-3">
+            <div class="col-6 pr-2">
+              <div class="p-3 rounded border h-100" style="background: var(--emp-surface-alt);">
+                <div class="small text-muted font-weight-bold mb-1">Jam Masuk</div>
+                <div class="h4 font-weight-bold mb-2 tabular-nums">
+                  <?php echo date('H:i:s', strtotime($absensi_hari_ini->jam_masuk)); ?>
+                </div>
+                <span class="emp-status <?php echo ($absensi_hari_ini->status == 'tepat_waktu') ? 'emp-status-ok' : 'emp-status-warn'; ?>">
+                  <?php echo ($absensi_hari_ini->status == 'tepat_waktu') ? 'Tepat Waktu' : 'Terlambat'; ?>
+                </span>
+              </div>
+            </div>
+            <div class="col-6 pl-2">
+              <div class="p-3 rounded border h-100" style="background: var(--emp-surface-alt);">
+                <div class="small text-muted font-weight-bold mb-1">Jam Pulang</div>
+                <?php if ($absensi_hari_ini->jam_pulang) : ?>
+                  <div class="h4 font-weight-bold mb-2 tabular-nums">
+                    <?php echo date('H:i:s', strtotime($absensi_hari_ini->jam_pulang)); ?>
+                  </div>
+                  <span class="emp-status emp-status-info">Sudah Pulang</span>
+                <?php else : ?>
+                  <div class="h4 font-weight-bold text-muted mb-2 tabular-nums">--:--:--</div>
+                  <span class="emp-status emp-status-warn">Belum Pulang</span>
+                <?php endif; ?>
+              </div>
+            </div>
+          </div>
 
-	<!-- Ringkasan Bulan Ini -->
-	<div class="row">
-		<div class="col-xl-3 col-md-6 mb-4">
-			<div class="card border-left-success shadow h-100 py-2">
-				<div class="card-body">
-					<div class="row no-gutters align-items-center">
-						<div class="col mr-2">
-							<div class="text-xs font-weight-bold text-success text-uppercase mb-1">Hadir Bulan Ini</div>
-							<div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $ringkasan['hadir'] ?> hari</div>
-						</div>
-						<div class="col-auto"><i class="fas fa-check-circle fa-2x text-gray-300"></i></div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="col-xl-3 col-md-6 mb-4">
-			<div class="card border-left-warning shadow h-100 py-2">
-				<div class="card-body">
-					<div class="row no-gutters align-items-center">
-						<div class="col mr-2">
-							<div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Terlambat</div>
-							<div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $ringkasan['terlambat'] ?> kali</div>
-						</div>
-						<div class="col-auto"><i class="fas fa-exclamation-triangle fa-2x text-gray-300"></i></div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="col-xl-3 col-md-6 mb-4">
-			<div class="card border-left-info shadow h-100 py-2">
-				<div class="card-body">
-					<div class="row no-gutters align-items-center">
-						<div class="col mr-2">
-							<div class="text-xs font-weight-bold text-info text-uppercase mb-1">Sakit / Izin</div>
-							<div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $ringkasan['sakit'] + $ringkasan['izin'] ?> hari</div>
-						</div>
-						<div class="col-auto"><i class="fas fa-hospital fa-2x text-gray-300"></i></div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="col-xl-3 col-md-6 mb-4">
-			<div class="card border-left-danger shadow h-100 py-2">
-				<div class="card-body">
-					<div class="row no-gutters align-items-center">
-						<div class="col mr-2">
-							<div class="text-xs font-weight-bold text-danger text-uppercase mb-1">Alpha</div>
-							<div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $ringkasan['alpha'] ?> hari</div>
-						</div>
-						<div class="col-auto"><i class="fas fa-times-circle fa-2x text-gray-300"></i></div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+          <?php if (!empty($absensi_hari_ini->keterangan)) : ?>
+            <div class="small p-2 px-3 rounded mb-3 border" style="background: var(--emp-surface-alt);">
+              <i class="fas fa-circle-info text-primary mr-1"></i>
+              <?php echo htmlspecialchars($absensi_hari_ini->keterangan, ENT_QUOTES, 'UTF-8'); ?>
+            </div>
+          <?php endif; ?>
+        <?php else : ?>
+          <div class="py-3 text-center">
+            <div class="font-weight-bold mb-1">Belum ada catatan absen masuk hari ini</div>
+            <p class="small text-muted mb-0">
+              Gerbang absen masuk aktif mulai pukul <?php echo date('H:i', strtotime($setting->mulai_absen_masuk)); ?> s/d <?php echo date('H:i', strtotime($setting->batas_terlambat_berat)); ?> WITA.
+            </p>
+          </div>
+        <?php endif; ?>
+      </div>
+
+      <div class="pt-2">
+        <?php if ($absensi_hari_ini) : ?>
+          <?php if (!$absensi_hari_ini->jam_pulang) : ?>
+            <?php if ($jam_sekarang >= $setting->mulai_absen_pulang) : ?>
+              <a href="<?php echo base_url('pegawai/absensi/absen_pulang'); ?>"
+                 class="btn btn-primary btn-block btn-konfirmasi"
+                 data-judul="Absen Pulang Sekarang?"
+                 data-pesan="Pastikan shift kerja Anda hari ini sudah selesai sebelum mencatat absen pulang."
+                 data-tipe="question">
+                <i class="fas fa-right-from-bracket"></i> Catat Absen Pulang
+              </a>
+            <?php else : ?>
+              <button type="button" class="btn btn-light btn-block" disabled>
+                <i class="fas fa-lock"></i> Absen pulang dibuka jam <?php echo date('H:i', strtotime($setting->mulai_absen_pulang)); ?> WITA
+              </button>
+            <?php endif; ?>
+          <?php else : ?>
+            <div class="p-3 rounded text-center small font-weight-bold" style="background: var(--emp-success-bg); color: var(--emp-success);">
+              <i class="fas fa-circle-check mr-1"></i> Absensi hari ini sudah lengkap tercatat.
+            </div>
+          <?php endif; ?>
+        <?php else : ?>
+          <?php if ($jam_sekarang >= $setting->mulai_absen_masuk && $jam_sekarang <= $setting->batas_terlambat_berat) : ?>
+            <a href="<?php echo base_url('pegawai/absensi/absen_masuk'); ?>"
+               class="btn btn-primary btn-block btn-konfirmasi"
+               data-judul="Absen Masuk Sekarang?"
+               data-pesan="Catat kehadiran masuk kerja Anda hari ini?"
+               data-tipe="question">
+              <i class="fas fa-right-to-bracket"></i> Catat Absen Masuk
+            </a>
+          <?php elseif ($jam_sekarang < $setting->mulai_absen_masuk) : ?>
+            <button type="button" class="btn btn-light btn-block" disabled>
+              <i class="fas fa-lock"></i> Belum waktunya masuk (dibuka jam <?php echo date('H:i', strtotime($setting->mulai_absen_masuk)); ?> WITA)
+            </button>
+          <?php else : ?>
+            <button type="button" class="btn btn-light btn-block" disabled>
+              <i class="fas fa-circle-xmark"></i> Gerbang absen ditutup (batas <?php echo date('H:i', strtotime($setting->batas_terlambat_berat)); ?> WITA)
+            </button>
+          <?php endif; ?>
+        <?php endif; ?>
+      </div>
+    </div>
+  </div>
 </div>
 
-<!-- Script Jam Real-Time -->
-<script>
-function updateClock() {
-	var now = new Date();
-	var hours = String(now.getHours()).padStart(2, '0');
-	var minutes = String(now.getMinutes()).padStart(2, '0');
-	var seconds = String(now.getSeconds()).padStart(2, '0');
-	document.getElementById('jam-realtime').textContent = hours + ':' + minutes + ':' + seconds;
+<!-- Ringkasan Kehadiran Bulan Ini -->
+<section aria-label="Ringkasan absensi bulan ini">
+  <h2 class="h6 font-weight-bold mb-2">Ringkasan Bulan Ini</h2>
+  <div class="emp-metric-strip">
+    <div class="emp-metric-tile">
+      <div class="emp-metric-label">Hadir</div>
+      <div class="emp-metric-value"><?php echo (int)$ringkasan['hadir']; ?> <span class="small font-weight-normal text-muted">hari</span></div>
+      <div class="emp-metric-note">Total masuk kerja</div>
+    </div>
+    <div class="emp-metric-tile">
+      <div class="emp-metric-label">Terlambat</div>
+      <div class="emp-metric-value"><?php echo (int)$ringkasan['terlambat']; ?> <span class="small font-weight-normal text-muted">kali</span></div>
+      <div class="emp-metric-note">Melewati batas toleransi</div>
+    </div>
+    <div class="emp-metric-tile">
+      <div class="emp-metric-label">Sakit / Izin</div>
+      <div class="emp-metric-value"><?php echo (int)($ringkasan['sakit'] + $ringkasan['izin']); ?> <span class="small font-weight-normal text-muted">hari</span></div>
+      <div class="emp-metric-note">Cuti atau izin tercatat</div>
+    </div>
+    <div class="emp-metric-tile">
+      <div class="emp-metric-label">Alpha</div>
+      <div class="emp-metric-value"><?php echo (int)$ringkasan['alpha']; ?> <span class="small font-weight-normal text-muted">hari</span></div>
+      <div class="emp-metric-note">Tanpa keterangan</div>
+    </div>
+  </div>
+</section>
 
-	var bulan = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
-	var hari = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
-	document.getElementById('tanggal-realtime').textContent = hari[now.getDay()] + ', ' + now.getDate() + ' ' + bulan[now.getMonth()] + ' ' + now.getFullYear();
-}
-setInterval(updateClock, 1000);
-updateClock();
+<script>
+(function() {
+  function updateClock() {
+    var now = new Date();
+    var h = String(now.getHours()).padStart(2, '0');
+    var m = String(now.getMinutes()).padStart(2, '0');
+    var s = String(now.getSeconds()).padStart(2, '0');
+    var jamEl = document.getElementById('jam-realtime');
+    if (jamEl) jamEl.textContent = h + ':' + m + ':' + s;
+
+    var bulan = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+    var hari = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+    var tglEl = document.getElementById('tanggal-realtime');
+    if (tglEl) tglEl.textContent = hari[now.getDay()] + ', ' + now.getDate() + ' ' + bulan[now.getMonth()] + ' ' + now.getFullYear();
+  }
+  updateClock();
+  setInterval(updateClock, 1000);
+})();
 </script>
-<!-- /.container-fluid -->

@@ -1,95 +1,102 @@
-<!-- Begin Page Content -->
-<div class="container-fluid">
-	<div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
-		<div>
-			<h1 class="h3 mb-1 font-weight-bold text-gray-800" style="letter-spacing: -0.02em;"><?php echo $title ?></h1>
-			<p class="text-muted small mb-0">Pengajuan lembur tugas dan riwayat persetujuan jam kerja tambahan Anda.</p>
-		</div>
-	</div>
+<section class="emp-page-head">
+  <div>
+    <h1 class="emp-page-title"><?php echo htmlspecialchars($title, ENT_QUOTES, 'UTF-8'); ?></h1>
+    <p class="emp-page-sub">Ajukan jam kerja tambahan (lembur) dan pantau status persetujuannya dari HRD atau Pimpinan.</p>
+  </div>
+</section>
 
-	<?php echo $this->session->flashdata('pesan') ?>
+<?php echo $this->session->flashdata('pesan'); ?>
 
-	<div class="row">
-		<!-- Form Pengajuan -->
-		<div class="col-lg-4">
-			<div class="card shadow mb-4">
-				<div class="card-header py-3 bg-primary text-white">
-					<h6 class="m-0 font-weight-bold"><i class="fas fa-plus-circle"></i> Form Pengajuan Lembur</h6>
-				</div>
-				<div class="card-body">
-					<form method="POST" action="<?php echo base_url('pegawai/lembur/tambah_aksi') ?>">
-						<div class="form-group">
-							<label>Tanggal Lembur</label>
-							<input type="date" name="tanggal_lembur" class="form-control" required value="<?php echo date('Y-m-d'); ?>">
-						</div>
-						<div class="form-group">
-							<label>Jam Mulai (Estimasi)</label>
-							<input type="time" name="jam_mulai" class="form-control" required>
-						</div>
-						<div class="form-group">
-							<label>Jam Selesai (Estimasi)</label>
-							<input type="time" name="jam_selesai" class="form-control" required>
-						</div>
-						<div class="form-group">
-							<label>Keterangan Pekerjaan</label>
-							<textarea name="keterangan" class="form-control" rows="3" required placeholder="Jelaskan apa yang dikerjakan saat lembur..."></textarea>
-						</div>
-						
-<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" style="display: none">
-<button type="submit" class="btn btn-primary btn-block"><i class="fas fa-paper-plane"></i> Ajukan Lembur</button>
-					</form>
-				</div>
-			</div>
-		</div>
+<div class="row">
+  <!-- Formulir Pengajuan Lembur -->
+  <div class="col-lg-4 mb-4">
+    <div class="emp-card">
+      <div class="card-header">
+        <h2 class="h6 font-weight-bold m-0">Formulir Pengajuan Lembur</h2>
+      </div>
+      <div class="card-body">
+        <form method="POST" action="<?php echo base_url('pegawai/lembur/tambah_aksi'); ?>">
+          <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
 
-		<!-- Riwayat Pengajuan -->
-		<div class="col-lg-8">
-			<div class="card shadow mb-4">
-				<div class="card-header py-3 bg-success text-white">
-					<h6 class="m-0 font-weight-bold"><i class="fas fa-history"></i> Riwayat Pengajuan Saya</h6>
-				</div>
-				<div class="card-body">
-					<div class="table-responsive">
-						<table class="table table-bordered table-striped" id="dataTable" width="100%" cellspacing="0">
-							<thead class="thead-light">
-								<tr>
-									<th>No</th>
-									<th>Tanggal</th>
-									<th>Durasi (Jam)</th>
-									<th>Keterangan</th>
-									<th>Status</th>
-								</tr>
-							</thead>
-							<tbody>
-								<?php $no=1; foreach($lembur as $l) : ?>
-								<tr>
-									<td><?php echo $no++ ?></td>
-									<td><?php echo date('d M Y', strtotime($l->tanggal_lembur)) ?></td>
-									<td class="text-center font-weight-bold"><?php echo $l->durasi_jam ?> Jam</td>
-									<td>
-										<small>
-											<i class="fas fa-clock text-info"></i> <?php echo date('H:i', strtotime($l->jam_mulai)) ?> - <?php echo date('H:i', strtotime($l->jam_selesai)) ?><br>
-											<?php echo $l->keterangan ?>
-										</small>
-									</td>
-									<td class="text-center">
-										<?php if($l->status == 'Pending') : ?>
-											<span class="badge badge-warning p-2"><i class="fas fa-hourglass-half"></i> Pending</span>
-										<?php elseif($l->status == 'Disetujui') : ?>
-											<span class="badge badge-success p-2"><i class="fas fa-check-circle"></i> Disetujui</span>
-										<?php elseif($l->status == 'Ditolak') : ?>
-											<span class="badge badge-danger p-2"><i class="fas fa-times-circle"></i> Ditolak</span>
-										<?php endif; ?>
-									</td>
-								</tr>
-								<?php endforeach; ?>
-							</tbody>
-						</table>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+          <div class="form-group">
+            <label for="tanggal_lembur" class="small font-weight-bold">Tanggal Lembur</label>
+            <input type="date" id="tanggal_lembur" name="tanggal_lembur" class="form-control" required value="<?php echo date('Y-m-d'); ?>">
+          </div>
 
+          <div class="form-row">
+            <div class="col-6 form-group">
+              <label for="jam_mulai" class="small font-weight-bold">Jam Mulai</label>
+              <input type="time" id="jam_mulai" name="jam_mulai" class="form-control" required>
+            </div>
+            <div class="col-6 form-group">
+              <label for="jam_selesai" class="small font-weight-bold">Jam Selesai</label>
+              <input type="time" id="jam_selesai" name="jam_selesai" class="form-control" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="keterangan_lembur" class="small font-weight-bold">Uraian Pekerjaan</label>
+            <textarea id="keterangan_lembur" name="keterangan" class="form-control" rows="3" required placeholder="Tuliskan tugas yang dikerjakan saat lembur"></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-block">
+            <i class="fas fa-paper-plane"></i> Kirim Pengajuan Lembur
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Riwayat Lembur -->
+  <div class="col-lg-8 mb-4">
+    <div class="emp-card">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <h2 class="h6 font-weight-bold m-0">Riwayat Pengajuan Lembur Anda</h2>
+        <span class="small text-muted tabular-nums"><?php echo count($lembur); ?> pengajuan</span>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-hover mb-0" id="dataTable" width="100%">
+            <thead>
+              <tr>
+                <th class="text-center" style="width: 48px;">No</th>
+                <th>Tanggal & Jam</th>
+                <th class="text-center">Durasi</th>
+                <th>Keterangan</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <?php if (!empty($lembur)) : ?>
+                <?php $no = 1; foreach ($lembur as $l) : ?>
+                  <tr>
+                    <td class="text-center text-muted tabular-nums"><?php echo $no++; ?></td>
+                    <td class="tabular-nums">
+                      <div class="font-weight-bold"><?php echo date('d M Y', strtotime($l->tanggal_lembur)); ?></div>
+                      <div class="small text-muted"><?php echo date('H:i', strtotime($l->jam_mulai)); ?> s/d <?php echo date('H:i', strtotime($l->jam_selesai)); ?></div>
+                    </td>
+                    <td class="text-center font-weight-bold tabular-nums"><?php echo (int)$l->durasi_jam; ?> jam</td>
+                    <td class="small"><?php echo htmlspecialchars($l->keterangan, ENT_QUOTES, 'UTF-8'); ?></td>
+                    <td>
+                      <?php if ($l->status == 'Disetujui') : ?>
+                        <span class="emp-status emp-status-ok">Disetujui</span>
+                      <?php elseif ($l->status == 'Ditolak') : ?>
+                        <span class="emp-status emp-status-danger">Ditolak</span>
+                      <?php else : ?>
+                        <span class="emp-status emp-status-warn">Pending</span>
+                      <?php endif; ?>
+                    </td>
+                  </tr>
+                <?php endforeach; ?>
+              <?php else : ?>
+                <tr>
+                  <td colspan="5" class="text-center py-4 text-muted">Belum ada pengajuan lembur tercatat.</td>
+                </tr>
+              <?php endif; ?>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
-<!-- /.container-fluid -->

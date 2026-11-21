@@ -986,6 +986,9 @@
             <button type="button" class="demo-chip-btn" id="demoStaffBtn" title="Gunakan Kredensial Pegawai">
               <i class="fas fa-user text-info"></i> Pegawai
             </button>
+            <button type="button" class="demo-chip-btn" id="demoPimpinanBtn" title="Gunakan Kredensial Pimpinan">
+              <i class="fas fa-user-tie text-warning"></i> Pimpinan
+            </button>
           </div>
           
           <!-- reCAPTCHA Widget -->
@@ -1147,10 +1150,11 @@
     }
 
     // =========================================================
-    // 5. QUICK DEMO CHIPS (ADMIN & PEGAWAI)
+    // 5. QUICK DEMO CHIPS (ADMIN, PEGAWAI & PIMPINAN)
     // =========================================================
     const demoAdminBtn = document.getElementById('demoAdminBtn');
     const demoStaffBtn = document.getElementById('demoStaffBtn');
+    const demoPimpinanBtn = document.getElementById('demoPimpinanBtn');
 
     if (demoAdminBtn && usernameInput && passwordInput) {
       demoAdminBtn.addEventListener('click', () => {
@@ -1164,6 +1168,14 @@
       demoStaffBtn.addEventListener('click', () => {
         usernameInput.value = 'anya';
         passwordInput.value = '12345';
+        toggleClearBtn();
+      });
+    }
+
+    if (demoPimpinanBtn && usernameInput && passwordInput) {
+      demoPimpinanBtn.addEventListener('click', () => {
+        usernameInput.value = 'pimpinan';
+        passwordInput.value = 'pimpinan123';
         toggleClearBtn();
       });
     }

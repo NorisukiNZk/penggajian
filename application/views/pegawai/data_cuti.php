@@ -1,314 +1,210 @@
-<!-- Begin Page Content -->
-<div class="container-fluid">
-
-  <!-- Header & Action Button -->
-  <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
-    <div>
-      <h1 class="h3 mb-1 font-weight-bold text-gray-800" style="letter-spacing: -0.02em;"><?php echo $title; ?></h1>
-      <p class="text-muted small mb-0">Kelola dan pantau status permohonan cuti, delegasi tugas rekan pengganti, dan nota persetujuan Direktur Utama.</p>
-    </div>
-    <div class="mt-3 mt-md-0">
-      <a href="<?php echo base_url('pegawai/cuti/tambah'); ?>" class="btn btn-primary btn-sm px-3 py-2 font-weight-bold shadow-sm rounded-pill">
-        <i class="fas fa-plus-circle mr-1"></i> Ajukan Cuti & Delegasi Baru
-      </a>
-    </div>
+<section class="emp-page-head">
+  <div>
+    <h1 class="emp-page-title"><?php echo htmlspecialchars($title, ENT_QUOTES, 'UTF-8'); ?></h1>
+    <p class="emp-page-sub">Kelola permohonan cuti, delegasi rekan pengganti shift, serta pantau status pengesahan Pimpinan.</p>
   </div>
+  <a href="<?php echo base_url('pegawai/cuti/tambah'); ?>" class="btn btn-primary btn-sm">
+    <i class="fas fa-plus"></i> Ajukan Cuti Baru
+  </a>
+</section>
 
-  <!-- Flash Message Session -->
-  <?php echo $this->session->flashdata('pesan'); ?>
+<?php echo $this->session->flashdata('pesan'); ?>
 
-  <!-- Top Overview: Saldo Cuti Card + Executive KPI Summary Cards -->
-  <div class="row mb-4">
-    
-    <!-- Saldo Cuti Banner -->
-    <div class="col-xl-4 col-lg-5 mb-3">
-      <div class="card border-0 rounded-lg text-white" style="background-color: var(--emp-secondary);">
-        <div class="card-body p-3">
-          <div class="d-flex justify-content-between align-items-center mb-2">
-            <span class="badge badge-light text-primary font-weight-bold px-2 py-1 small rounded-pill">
-              <i class="fas fa-wallet mr-1"></i> Saldo Cuti (<?php echo isset($mode_kuota) ? $mode_kuota : 'Kombinasi'; ?>)
-            </span>
-            <span class="text-white small opacity-90 font-weight-bold">
-              <?php echo isset($label_periode) ? $label_periode : '12 Hari/Th'; ?>
-            </span>
-          </div>
-          <div class="row align-items-center text-center mt-2">
-            <div class="col-6 border-right">
-              <div class="h3 mb-0 font-weight-bold text-white"><?php echo isset($sisa_cuti) ? $sisa_cuti : 12; ?> <span class="small font-weight-normal" style="font-size: 0.9rem;">Hari</span></div>
-              <span class="small opacity-80">Sisa Kuota Tersedia</span>
-            </div>
-            <div class="col-6">
-              <div class="h3 mb-0 font-weight-bold text-warning"><?php echo isset($cuti_terpakai) ? $cuti_terpakai : 0; ?> <span class="small font-weight-normal" style="font-size: 0.9rem;">Hari</span></div>
-              <span class="small opacity-80">Hari Terpakai</span>
-            </div>
-          </div>
-          <?php if(isset($saldo_cuti) && $saldo_cuti['mode'] == 'Kombinasi'): ?>
-            <div class="mt-2 pt-2 border-top text-center" style="border-color: rgba(255,255,255,0.15) !important;">
-              <small class="text-light opacity-80">
-                <i class="fas fa-info-circle mr-1 text-info"></i> Batas bulanan: <strong>Maks. <?php echo $saldo_cuti['kuota_bulanan']; ?> hari/bln</strong> (Bulan ini terpakai: <?php echo $saldo_cuti['cuti_terpakai_bulan']; ?> hr)
-              </small>
-            </div>
-          <?php endif; ?>
-        </div>
+<!-- Saldo Cuti + Ringkasan Status -->
+<div class="row mb-4">
+  <div class="col-lg-5 mb-3 mb-lg-0">
+    <div class="emp-attendance-hero h-100 d-flex flex-column justify-content-between">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <span class="emp-hero-label">Saldo Cuti (<?php echo htmlspecialchars(isset($mode_kuota) ? $mode_kuota : 'Kombinasi', ENT_QUOTES, 'UTF-8'); ?>)</span>
+        <span class="small" style="color: #CCFBF1;"><?php echo htmlspecialchars(isset($label_periode) ? $label_periode : '12 Hari/Th', ENT_QUOTES, 'UTF-8'); ?></span>
       </div>
-    </div>
-
-    <!-- KPI Metric Cards -->
-    <div class="col-xl-8 col-lg-7">
-      <div class="row">
-        <!-- Total Pengajuan -->
-        <div class="col-sm-4 mb-3">
-          <div class="card border-0 shadow-sm rounded-lg h-100" style="border-left: 4px solid #0284c7 !important; background: var(--card-bg, #ffffff);">
-            <div class="card-body p-3">
-              <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Total Diajukan</div>
-              <div class="h4 mb-0 font-weight-bold text-gray-800"><?php echo isset($kpi_total) ? $kpi_total : count($cuti); ?></div>
-            </div>
+      <div class="row text-center my-2">
+        <div class="col-6 pr-2">
+          <div class="emp-time-slot">
+            <div class="h3 font-weight-bold text-white mb-0 tabular-nums"><?php echo isset($sisa_cuti) ? (int)$sisa_cuti : 12; ?> <span class="small font-weight-normal">hari</span></div>
+            <div class="small" style="color: #CCFBF1;">Sisa Kuota</div>
           </div>
         </div>
-
-        <!-- Menunggu Review -->
-        <div class="col-sm-4 mb-3">
-          <div class="card border-0 shadow-sm rounded-lg h-100" style="border-left: 4px solid #f59e0b !important; background: var(--card-bg, #ffffff);">
-            <div class="card-body p-3">
-              <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Dalam Proses</div>
-              <div class="h4 mb-0 font-weight-bold text-warning"><?php echo isset($kpi_menunggu) ? $kpi_menunggu : 0; ?></div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Disetujui -->
-        <div class="col-sm-4 mb-3">
-          <div class="card border-0 shadow-sm rounded-lg h-100" style="border-left: 4px solid #10b981 !important; background: var(--card-bg, #ffffff);">
-            <div class="card-body p-3">
-              <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Disetujui Sah</div>
-              <div class="h4 mb-0 font-weight-bold text-success"><?php echo isset($kpi_disetujui) ? $kpi_disetujui : 0; ?></div>
-            </div>
+        <div class="col-6 pl-2">
+          <div class="emp-time-slot">
+            <div class="h3 font-weight-bold mb-0 tabular-nums" style="color: #FDE68A;"><?php echo isset($cuti_terpakai) ? (int)$cuti_terpakai : 0; ?> <span class="small font-weight-normal">hari</span></div>
+            <div class="small" style="color: #CCFBF1;">Terpakai</div>
           </div>
         </div>
       </div>
+      <?php if (isset($saldo_cuti) && $saldo_cuti['mode'] == 'Kombinasi') : ?>
+        <div class="small mt-2" style="color: #CCFBF1;">
+          Batas bulanan: maks. <?php echo (int)$saldo_cuti['kuota_bulanan']; ?> hari/bln (terpakai bulan ini: <?php echo (int)$saldo_cuti['cuti_terpakai_bulan']; ?> hari).
+        </div>
+      <?php endif; ?>
     </div>
-
   </div>
 
-  <!-- Data Cuti Table Card -->
-  <div class="card border-0 shadow-sm rounded-lg mb-4">
-    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between bg-transparent border-bottom">
-      <h6 class="m-0 font-weight-bold text-primary">
-        <i class="fas fa-list-check mr-2"></i>Daftar Riwayat Cuti & Pendelegasian Tugas
-      </h6>
-      <span class="badge badge-light border text-muted px-2 py-1 small">
-        SOP 3 Pilar Akuntabilitas
-      </span>
+  <div class="col-lg-7">
+    <div class="emp-metric-strip-3 h-100">
+      <div class="emp-metric-tile d-flex flex-column justify-content-center">
+        <div class="emp-metric-label">Total Diajukan</div>
+        <div class="emp-metric-value"><?php echo isset($kpi_total) ? (int)$kpi_total : count($cuti); ?></div>
+        <div class="emp-metric-note">Seluruh riwayat</div>
+      </div>
+      <div class="emp-metric-tile d-flex flex-column justify-content-center">
+        <div class="emp-metric-label">Dalam Proses</div>
+        <div class="emp-metric-value"><?php echo isset($kpi_menunggu) ? (int)$kpi_menunggu : 0; ?></div>
+        <div class="emp-metric-note">Menunggu keputusan</div>
+      </div>
+      <div class="emp-metric-tile d-flex flex-column justify-content-center">
+        <div class="emp-metric-label">Disetujui Sah</div>
+        <div class="emp-metric-value text-primary"><?php echo isset($kpi_disetujui) ? (int)$kpi_disetujui : 0; ?></div>
+        <div class="emp-metric-note">SK siap dicetak</div>
+      </div>
     </div>
+  </div>
+</div>
 
-    <div class="card-body">
-      <div class="table-responsive">
-        <table class="table table-hover align-middle mb-0" id="dataTable" width="100%" cellspacing="0">
-          <thead class="thead-light">
+<!-- Tabel Riwayat Cuti -->
+<div class="emp-card">
+  <div class="card-header d-flex flex-wrap align-items-center justify-content-between gap-2">
+    <h2 class="h6 font-weight-bold m-0">Daftar Riwayat Cuti & Pendelegasian Tugas</h2>
+    <span class="small text-muted">SOP Akuntabilitas Shift Klinik</span>
+  </div>
+  <div class="card-body">
+    <div class="table-responsive">
+      <table class="table table-hover mb-0" id="dataTable" width="100%">
+        <thead>
+          <tr>
+            <th class="text-center" style="width: 44px;">No</th>
+            <th>Periode & Kategori</th>
+            <th>Rekan Pengganti</th>
+            <th>Alasan & Berkas</th>
+            <th>Status Approval</th>
+            <th>Catatan HRD / Pimpinan</th>
+            <th class="text-center">Aksi</th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php if (empty($cuti)) : ?>
             <tr>
-              <th class="text-center" style="width: 4%;">No</th>
-              <th style="width: 20%;">Periode & Kategori</th>
-              <th style="width: 22%;">Rekan Pengganti & Shift</th>
-              <th style="width: 18%;">Alasan & Bukti</th>
-              <th class="text-center" style="width: 16%;">Status Approval</th>
-              <th style="width: 12%;">Catatan HRD / Direksi</th>
-              <th class="text-center" style="width: 8%;">Aksi</th>
+              <td colspan="7" class="text-center py-4 text-muted">
+                Belum ada riwayat permohonan cuti atau izin. Tekan tombol Ajukan Cuti Baru di kanan atas untuk membuat permohonan.
+              </td>
             </tr>
-          </thead>
-          <tbody>
-            <?php if(empty($cuti)): ?>
+          <?php else : ?>
+            <?php $no = 1; foreach ($cuti as $c) :
+              $dt_start   = new DateTime($c->tanggal_mulai);
+              $dt_end     = new DateTime($c->tanggal_akhir);
+              $durasi     = $dt_start->diff($dt_end)->days + 1;
+              $app_status = !empty($c->status_approval) ? $c->status_approval : ($c->status_cuti == 'Disetujui' ? 'Disetujui Direktur' : ($c->status_cuti == 'Ditolak' ? 'Ditolak' : 'Menunggu Review HRD'));
+            ?>
               <tr>
-                <td colspan="7" class="text-center py-4 text-muted">
-                  <i class="fas fa-folder-open fa-2x mb-2 d-block opacity-50"></i>
-                  Belum ada riwayat permohonan cuti atau izin.
-                </td>
-              </tr>
-            <?php else: ?>
-              <?php $no = 1; foreach($cuti as $c) : 
-                $dt_start = new DateTime($c->tanggal_mulai);
-                $dt_end   = new DateTime($c->tanggal_akhir);
-                $durasi   = $dt_start->diff($dt_end)->days + 1;
-
-                // Status Approval Labeling
-                $app_status = !empty($c->status_approval) ? $c->status_approval : ($c->status_cuti == 'Disetujui' ? 'Disetujui Direktur' : ($c->status_cuti == 'Ditolak' ? 'Ditolak' : 'Menunggu Review HRD'));
-              ?>
-              <tr>
-                <td class="text-center font-weight-bold text-muted"><?php echo $no++; ?></td>
-                
-                <!-- Periode & Kategori -->
+                <td class="text-center text-muted tabular-nums"><?php echo $no++; ?></td>
                 <td>
-                  <div class="font-weight-bold text-gray-800">
-                    <i class="fas fa-calendar-day text-info mr-1"></i>
+                  <div class="font-weight-bold tabular-nums">
                     <?php echo date('d M Y', strtotime($c->tanggal_mulai)); ?> s/d <?php echo date('d M Y', strtotime($c->tanggal_akhir)); ?>
                   </div>
-                  <div class="mt-1 d-flex flex-wrap gap-1 align-items-center">
-                    <span class="badge badge-info font-weight-normal px-2 py-1">
-                      <i class="fas fa-business-time mr-1"></i><?php echo $durasi; ?> Hari
-                    </span>
-                    <?php 
-                      $badge_jenis = 'badge-primary';
-                      if (stripos($c->jenis_cuti, 'Sakit') !== false) $badge_jenis = 'badge-warning';
-                      elseif (stripos($c->jenis_cuti, 'Melahirkan') !== false) $badge_jenis = 'badge-success';
-                      elseif (stripos($c->jenis_cuti, 'Penting') !== false) $badge_jenis = 'badge-secondary';
-                    ?>
-                    <span class="badge <?php echo $badge_jenis; ?> font-weight-normal px-2 py-1 ml-1">
-                      <?php echo htmlspecialchars($c->jenis_cuti, ENT_QUOTES, 'UTF-8'); ?>
-                    </span>
+                  <div class="small text-muted mt-1">
+                    <?php echo htmlspecialchars($c->jenis_cuti, ENT_QUOTES, 'UTF-8'); ?> &middot; <?php echo $durasi; ?> hari
                   </div>
-                  <small class="text-muted d-block mt-1">
+                  <div class="small text-muted tabular-nums" style="font-size: 0.76rem;">
                     Diajukan: <?php echo date('d/m/Y H:i', strtotime($c->created_at)); ?>
-                  </small>
+                  </div>
                 </td>
-
-                <!-- Rekan Pengganti Shift -->
                 <td>
                   <?php if (!empty($c->nama_pengganti)) : ?>
-                    <div class="font-weight-bold text-dark small">
-                      <i class="fas fa-user-check text-success mr-1"></i><?php echo htmlspecialchars($c->nama_pengganti, ENT_QUOTES, 'UTF-8'); ?>
-                    </div>
-                    <span class="badge badge-light border text-muted small" style="font-size: 0.75rem;">
-                      <?php echo htmlspecialchars($c->jabatan_pengganti, ENT_QUOTES, 'UTF-8'); ?>
-                    </span>
+                    <div class="font-weight-bold small"><?php echo htmlspecialchars($c->nama_pengganti, ENT_QUOTES, 'UTF-8'); ?></div>
+                    <div class="small text-muted"><?php echo htmlspecialchars((string)$c->jabatan_pengganti, ENT_QUOTES, 'UTF-8'); ?></div>
                     <?php if (!empty($c->tugas_pengganti)) : ?>
-                      <div class="small text-muted mt-1 font-italic border-left pl-2" style="font-size: 0.75rem; line-height: 1.3;">
-                        "<?php echo htmlspecialchars(mb_strimwidth($c->tugas_pengganti, 0, 70, "..."), ENT_QUOTES, 'UTF-8'); ?>"
-                      </div>
+                      <div class="small text-muted mt-1"><?php echo htmlspecialchars(mb_strimwidth($c->tugas_pengganti, 0, 65, '...'), ENT_QUOTES, 'UTF-8'); ?></div>
                     <?php endif; ?>
-                  <?php else: ?>
-                    <span class="badge badge-light border text-muted">-</span>
+                  <?php else : ?>
+                    <span class="small text-muted">-</span>
                   <?php endif; ?>
                 </td>
-
-                <!-- Alasan & Bukti SKD -->
                 <td>
-                  <div class="text-dark small mb-1" style="line-height: 1.4;">
-                    <?php echo htmlspecialchars(mb_strimwidth($c->alasan, 0, 70, "..."), ENT_QUOTES, 'UTF-8'); ?>
-                  </div>
-                  
+                  <div class="small mb-1"><?php echo htmlspecialchars(mb_strimwidth($c->alasan, 0, 70, '...'), ENT_QUOTES, 'UTF-8'); ?></div>
                   <?php if (!empty($c->file_lampiran)) : ?>
-                    <a href="<?php echo base_url('uploads/cuti/' . $c->file_lampiran); ?>" target="_blank" class="badge badge-success px-2 py-1 shadow-sm text-decoration-none">
-                      <i class="fas fa-paperclip mr-1"></i> Bukti Terlampir
+                    <a href="<?php echo base_url('uploads/cuti/' . $c->file_lampiran); ?>" target="_blank" class="small font-weight-bold text-primary">
+                      <i class="fas fa-paperclip"></i> Lihat Bukti
                     </a>
                   <?php else : ?>
-                    <span class="badge badge-light border text-muted small">Tanpa Berkas</span>
-                  <?php endif; ?>
-
-                  <?php if (!empty($c->kontak_darurat)) : ?>
-                    <div class="small text-muted mt-1" style="font-size: 0.75rem;">
-                      <i class="fas fa-phone-alt text-warning mr-1"></i><?php echo htmlspecialchars($c->kontak_darurat, ENT_QUOTES, 'UTF-8'); ?>
-                    </div>
+                    <span class="small text-muted">Tanpa berkas</span>
                   <?php endif; ?>
                 </td>
-
-                <!-- Status Approval 2 Tingkat -->
-                <td class="text-center">
-                  <?php if($app_status == 'Menunggu Review HRD' || $c->status_cuti == 'Menunggu'): ?>
-                    <span class="badge badge-warning px-2 py-1 font-weight-bold d-block mb-1" style="font-size: 0.8em;">
-                      <i class="fas fa-hourglass-half mr-1"></i>Review HRD
-                    </span>
-                    <small class="text-muted" style="font-size: 0.7rem;">Menunggu verifikasi berkas</small>
-                  <?php elseif($app_status == 'Diteruskan ke Direktur'): ?>
-                    <span class="badge badge-info px-2 py-1 font-weight-bold d-block mb-1" style="font-size: 0.8em;">
-                      <i class="fas fa-arrow-up-right-from-square mr-1"></i>Ke Direktur Utama
-                    </span>
-                    <small class="text-info font-weight-bold" style="font-size: 0.7rem;">Rekomendasi HRD Terkirim</small>
-                  <?php elseif($c->status_cuti == 'Disetujui'): ?>
-                    <span class="badge badge-success px-2 py-1 font-weight-bold d-block mb-1" style="font-size: 0.8em;">
-                      <i class="fas fa-circle-check mr-1"></i>Disetujui Sah
-                    </span>
-                    <small class="text-success font-weight-bold" style="font-size: 0.7rem;">SK Cuti Diterbitkan</small>
-                  <?php else: ?>
-                    <span class="badge badge-danger px-2 py-1 font-weight-bold d-block mb-1" style="font-size: 0.8em;">
-                      <i class="fas fa-circle-xmark mr-1"></i>Ditolak
-                    </span>
-                    <small class="text-danger" style="font-size: 0.7rem;">Tidak Memenuhi Syarat</small>
-                  <?php endif; ?>
-                </td>
-
-                <!-- Catatan HRD / Direksi -->
                 <td>
-                  <?php if(!empty($c->pesan_admin) || !empty($c->catatan_hrd)): ?>
-                    <div class="small bg-light p-2 rounded border" style="font-size: 0.75rem;">
-                      <?php if (!empty($c->catatan_hrd)): ?>
-                        <span class="font-weight-bold text-primary d-block">Telaah HR:</span>
-                        <span class="text-muted d-block mb-1 font-italic">"<?php echo htmlspecialchars($c->catatan_hrd); ?>"</span>
-                      <?php endif; ?>
-                      <?php if (!empty($c->pesan_admin)): ?>
-                        <span class="font-weight-bold text-dark d-block">Keputusan:</span>
-                        <span class="text-muted d-block font-italic">"<?php echo htmlspecialchars($c->pesan_admin); ?>"</span>
-                      <?php endif; ?>
-                    </div>
-                  <?php else: ?>
-                    <span class="text-muted small">-</span>
+                  <?php if ($c->status_cuti == 'Disetujui') : ?>
+                    <span class="emp-status emp-status-ok">Disetujui Sah</span>
+                  <?php elseif ($c->status_cuti == 'Ditolak') : ?>
+                    <span class="emp-status emp-status-danger">Ditolak</span>
+                  <?php elseif ($app_status == 'Diteruskan ke Direktur') : ?>
+                    <span class="emp-status emp-status-info">Ke Pimpinan</span>
+                  <?php else : ?>
+                    <span class="emp-status emp-status-warn">Menunggu Review</span>
                   <?php endif; ?>
                 </td>
-
-                <!-- Aksi -->
-                <td class="text-center">
-                  <div class="d-inline-flex gap-1">
-                    <?php if($c->status_cuti == 'Menunggu'): ?>
-                      <a href="<?php echo base_url('pegawai/cuti/batal/' . $c->id_cuti); ?>" 
-                         class="btn btn-sm btn-outline-danger btn-batal-cuti shadow-sm rounded-pill px-3" 
-                         title="Batalkan Pengajuan Ini"
-                         data-info="<?php echo date('d/m/Y', strtotime($c->tanggal_mulai)) . ' - ' . date('d/m/Y', strtotime($c->tanggal_akhir)); ?>">
-                        <i class="fas fa-trash-alt mr-1"></i> Batal
-                      </a>
-                    <?php elseif($c->status_cuti == 'Disetujui'): ?>
-                      <a href="<?php echo base_url('pegawai/cuti/cetak_surat/' . $c->id_cuti); ?>" 
-                         target="_blank" 
-                         class="btn btn-sm btn-outline-success shadow-sm rounded-pill px-3 font-weight-bold" 
-                         title="Cetak Surat Izin/Cuti Resmi">
-                        <i class="fas fa-print mr-1"></i> Cetak SK
-                      </a>
-                    <?php else: ?>
-                      <button class="btn btn-sm btn-light border text-muted rounded-pill px-3" disabled title="Pengajuan Ditolak">
-                        <i class="fas fa-ban mr-1"></i> Tutup
-                      </button>
+                <td class="small">
+                  <?php if (!empty($c->catatan_hrd) || !empty($c->pesan_admin)) : ?>
+                    <?php if (!empty($c->catatan_hrd)) : ?>
+                      <div class="mb-1"><strong>HRD:</strong> <?php echo htmlspecialchars($c->catatan_hrd, ENT_QUOTES, 'UTF-8'); ?></div>
                     <?php endif; ?>
-                  </div>
+                    <?php if (!empty($c->pesan_admin)) : ?>
+                      <div><strong>Keputusan:</strong> <?php echo htmlspecialchars($c->pesan_admin, ENT_QUOTES, 'UTF-8'); ?></div>
+                    <?php endif; ?>
+                  <?php else : ?>
+                    <span class="text-muted">-</span>
+                  <?php endif; ?>
+                </td>
+                <td class="text-center">
+                  <?php if ($c->status_cuti == 'Menunggu') : ?>
+                    <a href="<?php echo base_url('pegawai/cuti/batal/' . $c->id_cuti); ?>"
+                       class="btn btn-sm btn-outline-danger btn-batal-cuti"
+                       data-info="<?php echo date('d/m/Y', strtotime($c->tanggal_mulai)) . ' s/d ' . date('d/m/Y', strtotime($c->tanggal_akhir)); ?>">
+                      <i class="fas fa-trash-alt"></i> Batal
+                    </a>
+                  <?php elseif ($c->status_cuti == 'Disetujui') : ?>
+                    <a href="<?php echo base_url('pegawai/cuti/cetak_surat/' . $c->id_cuti); ?>" target="_blank" class="btn btn-sm btn-primary">
+                      <i class="fas fa-print"></i> Cetak SK
+                    </a>
+                  <?php else : ?>
+                    <span class="small text-muted">Selesai</span>
+                  <?php endif; ?>
                 </td>
               </tr>
-              <?php endforeach; ?>
-            <?php endif; ?>
-          </tbody>
-        </table>
-      </div>
+            <?php endforeach; ?>
+          <?php endif; ?>
+        </tbody>
+      </table>
     </div>
   </div>
-
 </div>
-<!-- /.container-fluid -->
 
-<!-- Interactive SweetAlert2 Script for Employee Actions -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  const cancelButtons = document.querySelectorAll('.btn-batal-cuti');
-  cancelButtons.forEach(button => {
+  document.querySelectorAll('.btn-batal-cuti').forEach(function(button) {
     button.addEventListener('click', function(e) {
       e.preventDefault();
-      const targetUrl = this.getAttribute('href');
-      const infoTgl   = this.getAttribute('data-info');
+      var targetUrl = this.getAttribute('href');
+      var infoTgl   = this.getAttribute('data-info');
+      var isDark    = document.documentElement.classList.contains('dark-mode');
 
       if (typeof Swal !== 'undefined') {
         Swal.fire({
           title: 'Batalkan Permohonan Cuti?',
-          text: 'Apakah Anda yakin ingin membatalkan permohonan cuti periode ' + infoTgl + '?',
+          text: 'Permohonan cuti periode ' + infoTgl + ' akan dibatalkan dari antrean.',
           icon: 'warning',
           showCancelButton: true,
-          confirmButtonColor: '#dc3545',
-          cancelButtonColor: '#6c757d',
+          confirmButtonColor: '#991B1B',
+          cancelButtonColor: '#495E54',
           confirmButtonText: 'Ya, Batalkan',
           cancelButtonText: 'Kembali',
-          reverseButtons: true
-        }).then((result) => {
+          reverseButtons: true,
+          background: isDark ? '#13201B' : '#FFFFFF',
+          color: isDark ? '#ECF3EF' : '#11211A'
+        }).then(function(result) {
           if (result.isConfirmed) {
             window.location.href = targetUrl;
           }
         });
-      } else {
-        if (confirm('Apakah Anda yakin ingin membatalkan permohonan cuti periode ' + infoTgl + '?')) {
-          window.location.href = targetUrl;
-        }
+      } else if (confirm('Batalkan permohonan cuti periode ' + infoTgl + '?')) {
+        window.location.href = targetUrl;
       }
     });
   });
