@@ -80,19 +80,19 @@
 										<?php
 										switch ($a->status) {
 											case 'tepat_waktu':
-												echo '<span class="badge badge-success">✅ Tepat Waktu</span>';
+												echo '<span class="emp-status emp-status-ok">Tepat Waktu</span>';
 												break;
 											case 'terlambat':
-												echo '<span class="badge badge-warning">⚠️ Terlambat</span>';
+												echo '<span class="emp-status emp-status-warn">Terlambat</span>';
 												break;
 											case 'sakit':
-												echo '<span class="badge badge-info">🏥 Sakit</span>';
+												echo '<span class="emp-status emp-status-info">Sakit</span>';
 												break;
 											case 'izin':
-												echo '<span class="badge badge-primary">📋 Izin</span>';
+												echo '<span class="emp-status emp-status-info">Izin</span>';
 												break;
 											case 'alpha':
-												echo '<span class="badge badge-danger">❌ Alpha</span>';
+												echo '<span class="emp-status emp-status-danger">Alpha</span>';
 												break;
 										}
 										?>

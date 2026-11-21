@@ -22,7 +22,7 @@
     
     <!-- Saldo Cuti Banner -->
     <div class="col-xl-4 col-lg-5 mb-3">
-      <div class="card border-0 shadow-sm rounded-lg text-white" style="background: linear-gradient(135deg, #0c2b4d 0%, #1e3a8a 100%);">
+      <div class="card border-0 rounded-lg text-white" style="background-color: var(--emp-secondary);">
         <div class="card-body p-3">
           <div class="d-flex justify-content-between align-items-center mb-2">
             <span class="badge badge-light text-primary font-weight-bold px-2 py-1 small rounded-pill">
@@ -139,7 +139,7 @@
                 <td>
                   <div class="font-weight-bold text-gray-800">
                     <i class="fas fa-calendar-day text-info mr-1"></i>
-                    <?php echo date('d M Y', strtotime($c->tanggal_mulai)); ?> &mdash; <?php echo date('d M Y', strtotime($c->tanggal_akhir)); ?>
+                    <?php echo date('d M Y', strtotime($c->tanggal_mulai)); ?> s/d <?php echo date('d M Y', strtotime($c->tanggal_akhir)); ?>
                   </div>
                   <div class="mt-1 d-flex flex-wrap gap-1 align-items-center">
                     <span class="badge badge-info font-weight-normal px-2 py-1">

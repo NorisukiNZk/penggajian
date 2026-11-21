@@ -54,7 +54,7 @@
 										<div class="text-xs font-weight-bold text-success text-uppercase">Absen Masuk</div>
 										<div class="h4 mb-0 font-weight-bold"><?php echo date('H:i:s', strtotime($absensi_hari_ini->jam_masuk)) ?></div>
 										<span class="badge badge-<?php echo ($absensi_hari_ini->status == 'tepat_waktu') ? 'success' : 'warning' ?>">
-											<?php echo ($absensi_hari_ini->status == 'tepat_waktu') ? '✅ Tepat Waktu' : '⚠️ Terlambat' ?>
+											<?php echo ($absensi_hari_ini->status == 'tepat_waktu') ? 'Tepat Waktu' : 'Terlambat' ?>
 										</span>
 									</div>
 								</div>
@@ -65,7 +65,7 @@
 										<div class="text-xs font-weight-bold text-info text-uppercase">Absen Pulang</div>
 										<?php if ($absensi_hari_ini->jam_pulang) : ?>
 											<div class="h4 mb-0 font-weight-bold"><?php echo date('H:i:s', strtotime($absensi_hari_ini->jam_pulang)) ?></div>
-											<span class="badge badge-info">✅ Sudah Pulang</span>
+											<span class="badge badge-info">Sudah Pulang</span>
 										<?php else : ?>
 											<div class="h4 mb-0 font-weight-bold text-muted">--:--:--</div>
 											<span class="badge badge-secondary">Belum Absen Pulang</span>

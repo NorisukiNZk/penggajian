@@ -69,6 +69,7 @@ class Login extends CI_Controller {
 			}else{
 				$this->session->set_userdata('hak_akses',$cek->hak_akses);
 				$this->session->set_userdata('nama_pegawai',$cek->nama_pegawai);
+				$this->session->set_userdata('jabatan',$cek->jabatan);
 				$this->session->set_userdata('photo',$cek->photo);
 				$this->session->set_userdata('id_pegawai',$cek->id_pegawai);
 				$this->session->set_userdata('nik',$cek->nik);
@@ -78,6 +79,8 @@ class Login extends CI_Controller {
 					case 1 : redirect('admin/dashboard');
 						break;
 					case 2 : redirect('pegawai/dashboard');
+						break;
+					case 3 : redirect('pimpinan/dashboard');
 						break;
 					default:
 						break;

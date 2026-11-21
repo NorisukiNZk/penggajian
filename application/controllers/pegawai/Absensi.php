@@ -69,7 +69,7 @@ class Absensi extends CI_Controller {
 		}
 
 		$absensi = $this->ModelAbsensiHarian->get_absensi_hari_ini($nik);
-		$status_text = ($absensi->status == 'tepat_waktu') ? 'Tepat Waktu ✅' : 'Terlambat ⚠️';
+		$status_text = ($absensi->status == 'tepat_waktu') ? 'Tepat Waktu' : 'Terlambat';
 
 		// Otomatis sinkronkan absensi harian ke data_kehadiran untuk payroll realtime
 		$this->ModelAbsensiHarian->sinkron_ke_kehadiran(date('m'), date('Y'));

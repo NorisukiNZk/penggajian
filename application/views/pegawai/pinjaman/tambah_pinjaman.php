@@ -228,7 +228,7 @@
         <div class="col-lg-5 mb-4">
 
             <!-- Live Calculation & Risk Meter Card -->
-            <div class="card border-0 shadow-sm rounded-lg mb-4" style="background: linear-gradient(135deg, #0c2b4d 0%, #1e3a8a 100%); color: #ffffff;">
+            <div class="card border-0 rounded-lg mb-4" style="background-color: var(--emp-secondary); color: #ffffff;">
                 <div class="card-body p-4 text-center position-relative overflow-hidden">
                     <div style="position: absolute; right: -20px; bottom: -20px; font-size: 8rem; opacity: 0.08; pointer-events: none;">
                         <i class="fas fa-calculator"></i>

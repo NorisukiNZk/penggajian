@@ -130,6 +130,7 @@
 							<select name="hak_akses" class="form-control">
 								<option value="1" <?php if($p->hak_akses == '1') echo 'selected'; ?>>Admin</option>
 								<option value="2" <?php if($p->hak_akses == '2') echo 'selected'; ?>>Pegawai</option>
+								<option value="3" <?php if($p->hak_akses == '3') echo 'selected'; ?>>Pimpinan</option>
 							</select>
 						</div>
 					</div>

@@ -130,6 +130,7 @@
 								<option value="">--Pilih Hak Akses--</option>
 								<option value="1">Admin</option>
 								<option value="2">Pegawai</option>
+								<option value="3">Pimpinan</option>
 							</select>
 							<?php echo form_error('hak_akses', '<div class="text-small text-danger mt-1"> </div>')?>
 						</div>

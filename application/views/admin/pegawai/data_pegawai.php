@@ -53,6 +53,8 @@
                 <td class="text-center">
                   <?php if ($p->hak_akses == '1') { ?>
                     <span class="badge badge-primary px-2 py-1">Admin</span>
+                  <?php } elseif ($p->hak_akses == '3') { ?>
+                    <span class="badge badge-warning px-2 py-1 text-dark">Pimpinan</span>
                   <?php } else { ?>
                     <span class="badge badge-info px-2 py-1">Pegawai</span>
                   <?php } ?>

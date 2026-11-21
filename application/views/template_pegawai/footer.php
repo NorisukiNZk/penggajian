@@ -1,557 +1,241 @@
-<!-- Footer -->
-      <footer class="sticky-footer">
-        <div class="container my-auto">
-          <div class="copyright text-center my-auto">
-          </div>
-        </div>
-      </footer>
-      <!-- End of Footer -->
+  </main>
+  <!-- End Main Workspace -->
 
-    </div>
-    <!-- End of Content Wrapper -->
+  <footer class="emp-footer">
+    Portal Mandiri Pegawai &middot; Klinik Pratama Dr. H.M. Hidayatullah &copy; <?php echo date('Y'); ?>
+  </footer>
 
-  </div>
-  <!-- End of Page Wrapper -->
+  <script src="<?php echo base_url('assets/vendor/jquery/jquery.min.js'); ?>"></script>
+  <script src="<?php echo base_url('assets/vendor/bootstrap/js/bootstrap.bundle.min.js'); ?>"></script>
+  <script src="https://cdn.datatables.net/2.2.2/js/dataTables.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.17.2/dist/sweetalert2.all.min.js"></script>
 
-  <!-- Scroll to Top Button-->
-  <a class="scroll-to-top rounded" href="#page-top">
-    <i class="fas fa-angle-up"></i>
-  </a>
-
-  <!-- Logout Modal-->
-  <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">×</span>
-          </button>
-        </div>
-        <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-        <div class="modal-footer">
-          <button class="btn btn-secondary" type="button" data-dismiss="modal">Batal</button>
-          <a class="btn btn-primary" href="<?php echo base_url('login/logout') ?>">Logout</a>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <script src="<?php echo base_url(); ?>assets/vendor/jquery/jquery.min.js"></script>
-<script src="<?php echo base_url(); ?>assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-
-<!-- Core plugin JavaScript-->
-<script src="<?php echo base_url(); ?>assets/vendor/jquery-easing/jquery.easing.min.js"></script>
-
-<!-- Custom scripts for all pages-->
-<script src="<?php echo base_url(); ?>assets/js/sb-admin-2.min.js"></script>
-
-<!-- Modern Chart.js v4.4+ -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
-
-<!-- Modern DataTables 2.x -->
-<script src="https://cdn.datatables.net/2.2.2/js/dataTables.min.js"></script>
-<script>
-$(document).ready(function() {
-  if ($.fn.DataTable && $('#dataTable').length > 0 && !$.fn.DataTable.isDataTable('#dataTable')) {
-    $('#dataTable').DataTable({
-      responsive: true,
-      pageLength: 10,
-      language: {
-        search: "",
-        searchPlaceholder: "🔍 Cari data...",
-        lengthMenu: "Tampilkan _MENU_ baris",
-        info: "Menampilkan _START_ - _END_ dari _TOTAL_ entri",
-        infoEmpty: "Menampilkan 0 entri",
-        infoFiltered: "(filter dari _MAX_ total data)",
-        zeroRecords: '<div class="py-3 text-muted font-weight-bold"><i class="fas fa-search mr-2 text-secondary"></i>Data tidak ditemukan</div>',
-        emptyTable: '<div class="py-3 text-muted font-weight-bold"><i class="fas fa-folder-open mr-2 text-secondary"></i>Belum ada data tersedia</div>',
-        paginate: {
-          first: '<i class="fas fa-angles-left"></i>',
-          previous: '<i class="fas fa-angle-left"></i>',
-          next: '<i class="fas fa-angle-right"></i>',
-          last: '<i class="fas fa-angles-right"></i>'
+  <script>
+  $(document).ready(function() {
+    if ($.fn.DataTable && $('#dataTable').length > 0 && !$.fn.DataTable.isDataTable('#dataTable')) {
+      $('#dataTable').DataTable({
+        responsive: true,
+        pageLength: 10,
+        language: {
+          search: "",
+          searchPlaceholder: "Cari data...",
+          lengthMenu: "Tampilkan _MENU_ baris",
+          info: "Menampilkan _START_ - _END_ dari _TOTAL_ entri",
+          infoEmpty: "Belum ada data",
+          infoFiltered: "(disaring dari _MAX_ total data)",
+          zeroRecords: '<div class="py-3 text-muted font-weight-bold">Tidak ada data yang cocok dengan pencarian Anda.</div>',
+          emptyTable: '<div class="py-3 text-muted font-weight-bold">Belum ada data tercatat pada tabel ini.</div>',
+          paginate: {
+            first: '<i class="fas fa-angles-left"></i>',
+            previous: '<i class="fas fa-angle-left"></i>',
+            next: '<i class="fas fa-angle-right"></i>',
+            last: '<i class="fas fa-angles-right"></i>'
+          }
         }
-      }
-    });
-  }
-
-  // Adjust table widths when toggling tabs
-  $('a[data-toggle="tab"], a[data-toggle="pill"]').on('shown.bs.tab', function(e) {
-    if ($.fn.DataTable) {
-      $($.fn.dataTable.tables(true)).DataTable().columns.adjust();
+      });
     }
-  });
 
-  // Chart handlers with v4 syntax if canvas exists
-  var ctxPie = document.getElementById("myPieChart");
-  if (ctxPie) {
-    new Chart(ctxPie, {
-      type: 'doughnut',
-      data: {
-        labels: ["HRD", "Manager", "Staff Marketing", "Direktur"],
-        datasets: [{
-          data: [
-            <?php echo $this->db->query("select jabatan from data_pegawai where jabatan='HRD'")->num_rows(); ?>,
-            <?php echo $this->db->query("select jabatan from data_pegawai where jabatan='Manager'")->num_rows(); ?>,
-            <?php echo $this->db->query("select jabatan from data_pegawai where jabatan='Staff Marketing'")->num_rows(); ?>,
-            <?php echo $this->db->query("select jabatan from data_pegawai where jabatan='Direktur'")->num_rows(); ?>
-          ],
-          backgroundColor: ['#0c2b4d', '#0ea5e9', '#10b981', '#f59e0b'],
-          hoverOffset: 6
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: { display: false }
-        },
-        cutout: '75%'
-      }
-    });
-  }
-
-  var ctxBar = document.getElementById("myBarChart");
-  if (ctxBar) {
-    new Chart(ctxBar, {
-      type: 'bar',
-      data: {
-        labels: ["Laki - Laki", "Perempuan"],
-        datasets: [{
-          label: "Jenis Kelamin",
-          backgroundColor: ['#0ea5e9', '#ec4899'],
-          borderRadius: 8,
-          data: [
-            <?php echo $this->db->query("select jenis_kelamin from data_pegawai where jenis_kelamin='Laki-laki'")->num_rows(); ?>,
-            <?php echo $this->db->query("select jenis_kelamin from data_pegawai where jenis_kelamin='Perempuan'")->num_rows(); ?>
-          ]
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: { display: false }
-        },
-        scales: {
-          y: { beginAtZero: true }
-        }
-      }
-    });
-  }
-});
-</script>
-
-
-<!-- SweetAlert2 v11.17 -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.17.2/dist/sweetalert2.all.min.js"></script>
-<script>
-$(document).ready(function() {
     function isDarkMode() {
-        return document.body.classList.contains('dark-mode') || document.documentElement.classList.contains('dark-mode');
+      return document.documentElement.classList.contains('dark-mode') || document.body.classList.contains('dark-mode');
     }
 
     const toastConfig = Swal.mixin({
-        toast: true,
-        position: 'top-end',
-        showConfirmButton: false,
-        timer: 3500,
-        timerProgressBar: true,
-        customClass: {
-            popup: 'swal2-toast-corporate'
-        },
-        didOpen: (toast) => {
-            toast.onmouseenter = Swal.stopTimer;
-            toast.onmouseleave = Swal.resumeTimer;
-        }
+      toast: true,
+      position: 'top-end',
+      showConfirmButton: false,
+      timer: 3500,
+      timerProgressBar: true,
+      didOpen: (toast) => {
+        toast.onmouseenter = Swal.stopTimer;
+        toast.onmouseleave = Swal.resumeTimer;
+      }
     });
 
     window.showToast = function(icon, title, text) {
-        const isDark = isDarkMode();
-        const type = icon || 'info';
-        let iconHtml = '';
-        if (type === 'success') {
-            iconHtml = '<i class="fas fa-check-circle" style="color: #10b981; font-size: 1.25rem;"></i>';
-        } else if (type === 'error' || type === 'danger') {
-            iconHtml = '<i class="fas fa-times-circle" style="color: #ef4444; font-size: 1.25rem;"></i>';
-        } else if (type === 'warning') {
-            iconHtml = '<i class="fas fa-exclamation-circle" style="color: #f59e0b; font-size: 1.25rem;"></i>';
-        } else {
-            iconHtml = '<i class="fas fa-info-circle" style="color: #0284c7; font-size: 1.25rem;"></i>';
-        }
-
-        const headline = title || 'Pemberitahuan';
-        const detailHtml = text ? `<div class="toast-corporate-detail">${text}</div>` : '';
-
-        toastConfig.fire({
-            iconHtml: iconHtml,
-            title: headline,
-            html: detailHtml || undefined,
-            customClass: {
-                popup: 'swal2-toast-corporate swal2-toast-' + type,
-                icon: 'swal2-toast-icon-clean'
-            },
-            background: isDark ? '#1e293b' : '#ffffff',
-            color: isDark ? '#f8fafc' : '#0f172a'
-        });
+      const isDark = isDarkMode();
+      toastConfig.fire({
+        icon: icon === 'danger' ? 'error' : (icon || 'info'),
+        title: title || 'Pemberitahuan',
+        text: text || undefined,
+        background: isDark ? '#13201B' : '#FFFFFF',
+        color: isDark ? '#ECF3EF' : '#11211A'
+      });
     };
 
     const $flashAlert = $('.alert.alert-dismissible').first();
     if ($flashAlert.length) {
-        let icon = 'info';
-        if ($flashAlert.hasClass('alert-success')) icon = 'success';
-        else if ($flashAlert.hasClass('alert-danger')) icon = 'error';
-        else if ($flashAlert.hasClass('alert-warning')) icon = 'warning';
-        else if ($flashAlert.hasClass('alert-info')) icon = 'info';
+      let icon = 'info';
+      if ($flashAlert.hasClass('alert-success')) icon = 'success';
+      else if ($flashAlert.hasClass('alert-danger')) icon = 'error';
+      else if ($flashAlert.hasClass('alert-warning')) icon = 'warning';
 
-        const $clone = $flashAlert.clone();
-        $clone.find('.close, button').remove();
-        const fullText = $clone.text().replace(/\s+/g, ' ').trim();
-
-        if (fullText.length > 0) {
-            window.showToast(icon, fullText);
-            if (fullText.length <= 160) {
-                $flashAlert.hide();
-            }
+      const $clone = $flashAlert.clone();
+      $clone.find('.close, button').remove();
+      const fullText = $clone.text().replace(/\s+/g, ' ').trim();
+      if (fullText.length > 0) {
+        window.showToast(icon, fullText);
+        if (fullText.length <= 160) {
+          $flashAlert.hide();
         }
+      }
     }
 
     <?php if ($this->session->flashdata('login_welcome')): ?>
     (function() {
-        const welcomeName = <?php echo json_encode($this->session->flashdata('login_welcome')); ?>;
-        const hour = new Date().getHours();
-        let greeting = 'Selamat Malam';
-        let icon = 'fa-moon';
-        let iconColor = '#6366f1';
+      const welcomeName = <?php echo json_encode($this->session->flashdata('login_welcome')); ?>;
+      const hour = new Date().getHours();
+      let greeting = 'Selamat Malam';
+      if (hour >= 4 && hour < 11) greeting = 'Selamat Pagi';
+      else if (hour >= 11 && hour < 15) greeting = 'Selamat Siang';
+      else if (hour >= 15 && hour < 18.5) greeting = 'Selamat Sore';
 
-        if (hour >= 4 && hour < 11) {
-            greeting = 'Selamat Pagi';
-            icon = 'fa-sun';
-            iconColor = '#f59e0b';
-        } else if (hour >= 11 && hour < 15) {
-            greeting = 'Selamat Siang';
-            icon = 'fa-sun';
-            iconColor = '#0ea5e9';
-        } else if (hour >= 15 && hour < 18.5) {
-            greeting = 'Selamat Sore';
-            icon = 'fa-cloud-sun';
-            iconColor = '#f97316';
-        }
-
-        const isDark = isDarkMode();
-        toastConfig.fire({
-            iconHtml: `<i class="fas ${icon}" style="color: ${iconColor}; font-size: 1.25rem;"></i>`,
-            title: `${greeting}, ${welcomeName}!`,
-            html: `<div class="toast-corporate-detail">Selamat datang kembali di Portal HRIS Klinik Pratama Hidayatullah.</div>`,
-            timer: 4500,
-            customClass: {
-                popup: 'swal2-toast-corporate',
-                icon: 'swal2-toast-icon-clean'
-            },
-            background: isDark ? '#1e293b' : '#ffffff',
-            color: isDark ? '#f8fafc' : '#0f172a'
-        });
+      window.showToast('success', greeting + ', ' + welcomeName, 'Selamat bekerja di Portal Pegawai Klinik Hidayatullah.');
     })();
     <?php endif; ?>
 
-    $(document).on('click', '.btn-hapus', function(e) {
-        e.preventDefault();
-        const href = $(this).attr('href');
-        const nama = $(this).data('nama') || $(this).attr('title') || 'data ini';
-        const isDark = isDarkMode();
-
-        Swal.fire({
-            title: 'Hapus Data?',
-            html: `
-                <div class="corporate-modal-desc">
-                    Apakah Anda yakin ingin menghapus <strong class="${isDark ? 'text-white' : 'text-gray-900'}">${nama}</strong>?
-                </div>
-                <div class="small text-danger mt-2 font-weight-medium">
-                    <i class="fas fa-exclamation-triangle mr-1"></i> Tindakan ini permanen dan tidak dapat dibatalkan.
-                </div>
-            `,
-            icon: 'warning',
-            iconColor: '#ef4444',
-            showCancelButton: true,
-            confirmButtonText: '<i class="fas fa-trash-alt mr-1"></i> Ya, Hapus',
-            cancelButtonText: '<i class="fas fa-times mr-1"></i> Batal',
-            customClass: {
-                popup: 'swal2-corporate-modal',
-                confirmButton: 'btn btn-danger font-weight-bold shadow-sm',
-                cancelButton: 'btn btn-light border font-weight-bold shadow-sm text-secondary'
-            },
-            buttonsStyling: false,
-            reverseButtons: true,
-            focusCancel: true,
-            background: isDark ? '#1e293b' : '#ffffff',
-            color: isDark ? '#f8fafc' : '#0f172a'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                Swal.fire({
-                    title: 'Memproses...',
-                    text: 'Sedang menghapus data...',
-                    allowOutsideClick: false,
-                    allowEscapeKey: false,
-                    showConfirmButton: false,
-                    customClass: {
-                        popup: 'swal2-corporate-modal'
-                    },
-                    background: isDark ? '#1e293b' : '#ffffff',
-                    color: isDark ? '#f8fafc' : '#0f172a',
-                    didOpen: () => {
-                        Swal.showLoading();
-                        document.location.href = href;
-                    }
-                });
-            }
-        });
-    });
-
     $(document).on('click', '.btn-konfirmasi', function(e) {
-        e.preventDefault();
-        const href = $(this).attr('href');
-        const form = $(this).closest('form');
-        const judul = $(this).data('judul') || 'Konfirmasi Tindakan';
-        const pesan = $(this).data('pesan') || 'Apakah Anda yakin ingin melanjutkan proses ini?';
-        const tipe = $(this).data('tipe') || 'question';
-        const isDark = isDarkMode();
-        const iconColor = tipe === 'warning' ? '#f59e0b' : (tipe === 'danger' || tipe === 'error' ? '#ef4444' : '#0284c7');
+      e.preventDefault();
+      const href  = $(this).attr('href');
+      const form  = $(this).closest('form');
+      const judul = $(this).data('judul') || 'Konfirmasi Tindakan';
+      const pesan = $(this).data('pesan') || 'Lanjutkan proses ini?';
+      const tipe  = $(this).data('tipe') || 'question';
+      const isDark = isDarkMode();
 
-        Swal.fire({
-            title: judul,
-            html: `<div class="corporate-modal-desc">${pesan}</div>`,
-            icon: tipe,
-            iconColor: iconColor,
-            showCancelButton: true,
-            confirmButtonText: '<i class="fas fa-check mr-1"></i> Ya, Lanjutkan',
-            cancelButtonText: '<i class="fas fa-times mr-1"></i> Batal',
-            customClass: {
-                popup: 'swal2-corporate-modal',
-                confirmButton: 'btn btn-primary font-weight-bold shadow-sm',
-                cancelButton: 'btn btn-light border font-weight-bold shadow-sm text-secondary'
-            },
-            buttonsStyling: false,
-            reverseButtons: true,
-            focusCancel: true,
-            background: isDark ? '#1e293b' : '#ffffff',
-            color: isDark ? '#f8fafc' : '#0f172a'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                if (href) {
-                    document.location.href = href;
-                } else if (form.length) {
-                    form.submit();
-                }
-            }
-        });
-    });
-
-    // =========================================================
-    // MODERN SWEETALERT2: Konfirmasi Logout Premium & Profesional
-    // =========================================================
-    $(document).on('click', '.btn-logout-swal, [data-target="#logoutModal"], a[href*="login/logout"]', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        if ($('#logoutModal').length) {
-            $('#logoutModal').modal('hide');
+      Swal.fire({
+        title: judul,
+        text: pesan,
+        icon: tipe,
+        showCancelButton: true,
+        confirmButtonText: 'Ya, Lanjutkan',
+        cancelButtonText: 'Batal',
+        confirmButtonColor: '#0F5132',
+        cancelButtonColor: '#64748B',
+        reverseButtons: true,
+        background: isDark ? '#13201B' : '#FFFFFF',
+        color: isDark ? '#ECF3EF' : '#11211A'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          if (href) {
+            window.location.href = href;
+          } else if (form.length) {
+            form.submit();
+          }
         }
-
-        const logoutUrl = $(this).attr('href') && $(this).attr('href') !== '#' ? $(this).attr('href') : '<?php echo base_url("login/logout"); ?>';
-        const userName = $(this).data('user') || '<?php echo htmlspecialchars($this->session->userdata("nama_pegawai") ?? "Pegawai"); ?>';
-        const userRole = $(this).data('role') || 'Pegawai';
-        const isDark = typeof isDarkMode === 'function' ? isDarkMode() : document.body.classList.contains('dark-mode');
-
-        Swal.fire({
-            html: `
-                <div class="logout-modal-content">
-                    <div class="logout-badge-circle">
-                        <i class="fas fa-power-off"></i>
-                    </div>
-                    <h4 class="font-weight-bold mb-2 ${isDark ? 'text-white' : 'text-gray-900'}" style="font-size: 1.25rem;">
-                        Konfirmasi Logout
-                    </h4>
-                    <p class="text-muted small mb-2" style="font-size: 0.9rem; line-height: 1.5;">
-                        Halo <strong class="${isDark ? 'text-light' : 'text-dark'}">${userName}</strong>, apakah Anda yakin ingin mengakhiri sesi di <strong>Portal ${userRole}</strong>?
-                    </p>
-                    <div class="logout-info-box">
-                        <i class="fas fa-shield-alt text-primary fa-lg mr-2"></i>
-                        <span class="small">Sesi autentikasi Anda akan diakhiri dengan aman. Pastikan seluruh pengajuan atau data telah tersimpan.</span>
-                    </div>
-                </div>
-            `,
-            showCancelButton: true,
-            confirmButtonText: '<i class="fas fa-sign-out-alt mr-2"></i> Ya, Logout',
-            cancelButtonText: '<i class="fas fa-times mr-2"></i> Tetap di Sini',
-            customClass: {
-                popup: 'swal2-logout-popup shadow-lg',
-                actions: 'swal2-logout-actions',
-                confirmButton: 'btn btn-danger px-4 py-2 font-weight-bold shadow-sm',
-                cancelButton: 'btn btn-light border px-4 py-2 font-weight-bold shadow-sm text-secondary'
-            },
-            buttonsStyling: false,
-            reverseButtons: true,
-            focusCancel: true,
-            width: 440,
-            background: isDark ? '#1e293b' : '#ffffff',
-            color: isDark ? '#f8fafc' : '#0f172a'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                Swal.fire({
-                    html: `
-                        <div class="logout-loading-content py-3 text-center">
-                            <div class="logout-spinner-container mb-3 position-relative d-inline-block">
-                                <div class="spinner-border text-danger" style="width: 3.5rem; height: 3.5rem; border-width: 3.5px;" role="status">
-                                    <span class="sr-only">Loading...</span>
-                                </div>
-                                <div class="position-absolute" style="top: 50%; left: 50%; transform: translate(-50%, -50%); color: #ef4444; font-size: 1.25rem;">
-                                    <i class="fas fa-power-off"></i>
-                                </div>
-                            </div>
-                            <h5 class="font-weight-bold mb-2 ${isDark ? 'text-white' : 'text-gray-900'}" style="font-size: 1.2rem; letter-spacing: -0.01em;">
-                                Mengakhiri Sesi...
-                            </h5>
-                            <p class="text-muted small mb-0" style="font-size: 0.88rem; line-height: 1.4;">
-                                Membersihkan sesi aman dan mengalihkan ke halaman login...
-                            </p>
-                        </div>
-                    `,
-                    showConfirmButton: false,
-                    allowOutsideClick: false,
-                    showCancelButton: false,
-                    width: 390,
-                    background: isDark ? '#1e293b' : '#ffffff',
-                    color: isDark ? '#f8fafc' : '#0f172a',
-                    customClass: {
-                        popup: 'swal2-logout-popup shadow-lg'
-                    }
-                });
-                setTimeout(function() {
-                    window.location.href = logoutUrl;
-                }, 750);
-            }
-        });
-    });
-});
-</script>
-
-<script>
-  // =========================================================
-  // SEAMLESS & GAPLESS DARK MODE ENGINE (View Transitions API)
-  // =========================================================
-  const darkModeToggle = document.getElementById('darkModeToggle');
-  const darkModeIcon = document.getElementById('darkModeIcon');
-
-  function updateDarkModeState(isDark) {
-      if (isDark) {
-          document.documentElement.classList.add('dark-mode');
-          document.body.classList.add('dark-mode');
-          localStorage.setItem('darkMode', 'enabled');
-          if (darkModeIcon) {
-              darkModeIcon.classList.remove('fa-moon', 'text-light');
-              darkModeIcon.classList.add('fa-sun', 'text-warning');
-          }
-      } else {
-          document.documentElement.classList.remove('dark-mode');
-          document.body.classList.remove('dark-mode');
-          localStorage.setItem('darkMode', 'disabled');
-          if (darkModeIcon) {
-              darkModeIcon.classList.remove('fa-sun', 'text-warning');
-              darkModeIcon.classList.add('fa-moon', 'text-light');
-          }
-      }
-  }
-
-  // Initial Sync on load
-  if (localStorage.getItem('darkMode') === 'enabled') {
-      updateDarkModeState(true);
-  }
-
-  if (darkModeToggle) {
-      darkModeToggle.addEventListener('click', () => {
-          const willBeDark = !document.body.classList.contains('dark-mode');
-
-          // Icon Micro-interaction rotation
-          if (darkModeIcon) {
-              darkModeIcon.style.transform = 'rotate(180deg) scale(0.65)';
-          }
-
-          // Native View Transitions API for GPU-accelerated morph
-          if (document.startViewTransition) {
-              document.startViewTransition(() => {
-                  updateDarkModeState(willBeDark);
-              }).finished.finally(() => {
-                  if (darkModeIcon) {
-                      darkModeIcon.style.transform = 'rotate(0deg) scale(1)';
-                  }
-              });
-          } else {
-              // Fallback smooth transition
-              document.documentElement.classList.add('theme-transitioning');
-              updateDarkModeState(willBeDark);
-              setTimeout(() => {
-                  if (darkModeIcon) {
-                      darkModeIcon.style.transform = 'rotate(0deg) scale(1)';
-                  }
-                  setTimeout(() => {
-                      document.documentElement.classList.remove('theme-transitioning');
-                  }, 380);
-              }, 40);
-          }
       });
-  }
+    });
 
-  // Preloader Fast & Non-Blocking Dismissal
+    $(document).on('click', '.btn-logout-swal, a[href*="login/logout"]', function(e) {
+      e.preventDefault();
+      const logoutUrl = $(this).attr('href') || '<?php echo base_url("login/logout"); ?>';
+      const userName  = $(this).data('user') || '<?php echo htmlspecialchars($this->session->userdata("nama_pegawai") ?? "Pegawai", ENT_QUOTES, "UTF-8"); ?>';
+      const isDark    = isDarkMode();
+
+      Swal.fire({
+        title: 'Keluar dari Portal Pegawai?',
+        text: 'Sesi atas nama ' + userName + ' akan diakhiri. Pastikan seluruh pengajuan sudah disimpan.',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Ya, Keluar',
+        cancelButtonText: 'Tetap Masuk',
+        confirmButtonColor: '#991B1B',
+        cancelButtonColor: '#495E54',
+        reverseButtons: true,
+        background: isDark ? '#13201B' : '#FFFFFF',
+        color: isDark ? '#ECF3EF' : '#11211A'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          window.location.href = logoutUrl;
+        }
+      });
+    });
+  });
+
+  // Theme Toggle (Light / Dark)
   (function() {
-      // Fix Sidebar on Mobile
-      if ($(window).width() <= 768) {
-          $("body").addClass("sidebar-toggled");
-          $(".sidebar").addClass("toggled");
+    const btn  = document.getElementById('darkModeToggle');
+    const icon = document.getElementById('darkModeIcon');
+
+    function syncTheme(isDark) {
+      document.documentElement.classList.toggle('dark-mode', isDark);
+      document.body.classList.toggle('dark-mode', isDark);
+      localStorage.setItem('darkMode', isDark ? 'enabled' : 'disabled');
+      if (icon) {
+        icon.classList.toggle('fa-sun', isDark);
+        icon.classList.toggle('fa-moon', !isDark);
       }
+    }
 
-      var preloader = document.getElementById('preloader');
-      if (!preloader) return;
+    syncTheme(localStorage.getItem('darkMode') === 'enabled');
 
-      function dismissPreloader() {
-          if (!preloader.classList.contains('loaded')) {
-              preloader.classList.add('loaded');
-              preloader.style.pointerEvents = 'none';
-              preloader.style.opacity = '0';
-              setTimeout(function() {
-                  if (preloader) preloader.style.display = 'none';
-              }, 200);
-          }
-      }
-
-      // Hide immediately as soon as DOM is interactive or loaded
-      if (document.readyState === 'interactive' || document.readyState === 'complete') {
-          setTimeout(dismissPreloader, 60);
-      } else {
-          document.addEventListener('DOMContentLoaded', function() {
-              setTimeout(dismissPreloader, 60);
-          });
-          window.addEventListener('load', dismissPreloader);
-      }
-
-      // Hard safety timeout: under no circumstance let the preloader trap clicks for >300ms
-      setTimeout(dismissPreloader, 300);
+    if (btn) {
+      btn.addEventListener('click', function() {
+        syncTheme(!document.documentElement.classList.contains('dark-mode'));
+      });
+    }
   })();
 
-  // Live Digital Clock
-  function updateLiveClock() {
-      var now = new Date();
-      var h = String(now.getHours()).padStart(2, '0');
-      var m = String(now.getMinutes()).padStart(2, '0');
-      var s = String(now.getSeconds()).padStart(2, '0');
-      var clockEl = document.getElementById('live-clock');
-      if (clockEl) {
-          clockEl.innerHTML = '<i class="fas fa-clock text-info"></i> ' + h + ':' + m + ':' + s + ' WITA';
+  // Tablet Drawer Toggle & Mobile Sheet Drawer (with Escape support)
+  (function() {
+    const tabletBtn    = document.getElementById('tabletMenuToggle');
+    const tabletDrawer = document.getElementById('tabletDrawer');
+    if (tabletBtn && tabletDrawer) {
+      tabletBtn.addEventListener('click', function() {
+        const isOpen = tabletDrawer.classList.toggle('open');
+        tabletBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      });
+    }
+
+    const sheetToggle   = document.getElementById('mobileSheetToggle');
+    const sheetClose    = document.getElementById('mobileSheetClose');
+    const sheet         = document.getElementById('mobileSheet');
+    const sheetBackdrop = document.getElementById('mobileSheetBackdrop');
+
+    function closeSheet() {
+      if (!sheet) return;
+      sheet.classList.remove('open');
+      if (sheetBackdrop) sheetBackdrop.classList.remove('open');
+      if (sheetToggle) sheetToggle.setAttribute('aria-expanded', 'false');
+    }
+
+    function openSheet() {
+      if (!sheet) return;
+      sheet.classList.add('open');
+      if (sheetBackdrop) sheetBackdrop.classList.add('open');
+      if (sheetToggle) sheetToggle.setAttribute('aria-expanded', 'true');
+      if (sheetClose) sheetClose.focus();
+    }
+
+    if (sheetToggle) sheetToggle.addEventListener('click', openSheet);
+    if (sheetClose) sheetClose.addEventListener('click', closeSheet);
+    if (sheetBackdrop) sheetBackdrop.addEventListener('click', closeSheet);
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        closeSheet();
+        if (tabletDrawer && tabletDrawer.classList.contains('open')) {
+          tabletDrawer.classList.remove('open');
+          if (tabletBtn) tabletBtn.setAttribute('aria-expanded', 'false');
+        }
       }
-  }
-  setInterval(updateLiveClock, 1000);
-  updateLiveClock(); // initial call
-</script>
+    });
+  })();
 
+  // Live Clock (Tabular WITA)
+  (function() {
+    function tick() {
+      const el = document.getElementById('live-clock');
+      if (!el) return;
+      const now = new Date();
+      const h = String(now.getHours()).padStart(2, '0');
+      const m = String(now.getMinutes()).padStart(2, '0');
+      const s = String(now.getSeconds()).padStart(2, '0');
+      const span = el.querySelector('span');
+      if (span) span.textContent = h + ':' + m + ':' + s + ' WITA';
+    }
+    tick();
+    setInterval(tick, 1000);
+  })();
+  </script>
 </body>
-
 </html>

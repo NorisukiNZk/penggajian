@@ -81,10 +81,10 @@
               </label>
               <select name="jenis_cuti" id="jenis_cuti" class="form-control font-weight-bold text-dark" required>
                 <option value="">-- Pilih Kategori Cuti / Izin --</option>
-                <option value="Tahunan" data-icon="🏖️">🏖️ Cuti Tahunan (Hak 12 Hari Kerja)</option>
-                <option value="Sakit" data-icon="🏥">🏥 Cuti Sakit (Wajib Unggah Surat Dokter/SKD)</option>
-                <option value="Melahirkan" data-icon="👶">👶 Cuti Melahirkan (Khusus Pegawai Wanita)</option>
-                <option value="Izin Penting" data-icon="⚡">⚡ Izin Khusus / Keperluan Mendesak</option>
+                <option value="Tahunan">Cuti Tahunan (Hak 12 Hari Kerja)</option>
+                <option value="Sakit">Cuti Sakit (Wajib Unggah Surat Dokter/SKD)</option>
+                <option value="Melahirkan">Cuti Melahirkan (Khusus Pegawai Wanita)</option>
+                <option value="Izin Penting">Izin Khusus / Keperluan Mendesak</option>
               </select>
             </div>
 
@@ -224,7 +224,7 @@
     <div class="col-lg-5 mb-4">
       
       <!-- Live Calculation Card -->
-      <div class="card border-0 shadow-sm rounded-lg mb-4" style="background: linear-gradient(135deg, #0c2b4d 0%, #1e3a8a 100%); color: #ffffff;">
+      <div class="card border-0 rounded-lg mb-4" style="background-color: var(--emp-secondary); color: #ffffff;">
         <div class="card-body p-4 text-center position-relative overflow-hidden">
           <div style="position: absolute; right: -20px; bottom: -20px; font-size: 8rem; opacity: 0.08; pointer-events: none;">
             <i class="fas fa-calculator"></i>
