@@ -59,7 +59,7 @@
           <i class="fas fa-bars"></i> <span>Menu</span>
         </button>
 
-        <a class="lp-btn-primary" href="<?php echo base_url('login'); ?>" style="min-height: 44px; padding: 0.55rem 1.05rem;">
+        <a class="lp-btn-primary lp-nav-login" href="<?php echo base_url('login'); ?>" style="min-height: 44px; padding: 0.55rem 1.05rem;">
           <i class="fas fa-right-to-bracket"></i> <span>Masuk Portal</span>
         </a>
       </div>
@@ -73,6 +73,9 @@
         <a class="lp-nav-link" href="<?php echo base_url('verifikasi'); ?>">Verifikasi Dokumen QR</a>
         <a class="lp-nav-link" href="#faq">Tanya Jawab</a>
         <a class="lp-nav-link" href="<?php echo base_url('lupa_password'); ?>">Pemulihan Kata Sandi</a>
+        <a class="lp-btn-primary mt-2" href="<?php echo base_url('login'); ?>" style="width: 100%;">
+          <i class="fas fa-right-to-bracket"></i> <span>Masuk ke Portal Login</span>
+        </a>
       </div>
     </div>
   </header>

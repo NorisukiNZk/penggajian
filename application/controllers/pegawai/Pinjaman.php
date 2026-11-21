@@ -291,7 +291,7 @@ class Pinjaman extends CI_Controller {
 
     public function batal($id = null)
     {
-        if (!$id) {
+        if (strtoupper((string)$this->input->method()) !== 'POST' || !$id) {
             redirect('pegawai/pinjaman');
             return;
         }
@@ -326,6 +326,7 @@ class Pinjaman extends CI_Controller {
         }
 
         $this->db->delete('data_pinjaman', array('id_pinjaman' => $id, 'nik' => $nik));
+        $this->ModelAudit->catat('pinjaman', 'batal_pegawai', $id, 'Pegawai NIK ' . $nik . ' membatalkan permohonan pinjaman ID ' . $id . '.');
 
         $this->session->set_flashdata('pesan', '<div class="alert alert-success alert-dismissible fade show" role="alert">
             <strong>Pengajuan Dibatalkan!</strong> Berkas permohonan pinjaman Anda berhasil ditarik dan dibatalkan.
@@ -335,6 +336,18 @@ class Pinjaman extends CI_Controller {
         redirect('pegawai/pinjaman');
     }
 
+    private function _load_own_sppk($id)
+    {
+        $nik = $this->session->userdata('nik');
+        return $this->db->query("
+            SELECT p.*, g.nama_pegawai, g.jenis_kelamin, g.status as status_karyawan, g.tanggal_masuk, j.nama_jabatan, j.gaji_pokok
+            FROM data_pinjaman p
+            JOIN data_pegawai g ON p.nik = g.nik
+            LEFT JOIN data_jabatan j ON g.jabatan = j.nama_jabatan
+            WHERE p.id_pinjaman = ? AND p.nik = ?
+        ", array($id, $nik))->row();
+    }
+
     public function cetak_sppk($id = null)
     {
         if (!$id) {
@@ -342,15 +355,7 @@ class Pinjaman extends CI_Controller {
             return;
         }
 
-        $nik = $this->session->userdata('nik');
-        $pinjaman = $this->db->query("
-            SELECT p.*, g.nama_pegawai, g.jenis_kelamin, g.status as status_karyawan, g.tanggal_masuk, j.nama_jabatan, j.gaji_pokok
-            FROM data_pinjaman p
-            JOIN data_pegawai g ON p.nik = g.nik
-            LEFT JOIN data_jabatan j ON g.jabatan = j.nama_jabatan
-            WHERE p.id_pinjaman = ? AND p.nik = ?
-        ", array($id, $nik))->row();
-
+        $pinjaman = $this->_load_own_sppk($id);
         if (!$pinjaman) {
             $this->session->set_flashdata('pesan', '<div class="alert alert-danger alert-dismissible fade show" role="alert">
                 <strong>Dokumen Tidak Ditemukan!</strong> Surat perjanjian pinjaman tidak dapat diakses.
@@ -364,5 +369,23 @@ class Pinjaman extends CI_Controller {
         $data['p'] = $pinjaman;
 
         $this->load->view('admin/pinjaman/cetak_sppk', $data);
+    }
+
+    public function download_pdf($id = null)
+    {
+        if (!$id) {
+            redirect('pegawai/pinjaman');
+            return;
+        }
+        $pinjaman = $this->_load_own_sppk($id);
+        if (!$pinjaman) {
+            redirect('pegawai/pinjaman');
+            return;
+        }
+        $data['title'] = "Surat Perjanjian Pinjaman Karyawan (SPPK)";
+        $data['p'] = $pinjaman;
+        $this->load->library('pdf_exporter');
+        $html = $this->load->view('pdf/sppk', $data, true);
+        $this->pdf_exporter->stream($html, 'SPPK_' . $pinjaman->nik . '_' . $pinjaman->id_pinjaman, 'A4', 'portrait', true);
     }
 }

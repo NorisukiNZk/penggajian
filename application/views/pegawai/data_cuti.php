@@ -154,15 +154,23 @@
                 </td>
                 <td class="text-center">
                   <?php if ($c->status_cuti == 'Menunggu') : ?>
-                    <a href="<?php echo base_url('pegawai/cuti/batal/' . $c->id_cuti); ?>"
-                       class="btn btn-sm btn-outline-danger btn-batal-cuti"
-                       data-info="<?php echo date('d/m/Y', strtotime($c->tanggal_mulai)) . ' s/d ' . date('d/m/Y', strtotime($c->tanggal_akhir)); ?>">
-                      <i class="fas fa-trash-alt"></i> Batal
-                    </a>
+                    <form method="POST" action="<?php echo base_url('pegawai/cuti/batal/' . $c->id_cuti); ?>" class="d-inline">
+                      <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
+                      <button type="submit"
+                         class="btn btn-sm btn-outline-danger btn-batal-cuti"
+                         data-info="<?php echo date('d/m/Y', strtotime($c->tanggal_mulai)) . ' s/d ' . date('d/m/Y', strtotime($c->tanggal_akhir)); ?>">
+                        <i class="fas fa-trash-alt"></i> Batal
+                      </button>
+                    </form>
                   <?php elseif ($c->status_cuti == 'Disetujui') : ?>
-                    <a href="<?php echo base_url('pegawai/cuti/cetak_surat/' . $c->id_cuti); ?>" target="_blank" class="btn btn-sm btn-primary">
-                      <i class="fas fa-print"></i> Cetak SK
-                    </a>
+                    <div class="d-inline-flex flex-wrap gap-1 justify-content-center">
+                      <a href="<?php echo base_url('pegawai/cuti/cetak_surat/' . $c->id_cuti); ?>" target="_blank" class="btn btn-sm btn-primary">
+                        <i class="fas fa-print"></i> Cetak SK
+                      </a>
+                      <a href="<?php echo base_url('pegawai/cuti/download_pdf/' . $c->id_cuti); ?>" class="btn btn-sm btn-light border">
+                        <i class="fas fa-file-pdf"></i> PDF
+                      </a>
+                    </div>
                   <?php else : ?>
                     <span class="small text-muted">Selesai</span>
                   <?php endif; ?>
@@ -181,7 +189,7 @@ document.addEventListener('DOMContentLoaded', function() {
   document.querySelectorAll('.btn-batal-cuti').forEach(function(button) {
     button.addEventListener('click', function(e) {
       e.preventDefault();
-      var targetUrl = this.getAttribute('href');
+      var form      = this.closest('form');
       var infoTgl   = this.getAttribute('data-info');
       var isDark    = document.documentElement.classList.contains('dark-mode');
 
@@ -199,12 +207,12 @@ document.addEventListener('DOMContentLoaded', function() {
           background: isDark ? '#13201B' : '#FFFFFF',
           color: isDark ? '#ECF3EF' : '#11211A'
         }).then(function(result) {
-          if (result.isConfirmed) {
-            window.location.href = targetUrl;
+          if (result.isConfirmed && form) {
+            form.submit();
           }
         });
-      } else if (confirm('Batalkan permohonan cuti periode ' + infoTgl + '?')) {
-        window.location.href = targetUrl;
+      } else if (confirm('Batalkan permohonan cuti periode ' + infoTgl + '?') && form) {
+        form.submit();
       }
     });
   });

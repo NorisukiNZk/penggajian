@@ -6,9 +6,12 @@
       <h1 class="h3 mb-1 font-weight-bold text-gray-800" style="letter-spacing: -0.02em;"><?php echo $title?></h1>
       <p class="text-muted small mb-0">Kelola kalender hari libur nasional dan cuti bersama operasional klinik.</p>
     </div>
-    <a href="<?php echo base_url('admin/hari_libur/sync_api') ?>" class="btn btn-sm btn-info shadow-sm btn-konfirmasi mt-3 mt-md-0" data-judul="Sync API Hari Libur?" data-pesan="Proses ini akan menarik data kalender libur nasional via internet. Lanjutkan?" data-tipe="info" data-warna="#36b9cc" data-btn-teks="<i class='fas fa-sync'></i> Ya, Sinkronkan!">
-      <i class="fas fa-sync fa-sm text-white mr-1"></i> Sync Data API Nasional
-    </a>
+    <form method="POST" action="<?php echo base_url('admin/hari_libur/sync_api') ?>" class="d-inline mt-3 mt-md-0">
+      <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
+      <button type="submit" class="btn btn-sm btn-info shadow-sm btn-konfirmasi" data-judul="Sync API Hari Libur?" data-pesan="Proses ini akan menarik data kalender libur nasional via internet. Lanjutkan?" data-tipe="info">
+        <i class="fas fa-sync fa-sm text-white mr-1"></i> Sync Data API Nasional
+      </button>
+    </form>
   </div>
 
   <?php echo $this->session->flashdata('pesan') ?>
@@ -65,9 +68,12 @@
                       </td>
                       <td><?php echo $l->keterangan ?></td>
                       <td class="text-center">
-                          <a class="btn btn-sm btn-danger btn-hapus" href="<?php echo base_url('admin/hari_libur/hapus/'.$l->id_libur) ?>" data-nama="<?php echo htmlspecialchars($l->keterangan, ENT_QUOTES, 'UTF-8') ?>" title="Hapus Tanggal Merah">
-                              <i class="fas fa-trash"></i>
-                          </a>
+                          <form method="POST" action="<?php echo base_url('admin/hari_libur/hapus/'.$l->id_libur) ?>" class="d-inline">
+                              <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
+                              <button type="submit" class="btn btn-sm btn-danger btn-hapus" data-nama="<?php echo htmlspecialchars($l->keterangan, ENT_QUOTES, 'UTF-8') ?>" title="Hapus Tanggal Merah">
+                                  <i class="fas fa-trash"></i>
+                              </button>
+                          </form>
                       </td>
                     </tr>
                     <?php endforeach; ?>

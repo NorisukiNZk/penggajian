@@ -14,6 +14,10 @@
   </div>
   <!-- End of Page Wrapper -->
 
+  <form id="globalPostCsrfForm" method="POST" action="" style="display:none;">
+    <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
+  </form>
+
   <!-- Logout Modal-->
   <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -50,7 +54,7 @@ $(document).ready(function() {
       pageLength: 10,
       language: {
         search: "",
-        searchPlaceholder: "🔍 Cari data...",
+        searchPlaceholder: "Cari data...",
         lengthMenu: "Tampilkan _MENU_ baris",
         info: "Menampilkan _START_ - _END_ dari _TOTAL_ entri",
         infoEmpty: "Menampilkan 0 entri",
@@ -190,8 +194,11 @@ $(document).ready(function() {
 
     $(document).on('click', '.btn-hapus', function(e) {
         e.preventDefault();
-        const href = $(this).attr('href');
-        const nama = $(this).data('nama') || $(this).attr('title') || 'data ini';
+        const $trigger = $(this);
+        const href = $trigger.attr('href');
+        const postUrl = $trigger.data('post-url');
+        const $form = $trigger.closest('form');
+        const nama = $trigger.data('nama') || $trigger.attr('title') || 'data ini';
         const isDark = isDarkMode();
 
         Swal.fire({
@@ -234,7 +241,15 @@ $(document).ready(function() {
                     color: isDark ? '#f8fafc' : '#0f172a',
                     didOpen: () => {
                         Swal.showLoading();
-                        document.location.href = href;
+                        if (postUrl && document.getElementById('globalPostCsrfForm')) {
+                            const f = document.getElementById('globalPostCsrfForm');
+                            f.action = postUrl;
+                            f.submit();
+                        } else if ($form.length) {
+                            $form[0].submit();
+                        } else if (href) {
+                            document.location.href = href;
+                        }
                     }
                 });
             }
@@ -271,10 +286,10 @@ $(document).ready(function() {
             color: isDark ? '#f8fafc' : '#0f172a'
         }).then((result) => {
             if (result.isConfirmed) {
-                if (href) {
+                if (form.length) {
+                    form[0].submit();
+                } else if (href) {
                     document.location.href = href;
-                } else if (form.length) {
-                    form.submit();
                 }
             }
         });

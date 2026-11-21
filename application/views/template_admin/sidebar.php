@@ -27,8 +27,8 @@
       $seg2 = strtolower((string)$this->uri->segment(2));
       $seg3 = strtolower((string)$this->uri->segment(3));
       $is_dashboard = ($seg2 == 'dashboard' || empty($seg2));
-      $is_master = in_array($seg2, array('data_pegawai', 'data_jabatan', 'hari_libur'));
-      $is_transaksi = in_array($seg2, array('absensi_harian', 'data_cuti', 'data_lembur', 'data_absensi', 'data_penggajian', 'pinjaman', 'komponen_gaji', 'potongan_gaji'));
+      $is_master = in_array($seg2, array('data_pegawai', 'data_jabatan', 'hari_libur', 'log_aktivitas'));
+      $is_transaksi = in_array($seg2, array('absensi_harian', 'data_cuti', 'data_lembur', 'data_penggajian', 'pinjaman', 'komponen_gaji', 'potongan_gaji'));
       $is_laporan = in_array($seg2, array('laporan', 'laporan_gaji', 'laporan_absensi', 'laporan_cuti', 'laporan_lembur', 'laporan_potongan', 'laporan_tahunan', 'slip_gaji', 'laporan_pegawai'));
     ?>
 
@@ -74,6 +74,9 @@
             <a class="collapse-item <?php echo ($seg2 == 'hari_libur') ? 'active font-weight-bold' : '' ?>" href="<?php echo base_url('admin/hari_libur') ?>">
               <i class="fas fa-calendar-day mr-2 text-warning"></i> Hari Libur Nasional
             </a>
+            <a class="collapse-item <?php echo ($seg2 == 'log_aktivitas') ? 'active font-weight-bold' : '' ?>" href="<?php echo base_url('admin/log_aktivitas') ?>">
+              <i class="fas fa-clipboard-list mr-2 text-success"></i> Log Aktivitas Audit
+            </a>
           </div>
         </div>
       </li>
@@ -110,9 +113,6 @@
             </a>
             <a class="collapse-item <?php echo ($seg2 == 'absensi_harian' && $seg3 == 'setting') ? 'active font-weight-bold' : '' ?>" href="<?php echo base_url('admin/absensi_harian/setting') ?>">
               <i class="fas fa-business-time mr-2 text-primary"></i> Setting Aturan Absensi
-            </a>
-            <a class="collapse-item <?php echo ($seg2 == 'data_absensi') ? 'active font-weight-bold' : '' ?>" href="<?php echo base_url('admin/data_absensi') ?>">
-              <i class="fas fa-history mr-2 text-muted"></i> Data Absensi (Lama)
             </a>
 
             <div class="dropdown-divider my-1"></div>

@@ -311,21 +311,29 @@
                   <span class="badge badge-light border text-muted px-2 py-1 small d-block mb-1">
                     <i class="fas fa-lock mr-1"></i>Selesai Diproses
                   </span>
-                  <div class="d-flex gap-1 justify-content-center">
+                  <div class="d-flex flex-wrap gap-1 justify-content-center">
                     <?php if($c->status_cuti == 'Disetujui') : ?>
                       <a href="<?php echo base_url('admin/data_cuti/cetak_surat/' . $c->id_cuti); ?>" 
                          target="_blank"
-                         class="btn btn-sm btn-outline-primary py-1 px-2 shadow-sm mr-1 font-weight-bold"
+                         class="btn btn-sm btn-outline-primary py-1 px-2 shadow-sm font-weight-bold"
                          title="Cetak Surat Keputusan Cuti Resmi">
                         <i class="fas fa-print mr-1"></i> Cetak SK
                       </a>
+                      <a href="<?php echo base_url('admin/data_cuti/download_pdf/' . $c->id_cuti); ?>" 
+                         class="btn btn-sm btn-primary py-1 px-2 shadow-sm font-weight-bold"
+                         title="Unduh Surat Keputusan Format PDF">
+                        <i class="fas fa-file-pdf mr-1"></i> PDF
+                      </a>
                     <?php endif; ?>
-                    <a href="<?php echo base_url('admin/data_cuti/hapus/' . $c->id_cuti); ?>" 
-                       class="btn btn-sm btn-outline-danger btn-hapus py-1 px-2 shadow-sm"
-                       data-nama="Riwayat cuti <?php echo htmlspecialchars($c->nama_pegawai, ENT_QUOTES, 'UTF-8'); ?>"
-                       title="Hapus Rekap Cuti">
-                      <i class="fas fa-trash-can mr-1"></i> Hapus
-                    </a>
+                    <form method="POST" action="<?php echo base_url('admin/data_cuti/hapus/' . $c->id_cuti); ?>" class="d-inline">
+                      <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
+                      <button type="submit"
+                         class="btn btn-sm btn-outline-danger btn-hapus py-1 px-2 shadow-sm"
+                         data-nama="Riwayat cuti <?php echo htmlspecialchars($c->nama_pegawai, ENT_QUOTES, 'UTF-8'); ?>"
+                         title="Hapus Rekap Cuti">
+                        <i class="fas fa-trash-can mr-1"></i> Hapus
+                      </button>
+                    </form>
                   </div>
                 <?php endif; ?>
               </td>

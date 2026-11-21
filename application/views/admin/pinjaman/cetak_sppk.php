@@ -305,7 +305,7 @@
     </p>
 
     <!-- Pasal 1 -->
-    <div class="pasal-title">Pasal 1 &mdash; Pokok Pinjaman & Skema Angsuran</div>
+    <div class="pasal-title">Pasal 1 : Pokok Pinjaman &amp; Skema Angsuran</div>
     <table class="detail-table">
         <tr>
             <td class="label-col">Total Nominal Pinjaman</td>
@@ -335,19 +335,19 @@
     </table>
 
     <!-- Pasal 2 (Klausul Mitigasi Risiko / Anti-Kabur) -->
-    <div class="pasal-title">Pasal 2 &mdash; Hak Kuasa Pemotongan Gaji & Jaminan Hukum</div>
+    <div class="pasal-title">Pasal 2 : Hak Kuasa Pemotongan Gaji &amp; Jaminan Hukum</div>
     <p class="legal-text">
         1. <strong>Kuasa Pemotongan Gaji Mutlak:</strong> Pihak Kedua dengan ini memberikan <strong>KUASA PENUH DAN TIDAK DAPAT DITARIK KEMBALI</strong> kepada Pihak Pertama untuk memotong langsung penghasilan bulanan Pihak Kedua sebesar nilai angsuran sampai seluruh kewajiban pinjaman lunas.
     </p>
     <p class="legal-text">
-        2. <strong>Klausul Pengunduran Diri / Mangkir / Berhenti Sepihak:</strong> Apabila Pihak Kedua mengundurkan diri (*resign*), diputus hubungan kerjanya (PHK), diberhentikan karena pelanggaran disiplin, atau <strong>MANGKIR / KABUR / BERHENTI BEKERJA SECARA SEPIHAK</strong> sebelum masa angsuran berakhir, maka seluruh sisa kewajiban pinjaman dinyatakan <strong>JATUH TEMPO SEKETIKA DAN WAJIB DILUNASI</strong>.
+        2. <strong>Klausul Pengunduran Diri / Mangkir / Berhenti Sepihak:</strong> Apabila Pihak Kedua mengundurkan diri (<em>resign</em>), diputus hubungan kerjanya (PHK), diberhentikan karena pelanggaran disiplin, atau <strong>MANGKIR / KABUR / BERHENTI BEKERJA SECARA SEPIHAK</strong> sebelum masa angsuran berakhir, maka seluruh sisa kewajiban pinjaman dinyatakan <strong>JATUH TEMPO SEKETIKA DAN WAJIB DILUNASI</strong>.
     </p>
     <p class="legal-text">
         3. Pihak Pertama <strong>BERHAK PENUH MEMOTONG SELURUH HAK KEUANGAN TERAKHIR</strong> Pihak Kedua yang mencakup: sisa gaji bulan berjalan, kompensasi sisa cuti tahunan, Tunjangan Hari Raya (THR), uang pesangon/penghargaan masa kerja, serta menahan dokumen jaminan/ijazah hingga seluruh sisa pinjaman terlunasi seutuhnya.
     </p>
 
     <!-- Pasal 3 -->
-    <div class="pasal-title">Pasal 3 &mdash; Data Kontak Penjamin / Darurat</div>
+    <div class="pasal-title">Pasal 3 : Data Kontak Penjamin / Darurat</div>
     <p class="legal-text">
         Pihak Kedua telah mencatatkan penjamin keluarga terdekat sebagai kontak darurat yang bertanggung jawab membantu penyelesaian apabila Pihak Kedua berhalangan atau mangkir dari kewajiban:
         <br>

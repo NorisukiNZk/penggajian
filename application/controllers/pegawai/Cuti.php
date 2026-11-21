@@ -267,7 +267,7 @@ class Cuti extends CI_Controller {
     }
 
     public function batal($id = null) {
-        if (!$id) {
+        if (strtoupper((string)$this->input->method()) !== 'POST' || !$id) {
             redirect('pegawai/cuti');
             return;
         }
@@ -300,6 +300,7 @@ class Cuti extends CI_Controller {
 
         // Hapus pengajuan
         $this->db->delete('data_cuti', array('id_cuti' => $id, 'nik' => $nik));
+        $this->ModelAudit->catat('cuti', 'batal_pegawai', $id, 'Pegawai NIK ' . $nik . ' membatalkan permohonan cuti ID ' . $id . '.');
 
         $this->session->set_flashdata('pesan', '<div class="alert alert-success alert-dismissible fade show" role="alert">
             <strong>Pengajuan Dibatalkan!</strong> Permohonan cuti/izin Anda telah berhasil dibatalkan dari sistem.
@@ -309,14 +310,9 @@ class Cuti extends CI_Controller {
         redirect('pegawai/cuti');
     }
 
-    public function cetak_surat($id = null) {
-        if (!$id) {
-            redirect('pegawai/cuti');
-            return;
-        }
-
+    private function _load_own_cuti($id) {
         $nik = $this->session->userdata('nik');
-        $cuti = $this->db->query("
+        return $this->db->query("
             SELECT c.*, 
                    p.nama_pegawai, p.jabatan, p.jenis_kelamin, p.status as status_karyawan, p.tanggal_masuk, p.photo,
                    p2.nama_pegawai as nama_pengganti, p2.jabatan as jabatan_pengganti
@@ -325,7 +321,14 @@ class Cuti extends CI_Controller {
             LEFT JOIN data_pegawai p2 ON c.nik_pengganti = p2.nik
             WHERE c.id_cuti = ? AND c.nik = ?
         ", array($id, $nik))->row();
+    }
 
+    public function cetak_surat($id = null) {
+        if (!$id) {
+            redirect('pegawai/cuti');
+            return;
+        }
+        $cuti = $this->_load_own_cuti($id);
         if (!$cuti) {
             $this->session->set_flashdata('pesan', '<div class="alert alert-danger alert-dismissible fade show" role="alert">
                 <strong>Data Tidak Ditemukan!</strong> Dokumen surat permohonan cuti tidak dapat diakses.
@@ -334,10 +337,25 @@ class Cuti extends CI_Controller {
             redirect('pegawai/cuti');
             return;
         }
-
         $data['title'] = "Surat Keterangan Cuti & Izin Resmi";
         $data['cuti']  = $cuti;
-
         $this->load->view('pegawai/cetak_surat_cuti', $data);
+    }
+
+    public function download_pdf($id = null) {
+        if (!$id) {
+            redirect('pegawai/cuti');
+            return;
+        }
+        $cuti = $this->_load_own_cuti($id);
+        if (!$cuti) {
+            redirect('pegawai/cuti');
+            return;
+        }
+        $data['title'] = "Surat Keputusan Izin Cuti";
+        $data['cuti']  = $cuti;
+        $this->load->library('pdf_exporter');
+        $html = $this->load->view('pdf/surat_cuti', $data, true);
+        $this->pdf_exporter->stream($html, 'SK_Cuti_' . $cuti->nik . '_' . $cuti->id_cuti, 'A4', 'portrait', true);
     }
 }

@@ -3,12 +3,20 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 if (!function_exists('qr_doc_secret')) {
 	function qr_doc_secret() {
-		$CI =& get_instance();
-		$key = $CI->config->item('encryption_key');
-		if (!empty($key)) {
-			return hash('sha256', $key . '|KPMH_HRIS_DOC_V1');
+		if (function_exists('get_instance')) {
+			$CI =& get_instance();
+			if ($CI && isset($CI->config)) {
+				$key = $CI->config->item('encryption_key');
+				if (!empty($key)) {
+					return hash('sha256', $key . '|KPMH_HRIS_DOC_V1');
+				}
+			}
 		}
-		return hash('sha256', 'KPMH_BANJARBARU_HRIS_SIGNED_DOC_SECRET_2026');
+		$envKey = getenv('APP_ENCRYPTION_KEY');
+		if (!empty($envKey)) {
+			return hash('sha256', $envKey . '|KPMH_HRIS_DOC_V1');
+		}
+		return hash('sha256', 'kpmh_hris_2026_9f3c7a1b8e4d206a5c3f8b1e7d4a92c1|KPMH_HRIS_DOC_V1');
 	}
 }
 
@@ -42,18 +50,36 @@ if (!function_exists('qr_doc_url')) {
 	}
 }
 
-if (!function_exists('render_qr_dokumen')) {
-	function render_qr_dokumen($tipe, $ref, $periode = '', $size = 82) {
-		static $script_emitted = false;
+if (!function_exists('qr_doc_data_uri')) {
+	function qr_doc_data_uri($url, $size = 82) {
+		if (!class_exists('Qr_matrix', false)) {
+			$libPath = defined('APPPATH')
+				? APPPATH . 'libraries/Qr_matrix.php'
+				: dirname(__DIR__) . '/libraries/Qr_matrix.php';
+			if (file_exists($libPath)) {
+				require_once $libPath;
+			}
+		}
+		if (class_exists('Qr_matrix', false)) {
+			return Qr_matrix::toPngDataUri($url, max(160, (int)$size * 2));
+		}
+		return '';
+	}
+}
 
-		$url  = qr_doc_url($tipe, $ref, $periode);
-		$sig  = qr_doc_signature($tipe, $ref, $periode);
-		$code = strtoupper($tipe) . '-' . $sig;
-		$size = max(64, (int)$size);
+if (!function_exists('render_qr_dokumen')) {
+	function render_qr_dokumen($tipe, $ref, $periode = '', $size = 82, $for_pdf = false) {
+		static $style_emitted = false;
+
+		$url     = qr_doc_url($tipe, $ref, $periode);
+		$sig     = qr_doc_signature($tipe, $ref, $periode);
+		$code    = strtoupper($tipe) . '-' . $sig;
+		$size    = max(64, (int)$size);
+		$dataUri = qr_doc_data_uri($url, $size);
 
 		$html = '';
-		if (!$script_emitted) {
-			$script_emitted = true;
+		if (!$for_pdf && !$style_emitted) {
+			$style_emitted = true;
 			$html .= '<style>
 				.qr-wrapper {
 					width: auto !important;
@@ -77,21 +103,14 @@ if (!function_exists('render_qr_dokumen')) {
 					border: 1px solid #CBD5E1 !important;
 					border-radius: 6px !important;
 					line-height: 0 !important;
-					overflow: hidden !important;
-				}
-				.qr-doc-box canvas {
-					display: none !important;
 				}
 				.qr-doc-box img.qr-doc-img {
 					display: block !important;
 					width: 100% !important;
 					height: 100% !important;
-					max-width: 100% !important;
-					max-height: 100% !important;
 					margin: 0 !important;
 					padding: 0 !important;
 					border: 0 !important;
-					object-fit: contain !important;
 					image-rendering: pixelated;
 				}
 				.qr-doc-code {
@@ -104,56 +123,26 @@ if (!function_exists('render_qr_dokumen')) {
 					line-height: 1.2 !important;
 				}
 			</style>';
-			$html .= '<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>';
-			$html .= '<script>
-				document.addEventListener("DOMContentLoaded", function() {
-					if (typeof QRCode === "undefined") return;
-					var nodes = document.querySelectorAll(".qr-doc-box[data-qr-url]");
-					nodes.forEach(function(el) {
-						if (el.dataset.qrRendered === "1") return;
-						var url = el.getAttribute("data-qr-url");
-						var sz  = parseInt(el.getAttribute("data-qr-size"), 10) || 82;
+		}
 
-						// Render pada elemen sementara agar hanya 1 gambar PNG tajam yang masuk ke DOM (mencegah duplikasi canvas + img)
-						var scratch = document.createElement("div");
-						new QRCode(scratch, {
-							text: url,
-							width: sz * 2,
-							height: sz * 2,
-							colorDark: "#0F172A",
-							colorLight: "#FFFFFF",
-							correctLevel: QRCode.CorrectLevel.M
-						});
-
-						var canvas = scratch.querySelector("canvas");
-						var imgEl  = document.createElement("img");
-						imgEl.className = "qr-doc-img";
-						imgEl.alt = "QR Verifikasi Digital HRIS";
-						imgEl.width = sz;
-						imgEl.height = sz;
-
-						if (canvas && typeof canvas.toDataURL === "function") {
-							imgEl.src = canvas.toDataURL("image/png");
-						} else {
-							var fallbackImg = scratch.querySelector("img");
-							if (fallbackImg && fallbackImg.src) {
-								imgEl.src = fallbackImg.src;
-							}
-						}
-
-						if (imgEl.src) {
-							el.innerHTML = "";
-							el.appendChild(imgEl);
-							el.dataset.qrRendered = "1";
-						}
-					});
-				});
-			</script>';
+		if ($for_pdf) {
+			$html .= '<div style="text-align:center; margin: 4px auto;">';
+			if ($dataUri !== '') {
+				$html .= '<img src="' . $dataUri . '" width="' . $size . '" height="' . $size . '" style="border:1px solid #CBD5E1; padding:3px; background:#FFFFFF;" alt="QR Verifikasi">';
+			}
+			$html .= '<div style="font-family: Courier, monospace; font-size: 8.5px; font-weight: bold; color: #334155; margin-top: 3px;">'
+				. htmlspecialchars($code, ENT_QUOTES, 'UTF-8') . '</div>';
+			$html .= '</div>';
+			return $html;
 		}
 
 		$html .= '<a class="qr-doc-link" href="' . htmlspecialchars($url, ENT_QUOTES, 'UTF-8') . '" target="_blank" title="Pindai atau klik QR Code untuk memverifikasi keaslian dokumen">';
-		$html .= '<span class="qr-doc-box" style="width: ' . $size . 'px; height: ' . $size . 'px;" data-qr-url="' . htmlspecialchars($url, ENT_QUOTES, 'UTF-8') . '" data-qr-size="' . $size . '">';
-		$html .= '<span style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;font-size:9px;line-height:1.2;color:#334155;text-align:center;">QR<br>' . htmlspecialchars($sig, ENT_QUOTES, 'UTF-8') . '</span>';
+		$html .= '<span class="qr-doc-box" style="width: ' . $size . 'px; height: ' . $size . 'px;">';
+		if ($dataUri !== '') {
+			$html .= '<img class="qr-doc-img" src="' . $dataUri . '" width="' . $size . '" height="' . $size . '" alt="QR Verifikasi Digital HRIS">';
+		} else {
+			$html .= '<span style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;font-size:9px;color:#334155;">' . htmlspecialchars($sig, ENT_QUOTES, 'UTF-8') . '</span>';
+		}
 		$html .= '</span>';
 		$html .= '<span class="qr-doc-code">' . htmlspecialchars($code, ENT_QUOTES, 'UTF-8') . '</span>';
 		$html .= '</a>';

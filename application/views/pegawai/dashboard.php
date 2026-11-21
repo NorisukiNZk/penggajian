@@ -71,14 +71,17 @@
 
         <?php if (!$absensi_hari_ini->jam_pulang) : ?>
           <?php if (empty($setting) || $jam_sekarang >= $setting->mulai_absen_pulang) : ?>
-            <a href="<?php echo base_url('pegawai/absensi/absen_pulang'); ?>"
-               class="btn btn-block font-weight-bold btn-konfirmasi"
-               style="background: #FFFFFF; color: #0F5132; border: none;"
-               data-judul="Catat Absen Pulang?"
-               data-pesan="Pastikan shift kerja Anda hari ini telah selesai sebelum melakukan absen pulang."
-               data-tipe="question">
-              <i class="fas fa-right-from-bracket"></i> Catat Absen Pulang Sekarang
-            </a>
+            <form method="POST" action="<?php echo base_url('pegawai/absensi/absen_pulang'); ?>" class="m-0">
+              <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
+              <button type="submit"
+                 class="btn btn-block font-weight-bold btn-konfirmasi"
+                 style="background: #FFFFFF; color: #0F5132; border: none;"
+                 data-judul="Catat Absen Pulang?"
+                 data-pesan="Pastikan shift kerja Anda hari ini telah selesai sebelum melakukan absen pulang."
+                 data-tipe="question">
+                <i class="fas fa-right-from-bracket"></i> Catat Absen Pulang Sekarang
+              </button>
+            </form>
           <?php else : ?>
             <div class="small px-3 py-2 rounded" style="background: rgba(255,255,255,0.12); color: #CCFBF1;">
               <i class="fas fa-lock mr-1"></i> Absen pulang dibuka mulai pukul <?php echo date('H:i', strtotime($setting->mulai_absen_pulang)); ?> WITA.
@@ -94,14 +97,17 @@
           <div class="font-weight-bold text-white mb-1">Belum ada catatan masuk hari ini</div>
           <div class="small" style="color: #CCFBF1;">Tekan tombol di bawah saat tiba di klinik untuk mencatat waktu kehadiran Anda.</div>
         </div>
-        <a href="<?php echo base_url('pegawai/absensi/absen_masuk'); ?>"
-           class="btn btn-block font-weight-bold btn-konfirmasi"
-           style="background: #FFFFFF; color: #0F5132; border: none;"
-           data-judul="Catat Absen Masuk?"
-           data-pesan="Catat kehadiran masuk kerja Anda untuk shift hari ini?"
-           data-tipe="question">
-          <i class="fas fa-right-to-bracket"></i> Catat Absen Masuk Sekarang
-        </a>
+        <form method="POST" action="<?php echo base_url('pegawai/absensi/absen_masuk'); ?>" class="m-0">
+          <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
+          <button type="submit"
+             class="btn btn-block font-weight-bold btn-konfirmasi"
+             style="background: #FFFFFF; color: #0F5132; border: none;"
+             data-judul="Catat Absen Masuk?"
+             data-pesan="Catat kehadiran masuk kerja Anda untuk shift hari ini?"
+             data-tipe="question">
+            <i class="fas fa-right-to-bracket"></i> Catat Absen Masuk Sekarang
+          </button>
+        </form>
       <?php endif; ?>
     </div>
   </div>

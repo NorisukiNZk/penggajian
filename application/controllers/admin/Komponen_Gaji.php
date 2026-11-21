@@ -102,8 +102,16 @@ class Komponen_Gaji extends CI_Controller {
 	 */
 	public function delete_potongan($id)
 	{
+		if (strtoupper((string)$this->input->method()) !== 'POST') {
+			redirect('admin/komponen_gaji?tab=potongan');
+			return;
+		}
+		$old = $this->db->get_where('potongan_gaji', array('id' => $id))->row();
 		$where = array('id' => $id);
 		$this->ModelPenggajian->delete_data($where, 'potongan_gaji');
+		if ($old) {
+			$this->ModelAudit->catat('payroll', 'hapus_tarif_potongan', $id, 'Menghapus tarif denda ' . $old->potongan . '.', $old, null);
+		}
 		$this->session->set_flashdata('pesan', '<div class="alert alert-success alert-dismissible fade show" role="alert">
 			<strong>Sukses!</strong> Tarif denda absensi berhasil dihapus.
 			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -215,7 +223,15 @@ class Komponen_Gaji extends CI_Controller {
 	 */
 	public function hapus($id)
 	{
+		if (strtoupper((string)$this->input->method()) !== 'POST') {
+			redirect('admin/komponen_gaji');
+			return;
+		}
+		$old = $this->ModelKomponen->get_komponen_by_id($id);
 		$this->ModelKomponen->delete_komponen($id);
+		if ($old) {
+			$this->ModelAudit->catat('payroll', 'hapus_komponen', $id, 'Menghapus komponen gaji ' . $old->nama_komponen . '.', $old, null);
+		}
 		$this->session->set_flashdata('pesan','<div class="alert alert-danger alert-dismissible fade show" role="alert">
 			<strong>Komponen gaji berhasil dihapus!</strong>
 			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -230,7 +246,12 @@ class Komponen_Gaji extends CI_Controller {
 	 */
 	public function toggle($id)
 	{
+		if (strtoupper((string)$this->input->method()) !== 'POST') {
+			redirect('admin/komponen_gaji');
+			return;
+		}
 		$this->ModelKomponen->toggle_status($id);
+		$this->ModelAudit->catat('payroll', 'toggle_komponen', $id, 'Mengubah status aktif komponen gaji ID ' . $id . '.');
 		$this->session->set_flashdata('pesan','<div class="alert alert-info alert-dismissible fade show" role="alert">
 			<strong>Status komponen berhasil diubah!</strong>
 			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -319,7 +340,12 @@ class Komponen_Gaji extends CI_Controller {
 	 */
 	public function hapus_komponen_pegawai($id_override, $id_komponen)
 	{
+		if (strtoupper((string)$this->input->method()) !== 'POST') {
+			redirect('admin/komponen_gaji/kelola_pegawai/' . $id_komponen);
+			return;
+		}
 		$this->ModelKomponen->delete_komponen_pegawai($id_override);
+		$this->ModelAudit->catat('payroll', 'hapus_override_komponen', $id_override, 'Menghapus override komponen ID ' . $id_komponen . ' per pegawai.');
 		$this->session->set_flashdata('pesan','<div class="alert alert-info alert-dismissible fade show" role="alert">
 			<strong>Override komponen pegawai berhasil dihapus!</strong>
 			<button type="button" class="close" data-dismiss="alert" aria-label="Close">

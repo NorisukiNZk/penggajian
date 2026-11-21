@@ -1,4 +1,5 @@
 <?php
+defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Data_Gaji extends CI_Controller {
 
@@ -12,94 +13,77 @@ class Data_Gaji extends CI_Controller {
 				<span aria-hidden="true">&times;</span>
 				</button>
 				</div>');
-				redirect('login');
+			redirect('login');
 		}
 	}
-	public function index() 
+
+	public function index()
 	{
-		$data['title'] = "Data Gaji";
-		$nik=$this->session->userdata('nik');
-
-		// Otomatis sinkronkan absensi harian ke data_kehadiran secara realtime
-		$this->ModelAbsensiHarian->sinkron_ke_kehadiran(date('m'), date('Y'));
-
-		$data['potongan'] = $this->ModelPenggajian->get_data('potongan_gaji')->result();
-		$data['gaji'] = $this->db->query("SELECT data_pegawai.nama_pegawai,data_pegawai.nik,
-			data_jabatan.gaji_pokok,data_jabatan.tj_transport,data_jabatan.uang_makan,
-			data_kehadiran.alpha,data_kehadiran.bulan,data_kehadiran.id_kehadiran
-			FROM data_pegawai
-			INNER JOIN data_kehadiran ON data_kehadiran.nik = data_pegawai.nik
-			INNER JOIN data_jabatan ON data_jabatan.nama_jabatan = data_pegawai.jabatan
-			WHERE data_kehadiran.nik = ?
-			ORDER BY data_kehadiran.bulan DESC", array($nik))->result();
-
-		// Komponen dinamis per bulan
-		$data['komponen_per_bulan'] = array();
-		foreach ($data['gaji'] as $g) {
-			$tunjangan = $this->ModelKomponen->hitung_total_tunjangan($g->nik, $g->bulan, $g->gaji_pokok);
-			$potongan_dinamis = $this->ModelKomponen->hitung_total_potongan($g->nik, $g->bulan, $g->gaji_pokok);
-            
-            $bulan = substr($g->bulan, 0, 2);
-            $tahun = substr($g->bulan, 2, 4);
-            $pinjaman = $this->ModelPenggajian->hitung_potongan_pinjaman($g->nik, $bulan, $tahun);
-            $lembur = $this->ModelPenggajian->hitung_uang_lembur($g->nik, $bulan, $tahun);
-
-			$data['komponen_per_bulan'][$g->bulan] = array(
-				'tunjangan'   => $tunjangan,
-				'potongan'    => $potongan_dinamis,
-                'pinjaman'    => $pinjaman,
-                'uang_lembur' => $lembur['uang_lembur'],
-                'jam_lembur'  => $lembur['total_jam']
-			);
+		$nik = $this->session->userdata('nik');
+		$tahun_filter = trim((string)$this->input->get('tahun', TRUE));
+		if ($tahun_filter !== '' && !ctype_digit($tahun_filter)) {
+			$tahun_filter = '';
 		}
 
-		$this->load->view('template_pegawai/header',$data);
+		$history = $this->ModelPenggajian->hitung_payroll_pegawai_history($nik, $tahun_filter !== '' ? $tahun_filter : null);
+
+		$data['title']              = "Data Gaji";
+		$data['potongan']           = $history['potongan'];
+		$data['gaji']               = $history['gaji'];
+		$data['komponen_per_bulan'] = $history['komponen_per_bulan'];
+		$data['available_years']    = $history['available_years'];
+		$data['tahun_filter']       = $tahun_filter;
+
+		$this->load->view('template_pegawai/header', $data);
 		$this->load->view('template_pegawai/sidebar');
 		$this->load->view('pegawai/data_gaji', $data);
 		$this->load->view('template_pegawai/footer');
 	}
 
+	private function _load_single_slip($id)
+	{
+		$nik = $this->session->userdata('nik');
+		$row = $this->db->get_where('data_kehadiran', array('id_kehadiran' => (int)$id, 'nik' => $nik))->row();
+		if (!$row) {
+			return null;
+		}
+		$bulan = substr($row->bulan, 0, 2);
+		$tahun = substr($row->bulan, 2, 4);
+		$payroll = $this->ModelPenggajian->hitung_payroll_bulan($bulan, $tahun, false, $nik);
+		if (empty($payroll['rows'])) {
+			return null;
+		}
+		return array(
+			'title'                => 'Cetak Slip Gaji',
+			'potongan'             => $payroll['potongan'],
+			'print_slip'           => $payroll['rows'],
+			'komponen_per_pegawai' => $payroll['komponen_per_pegawai'],
+			'bulan'                => $bulan,
+			'tahun'                => $tahun
+		);
+	}
+
 	public function cetak_slip($id)
 	{
-		$data['title'] = 'Cetak Slip Gaji';
-		$nik = $this->session->userdata('nik');
-		$data['potongan'] = $this->ModelPenggajian->get_data('potongan_gaji')->result();
-
-		$data['print_slip'] = $this->db->query("SELECT data_pegawai.nik,data_pegawai.nama_pegawai,data_jabatan.nama_jabatan,data_jabatan.gaji_pokok,data_jabatan.tj_transport,data_jabatan.uang_makan,data_kehadiran.alpha,data_kehadiran.bulan
-			FROM data_pegawai
-			INNER JOIN data_kehadiran ON data_kehadiran.nik=data_pegawai.nik
-			INNER JOIN data_jabatan ON data_jabatan.nama_jabatan=data_pegawai.jabatan
-			WHERE data_kehadiran.id_kehadiran = ? AND data_pegawai.nik = ?", array($id, $nik))->result();
-
-		if (empty($data['print_slip'])) {
+		$data = $this->_load_single_slip($id);
+		if (!$data) {
 			$this->session->set_flashdata('pesan', '<div class="alert alert-danger">Data slip gaji tidak ditemukan atau Anda tidak memiliki akses.</div>');
 			redirect('pegawai/data_gaji');
 			return;
 		}
-
-		// Komponen dinamis per pegawai
-		$data['komponen_per_pegawai'] = array();
-		foreach ($data['print_slip'] as $ps) {
-			$tunjangan = $this->ModelKomponen->hitung_total_tunjangan($ps->nik, $ps->bulan, $ps->gaji_pokok);
-			$potongan_dinamis = $this->ModelKomponen->hitung_total_potongan($ps->nik, $ps->bulan, $ps->gaji_pokok);
-            
-            // Extract month and year from $ps->bulan (format mmYYYY)
-            $bulan = substr($ps->bulan, 0, 2);
-            $tahun = substr($ps->bulan, 2, 4);
-            $pinjaman = $this->ModelPenggajian->hitung_potongan_pinjaman($ps->nik, $bulan, $tahun);
-            $lembur = $this->ModelPenggajian->hitung_uang_lembur($ps->nik, $bulan, $tahun);
-
-			$data['komponen_per_pegawai'][$ps->nik] = array(
-				'tunjangan'   => $tunjangan,
-				'potongan'    => $potongan_dinamis,
-                'pinjaman'    => $pinjaman,
-                'uang_lembur' => $lembur['uang_lembur'],
-                'jam_lembur'  => $lembur['total_jam']
-			);
-		}
-
 		$this->load->view('pegawai/cetak_slip_gaji', $data);
 	}
-}
 
-?>
+	public function download_pdf($id)
+	{
+		$data = $this->_load_single_slip($id);
+		if (!$data) {
+			$this->session->set_flashdata('pesan', '<div class="alert alert-danger">Data slip gaji tidak ditemukan atau Anda tidak memiliki akses.</div>');
+			redirect('pegawai/data_gaji');
+			return;
+		}
+		$this->load->library('pdf_exporter');
+		$html = $this->load->view('pdf/slip_gaji', $data, true);
+		$this->pdf_exporter->stream($html, 'Slip_Gaji_' . $data['print_slip'][0]->nik . '_' . $data['bulan'] . '_' . $data['tahun'], 'A4', 'portrait', true);
+	}
+}

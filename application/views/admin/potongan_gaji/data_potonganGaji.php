@@ -33,7 +33,10 @@
                                 <td>
                                     <center>
                                         <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#editModal<?php echo $p->id ?>" title="Edit Data"><i class="fas fa-edit"></i></button>
-                                        <a class="btn btn-sm btn-danger btn-hapus" href="<?php echo base_url('admin/potongan_gaji/delete_data/'.$p->id) ?>" data-nama="<?php echo htmlspecialchars($p->potongan, ENT_QUOTES, 'UTF-8') ?>" title="Hapus Data"><i class="fas fa-trash"></i></a>
+                                        <form method="POST" action="<?php echo base_url('admin/potongan_gaji/delete_data/'.$p->id) ?>" class="d-inline">
+                                            <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
+                                            <button type="submit" class="btn btn-sm btn-danger btn-hapus" data-nama="<?php echo htmlspecialchars($p->potongan, ENT_QUOTES, 'UTF-8') ?>" title="Hapus Data"><i class="fas fa-trash"></i></button>
+                                        </form>
                                     </center>
                                 </td>
                             </tr>

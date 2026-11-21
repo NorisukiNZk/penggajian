@@ -105,15 +105,23 @@
                 </td>
                 <td class="text-center">
                   <?php if ($p->status == 'Pending') : ?>
-                    <a href="<?php echo base_url('pegawai/pinjaman/batal/' . $p->id_pinjaman); ?>"
-                       class="btn btn-sm btn-outline-danger btn-batal-pinjaman"
-                       data-nominal="Rp <?php echo number_format($p->jumlah_pinjaman, 0, ',', '.'); ?>">
-                      <i class="fas fa-trash-alt"></i> Batalkan
-                    </a>
+                    <form method="POST" action="<?php echo base_url('pegawai/pinjaman/batal/' . $p->id_pinjaman); ?>" class="d-inline">
+                      <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
+                      <button type="submit"
+                         class="btn btn-sm btn-outline-danger btn-batal-pinjaman"
+                         data-nominal="Rp <?php echo number_format($p->jumlah_pinjaman, 0, ',', '.'); ?>">
+                        <i class="fas fa-trash-alt"></i> Batalkan
+                      </button>
+                    </form>
                   <?php elseif ($p->status == 'Disetujui' || $p->status == 'Lunas') : ?>
-                    <a href="<?php echo base_url('pegawai/pinjaman/cetak_sppk/' . $p->id_pinjaman); ?>" target="_blank" class="btn btn-sm btn-primary">
-                      <i class="fas fa-print"></i> Cetak SPPK
-                    </a>
+                    <div class="d-inline-flex flex-wrap gap-1 justify-content-center">
+                      <a href="<?php echo base_url('pegawai/pinjaman/cetak_sppk/' . $p->id_pinjaman); ?>" target="_blank" class="btn btn-sm btn-primary">
+                        <i class="fas fa-print"></i> Cetak SPPK
+                      </a>
+                      <a href="<?php echo base_url('pegawai/pinjaman/download_pdf/' . $p->id_pinjaman); ?>" class="btn btn-sm btn-light border">
+                        <i class="fas fa-file-pdf"></i> PDF
+                      </a>
+                    </div>
                   <?php else : ?>
                     <span class="small text-muted">Selesai</span>
                   <?php endif; ?>
@@ -131,7 +139,7 @@
 document.addEventListener('DOMContentLoaded', function() {
   $(document).on('click', '.btn-batal-pinjaman', function(e) {
     e.preventDefault();
-    var href    = $(this).attr('href');
+    var form    = $(this).closest('form');
     var nominal = $(this).data('nominal') || 'pinjaman ini';
     var isDark  = document.documentElement.classList.contains('dark-mode');
 
@@ -148,8 +156,8 @@ document.addEventListener('DOMContentLoaded', function() {
       background: isDark ? '#13201B' : '#FFFFFF',
       color: isDark ? '#ECF3EF' : '#11211A'
     }).then(function(result) {
-      if (result.isConfirmed) {
-        window.location.href = href;
+      if (result.isConfirmed && form.length) {
+        form[0].submit();
       }
     });
   });

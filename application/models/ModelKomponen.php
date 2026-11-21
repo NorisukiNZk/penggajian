@@ -189,46 +189,109 @@ class ModelKomponen extends CI_Model
         return $this->_hitung_komponen('potongan', $nik, $bulan, $gaji_pokok);
     }
 
+    private static $komponen_aktif_cache = null;
+
+    private function _ensure_calculator()
+    {
+        if (!class_exists('Payroll_calculator', false)) {
+            require_once APPPATH . 'libraries/Payroll_calculator.php';
+        }
+    }
+
+    private function _get_komponen_aktif_grouped()
+    {
+        if (self::$komponen_aktif_cache === null) {
+            $this->db->where('is_aktif', 1);
+            $this->db->order_by('nama_komponen', 'ASC');
+            $all = $this->db->get('komponen_gaji')->result();
+            self::$komponen_aktif_cache = array('tunjangan' => array(), 'potongan' => array());
+            foreach ($all as $k) {
+                $tipe = strtolower((string)$k->tipe);
+                if (isset(self::$komponen_aktif_cache[$tipe])) {
+                    self::$komponen_aktif_cache[$tipe][] = $k;
+                }
+            }
+        }
+        return self::$komponen_aktif_cache;
+    }
+
     /**
-     * Internal: Hitung komponen berdasarkan tipe
+     * Ambil seluruh komponen (tunjangan & potongan) sekaligus untuk sekelompok NIK di 1 bulan
+     * sehingga menghindari query N+1 dalam perulangan payroll.
+     */
+    public function get_batch_komponen_bulan($bulan, $gaji_pokok_by_nik)
+    {
+        $this->_ensure_calculator();
+        $grouped = $this->_get_komponen_aktif_grouped();
+
+        $overrides = array();
+        if (!empty($gaji_pokok_by_nik)) {
+            $niks = array_keys($gaji_pokok_by_nik);
+            $this->db->where('bulan', $bulan);
+            $this->db->where_in('nik', $niks);
+            $rows = $this->db->get('komponen_gaji_pegawai')->result();
+            foreach ($rows as $row) {
+                $overrides[$row->nik][(int)$row->id_komponen] = (float)$row->nominal_override;
+            }
+        }
+
+        $result = array();
+        foreach ($gaji_pokok_by_nik as $nik => $gaji_pokok) {
+            $tj_detail = array();
+            $tj_total = 0;
+            foreach ($grouped['tunjangan'] as $k) {
+                $ov = isset($overrides[$nik][(int)$k->id_komponen]) ? $overrides[$nik][(int)$k->id_komponen] : null;
+                $item = Payroll_calculator::resolveKomponenItem($k, $gaji_pokok, $ov);
+                $tj_total += $item['nominal'];
+                $tj_detail[] = $item;
+            }
+
+            $pot_detail = array();
+            $pot_total = 0;
+            foreach ($grouped['potongan'] as $k) {
+                $ov = isset($overrides[$nik][(int)$k->id_komponen]) ? $overrides[$nik][(int)$k->id_komponen] : null;
+                $item = Payroll_calculator::resolveKomponenItem($k, $gaji_pokok, $ov);
+                $pot_total += $item['nominal'];
+                $pot_detail[] = $item;
+            }
+
+            $result[$nik] = array(
+                'tunjangan' => array('total' => $tj_total, 'detail' => $tj_detail),
+                'potongan'  => array('total' => $pot_total, 'detail' => $pot_detail)
+            );
+        }
+
+        return $result;
+    }
+
+    /**
+     * Internal: Hitung komponen berdasarkan tipe (1 query override per pegawai, tanpa N+1)
      */
     private function _hitung_komponen($tipe, $nik, $bulan, $gaji_pokok)
     {
+        $this->_ensure_calculator();
+        $grouped = $this->_get_komponen_aktif_grouped();
+        $komponen_list = isset($grouped[$tipe]) ? $grouped[$tipe] : array();
+
+        $overrides = array();
+        if (!empty($komponen_list)) {
+            $ov_rows = $this->db->get_where('komponen_gaji_pegawai', array(
+                'nik'   => $nik,
+                'bulan' => $bulan
+            ))->result();
+            foreach ($ov_rows as $ov) {
+                $overrides[(int)$ov->id_komponen] = (float)$ov->nominal_override;
+            }
+        }
+
         $total = 0;
         $detail = array();
 
-        // Ambil semua komponen aktif dengan tipe tertentu
-        $this->db->where('tipe', $tipe);
-        $this->db->where('is_aktif', 1);
-        $this->db->order_by('nama_komponen', 'ASC');
-        $komponen_list = $this->db->get('komponen_gaji')->result();
-
         foreach ($komponen_list as $k) {
-            // Cek apakah ada override untuk pegawai ini
-            $override = $this->db->get_where('komponen_gaji_pegawai', array(
-                'id_komponen' => $k->id_komponen,
-                'nik' => $nik,
-                'bulan' => $bulan
-            ))->row();
-
-            if ($override) {
-                $nominal = $override->nominal_override;
-            } else if ($k->is_persentase == 1) {
-                // Hitung persentase dari gaji pokok
-                $nominal = ($gaji_pokok * $k->nominal) / 100;
-            } else {
-                $nominal = $k->nominal;
-            }
-
-            $total += $nominal;
-            $detail[] = array(
-                'id_komponen' => $k->id_komponen,
-                'nama_komponen' => $k->nama_komponen,
-                'tipe' => $k->tipe,
-                'nominal' => $nominal,
-                'is_persentase' => $k->is_persentase,
-                'is_override' => ($override) ? true : false
-            );
+            $ov_val = isset($overrides[(int)$k->id_komponen]) ? $overrides[(int)$k->id_komponen] : null;
+            $item = Payroll_calculator::resolveKomponenItem($k, $gaji_pokok, $ov_val);
+            $total += $item['nominal'];
+            $detail[] = $item;
         }
 
         return array('total' => $total, 'detail' => $detail);

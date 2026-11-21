@@ -116,10 +116,10 @@
         color: isDark ? '#ECF3EF' : '#11211A'
       }).then((result) => {
         if (result.isConfirmed) {
-          if (href) {
+          if (form.length) {
+            form[0].submit();
+          } else if (href) {
             window.location.href = href;
-          } else if (form.length) {
-            form.submit();
           }
         }
       });

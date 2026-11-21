@@ -49,6 +49,10 @@ class Pinjaman extends CI_Controller {
 
     public function setujui($id)
     {
+        if (strtoupper((string)$this->input->method()) !== 'POST') {
+            redirect('admin/pinjaman');
+            return;
+        }
         $pinjaman = $this->db->get_where('data_pinjaman', array('id_pinjaman' => $id))->row();
         if (!$pinjaman) {
             $this->session->set_flashdata('pesan', '<div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -83,6 +87,7 @@ class Pinjaman extends CI_Controller {
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
             </div>');
         } else {
+            $this->ModelAudit->catat('pinjaman', 'disetujui_admin', $id, 'HRD menyetujui pinjaman NIK ' . $pinjaman->nik . ' sebesar Rp ' . number_format($pinjaman->jumlah_pinjaman, 0, ',', '.'));
             $this->session->set_flashdata('pesan', '<div class="alert alert-success alert-dismissible fade show" role="alert">
                 <strong>Berhasil!</strong> Pengajuan pinjaman telah disetujui. Surat Perjanjian Pinjaman Karyawan (SPPK) telah resmi diterbitkan.
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
@@ -94,6 +99,10 @@ class Pinjaman extends CI_Controller {
 
     public function tolak($id)
     {
+        if (strtoupper((string)$this->input->method()) !== 'POST') {
+            redirect('admin/pinjaman');
+            return;
+        }
         $pinjaman = $this->db->get_where('data_pinjaman', array('id_pinjaman' => $id))->row();
         if (!$pinjaman) {
             $this->session->set_flashdata('pesan', '<div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -114,6 +123,7 @@ class Pinjaman extends CI_Controller {
             'status'      => 'Ditolak',
             'pesan_admin' => $pesan_admin
         ));
+        $this->ModelAudit->catat('pinjaman', 'ditolak_admin', $id, 'HRD menolak pinjaman NIK ' . $pinjaman->nik . ': ' . $pesan_admin);
 
         $this->session->set_flashdata('pesan', '<div class="alert alert-danger alert-dismissible fade show" role="alert">
             <strong>Ditolak!</strong> Permohonan pinjaman telah ditolak dengan catatan: <em>"' . htmlspecialchars($pesan_admin, ENT_QUOTES, 'UTF-8') . '"</em>.
@@ -125,6 +135,10 @@ class Pinjaman extends CI_Controller {
 
     public function lunas($id)
     {
+        if (strtoupper((string)$this->input->method()) !== 'POST') {
+            redirect('admin/pinjaman');
+            return;
+        }
         $pinjaman = $this->db->get_where('data_pinjaman', array('id_pinjaman' => $id))->row();
         if (!$pinjaman) {
             redirect('admin/pinjaman');
@@ -137,6 +151,7 @@ class Pinjaman extends CI_Controller {
             'sisa_tenor'  => 0,
             'pesan_admin' => 'Telah dilunasi penuh pada ' . date('d/m/Y') . '.'
         ));
+        $this->ModelAudit->catat('pinjaman', 'lunas', $id, 'Pinjaman NIK ' . $pinjaman->nik . ' ditandai LUNAS.');
 
         $this->session->set_flashdata('pesan', '<div class="alert alert-success alert-dismissible fade show" role="alert">
             <strong>Pinjaman Lunas!</strong> Status fasilitas kasbon telah ditandai lunas penuh.
@@ -148,6 +163,10 @@ class Pinjaman extends CI_Controller {
 
     public function hapus($id)
     {
+        if (strtoupper((string)$this->input->method()) !== 'POST') {
+            redirect('admin/pinjaman');
+            return;
+        }
         $pinjaman = $this->db->get_where('data_pinjaman', array('id_pinjaman' => $id))->row();
         if ($pinjaman) {
             // Hapus file dokumen fisik jika ada
@@ -159,6 +178,7 @@ class Pinjaman extends CI_Controller {
             }
 
             $this->db->delete('data_pinjaman', array('id_pinjaman' => $id));
+            $this->ModelAudit->catat('pinjaman', 'hapus_pinjaman', $id, 'HRD menghapus data pinjaman NIK ' . $pinjaman->nik . '.', $pinjaman, null);
 
             $this->session->set_flashdata('pesan', '<div class="alert alert-success alert-dismissible fade show" role="alert">
                 <strong>Berhasil!</strong> Data riwayat pinjaman telah dihapus dari sistem.
@@ -167,6 +187,30 @@ class Pinjaman extends CI_Controller {
         }
 
         redirect('admin/pinjaman');
+    }
+
+    public function download_sppk_pdf($id = null)
+    {
+        if (!$id) {
+            redirect('admin/pinjaman');
+            return;
+        }
+        $pinjaman = $this->db->query("
+            SELECT p.*, g.nama_pegawai, g.jenis_kelamin, g.status as status_karyawan, g.tanggal_masuk, j.nama_jabatan, j.gaji_pokok
+            FROM data_pinjaman p
+            JOIN data_pegawai g ON p.nik = g.nik
+            LEFT JOIN data_jabatan j ON g.jabatan = j.nama_jabatan
+            WHERE p.id_pinjaman = ?
+        ", array($id))->row();
+        if (!$pinjaman) {
+            redirect('admin/pinjaman');
+            return;
+        }
+        $data['title'] = "Surat Perjanjian Pinjaman Karyawan (SPPK)";
+        $data['p'] = $pinjaman;
+        $this->load->library('pdf_exporter');
+        $html = $this->load->view('pdf/sppk', $data, true);
+        $this->pdf_exporter->stream($html, 'SPPK_' . $pinjaman->nik . '_' . $pinjaman->id_pinjaman, 'A4', 'portrait', true);
     }
 
     public function cetak_sppk($id = null)

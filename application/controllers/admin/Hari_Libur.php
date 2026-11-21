@@ -55,8 +55,16 @@ class Hari_Libur extends CI_Controller {
     }
 
     public function hapus($id) {
+        if (strtoupper((string)$this->input->method()) !== 'POST') {
+            redirect('admin/hari_libur');
+            return;
+        }
+        $old = $this->db->get_where('hari_libur', array('id_libur' => $id))->row();
         $this->db->where('id_libur', $id);
         $this->db->delete('hari_libur');
+        if ($old) {
+            $this->ModelAudit->catat('kalender', 'hapus_libur', $id, 'Menghapus hari libur ' . $old->tanggal . ' (' . $old->keterangan . ').');
+        }
 
         $this->session->set_flashdata('pesan','<div class="alert alert-success alert-dismissible fade show" role="alert">
             <strong>Berhasil!</strong> Tanggal merah berhasil dihapus.
@@ -68,17 +76,25 @@ class Hari_Libur extends CI_Controller {
     }
 
     public function sync_api() {
+        if (strtoupper((string)$this->input->method()) !== 'POST') {
+            redirect('admin/hari_libur');
+            return;
+        }
         $year = date('Y');
-        // Menggunakan sumber JSON statis dari Github (lebih stabil daripada API Vercel gratisan)
         $url = "https://raw.githubusercontent.com/guangrei/APIHariLibur_V2/main/calendar.json";
         
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 15); // 15 detik timeout (file cukup besar)
+        curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+        $caBundle = 'C:/xampp/apache/bin/curl-ca-bundle.crt';
+        if (file_exists($caBundle)) {
+            curl_setopt($ch, CURLOPT_CAINFO, $caBundle);
+        }
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
         $output = curl_exec($ch);
         $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $curl_err  = curl_error($ch);
         curl_close($ch);
 
         if ($http_code == 200 && $output) {
@@ -105,6 +121,7 @@ class Hari_Libur extends CI_Controller {
                     }
                 }
                 
+                $this->ModelAudit->catat('kalender', 'sync_libur', $year, 'Sinkronisasi API kalender libur nasional tahun ' . $year . ': ' . $berhasil . ' tanggal ditambahkan.');
                 $this->session->set_flashdata('pesan','<div class="alert alert-success alert-dismissible fade show" role="alert">
                 <strong>Sync API Berhasil!</strong> '.$berhasil.' data libur nasional ditarik secara otomatis.
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -113,8 +130,9 @@ class Hari_Libur extends CI_Controller {
                 </div>');
             }
         } else {
+            $detail = $curl_err ? ' (' . htmlspecialchars($curl_err, ENT_QUOTES, 'UTF-8') . ')' : '';
             $this->session->set_flashdata('pesan','<div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <strong>Gagal Sync API!</strong> Server Github sedang tidak merespon (HTTP '.$http_code.') atau butuh koneksi internet. Silakan input manual sementara waktu.
+                <strong>Gagal Sync API!</strong> Server remote tidak merespon (HTTP '.$http_code.')'.$detail.'. Silakan input manual sementara waktu.
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
                 </button>

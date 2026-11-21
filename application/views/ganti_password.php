@@ -42,7 +42,7 @@
             <div class="form-group mb-3">
               <label class="font-weight-bold text-gray-700 small mb-2"><i class="fas fa-lock mr-2"></i> Password Baru</label>
               <div class="input-group">
-                <input type="password" name="passBaru" id="passBaru" class="form-control form-control-user" placeholder="Buat password baru yang kuat..." required>
+                <input type="password" name="passBaru" id="passBaru" class="form-control form-control-user" placeholder="Buat password baru minimal 8 karakter..." minlength="8" required>
                 <div class="input-group-append">
                   <span class="input-group-text bg-white cursor-pointer toggle-password" data-target="#passBaru"><i class="fas fa-eye"></i></span>
                 </div>

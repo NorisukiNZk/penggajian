@@ -56,6 +56,7 @@ class Data_Jabatan extends CI_Controller {
 			);
 
 			$this->ModelPenggajian->insert_data($data, 'data_jabatan');
+			$this->ModelAudit->catat('jabatan', 'tambah_jabatan', $nama_jabatan, 'Menambahkan jabatan ' . $nama_jabatan . '.', null, $data);
 			$this->session->set_flashdata('pesan','<div class="alert alert-success alert-dismissible fade show" role="alert">
 				<strong>Data berhasil ditambahkan!</strong>
 				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -115,6 +116,7 @@ class Data_Jabatan extends CI_Controller {
 			}
 
 			$this->db->trans_complete();
+			$this->ModelAudit->catat('jabatan', 'update_jabatan', $id, 'Memperbarui standar jabatan ' . $nama_jabatan . '.', $old, $data);
 
 			$this->session->set_flashdata('pesan','<div class="alert alert-success alert-dismissible fade show" role="alert">
 				<strong>Data berhasil diupdate!</strong>
@@ -150,6 +152,10 @@ class Data_Jabatan extends CI_Controller {
 	}
 
 	public function delete_data($id) {
+		if (strtoupper((string)$this->input->method()) !== 'POST') {
+			redirect('admin/data_jabatan');
+			return;
+		}
 		$jabatan = $this->db->get_where('data_jabatan', array('id_jabatan' => $id))->row();
 		if (!$jabatan) {
 			redirect('admin/data_jabatan');
@@ -171,6 +177,7 @@ class Data_Jabatan extends CI_Controller {
 
 		$where = array('id_jabatan' => $id);
 		$this->ModelPenggajian->delete_data($where, 'data_jabatan');
+		$this->ModelAudit->catat('jabatan', 'hapus_jabatan', $id, 'Menghapus jabatan ' . $jabatan->nama_jabatan . '.', $jabatan, null);
 		$this->session->set_flashdata('pesan','<div class="alert alert-success alert-dismissible fade show" role="alert">
 				<strong>Data berhasil dihapus!</strong>
 				<button type="button" class="close" data-dismiss="alert" aria-label="Close">

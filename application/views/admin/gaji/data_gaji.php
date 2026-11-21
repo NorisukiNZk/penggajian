@@ -75,8 +75,11 @@ foreach ($potongan as $p) {
 				</button>
 
 				<?php if ($jml_data > 0) : ?>
-					<a href="<?php echo base_url('admin/data_penggajian/cetak_gaji?bulan=' . $bulan . '&tahun=' . $tahun); ?>" class="btn btn-sm btn-success mb-2 shadow-sm" target="_blank">
+					<a href="<?php echo base_url('admin/data_penggajian/cetak_gaji?bulan=' . $bulan . '&tahun=' . $tahun); ?>" class="btn btn-sm btn-success mb-2 shadow-sm mr-2" target="_blank">
 						<i class="fas fa-print mr-1"></i> Cetak Daftar Gaji
+					</a>
+					<a href="<?php echo base_url('admin/data_penggajian/download_pdf?bulan=' . $bulan . '&tahun=' . $tahun); ?>" class="btn btn-sm btn-outline-primary mb-2 shadow-sm">
+						<i class="fas fa-file-pdf mr-1"></i> Unduh PDF
 					</a>
 				<?php else : ?>
 					<button type="button" class="btn btn-sm btn-outline-secondary mb-2 shadow-sm" disabled>
@@ -452,6 +455,9 @@ foreach ($potongan as $p) {
 							</div>
 						</div>
 						<div class="modal-footer bg-white border-top">
+							<a href="<?php echo base_url('admin/slip_gaji/download_pdf?nik=' . $g->nik . '&bulan=' . $bulan . '&tahun=' . $tahun); ?>" class="btn btn-outline-primary shadow-sm">
+								<i class="fas fa-file-pdf mr-1"></i> Unduh PDF
+							</a>
 							<a href="<?php echo base_url('admin/slip_gaji/cetak_slip_gaji?nik=' . $g->nik . '&bulan=' . $bulan . '&tahun=' . $tahun); ?>" target="_blank" class="btn btn-primary shadow-sm">
 								<i class="fas fa-print mr-1"></i> Cetak Slip Resmi
 							</a>
@@ -475,8 +481,8 @@ foreach ($potongan as $p) {
 					Sistem penggajian membutuhkan data absensi pegawai untuk periode <strong><?php echo $nama_bulan . ' ' . $tahun; ?></strong>. Silakan input kehadiran pegawai terlebih dahulu untuk mengaktifkan perhitungan gaji.
 				</p>
 				<div class="d-flex justify-content-center">
-					<a href="<?php echo base_url('admin/data_absensi/input_absensi'); ?>" class="btn btn-primary shadow-sm px-4">
-						<i class="fas fa-user-check mr-2"></i> Input Data Kehadiran Pegawai
+					<a href="<?php echo base_url('admin/absensi_harian'); ?>" class="btn btn-primary shadow-sm px-4">
+						<i class="fas fa-user-check mr-2"></i> Monitoring &amp; Rekap Absensi
 					</a>
 				</div>
 			</div>

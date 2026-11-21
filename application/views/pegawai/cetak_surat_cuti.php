@@ -348,7 +348,7 @@
     <div class="section-title">II. PENDELEGASIAN TUGAS & OPERASIONAL SHIFT</div>
     <table class="detail-table">
         <tr>
-            <td class="label-col">Petugas Pengganti (*Handover*)</td>
+            <td class="label-col">Petugas Pengganti (Serah Terima)</td>
             <td class="separator">:</td>
             <td class="value-col">
                 <?php if (!empty($cuti->nama_pengganti)) : ?>

@@ -58,7 +58,7 @@ $autoload['packages'] = array();
 |
 |	$autoload['libraries'] = array('user_agent' => 'ua');
 */
-$autoload['libraries'] = array('database','form_validation','session');
+$autoload['libraries'] = array('database','form_validation','session','payroll_calculator');
 
 /*
 | -------------------------------------------------------------------
@@ -103,7 +103,7 @@ $autoload['helper'] = array('url', 'form', 'qr_dokumen');
 | config files.  Otherwise, leave it blank.
 |
 */
-$autoload['config'] = array();
+$autoload['config'] = array('app_security');
 
 /*
 | -------------------------------------------------------------------
@@ -132,4 +132,4 @@ $autoload['language'] = array();
 |
 |	$autoload['model'] = array('first_model' => 'first');
 */
-$autoload['model'] = array('ModelPenggajian', 'ModelKomponen', 'ModelAbsensiHarian');
+$autoload['model'] = array('ModelPenggajian', 'ModelKomponen', 'ModelAbsensiHarian', 'ModelAudit');

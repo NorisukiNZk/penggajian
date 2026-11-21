@@ -324,7 +324,7 @@ $config['cache_query_string'] = FALSE;
 | https://codeigniter.com/user_guide/libraries/encryption.html
 |
 */
-$config['encryption_key'] = '';
+$config['encryption_key'] = getenv('APP_ENCRYPTION_KEY') ? getenv('APP_ENCRYPTION_KEY') : 'kpmh_hris_2026_9f3c7a1b8e4d206a5c3f8b1e7d4a92c1';
 
 /*
 |--------------------------------------------------------------------------
@@ -403,8 +403,8 @@ $config['sess_regenerate_destroy'] = FALSE;
 $config['cookie_prefix']	= '';
 $config['cookie_domain']	= '';
 $config['cookie_path']		= '/';
-$config['cookie_secure']	= FALSE;
-$config['cookie_httponly'] 	= FALSE;
+$config['cookie_secure']	= (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off');
+$config['cookie_httponly'] 	= TRUE;
 
 /*
 |--------------------------------------------------------------------------
@@ -453,16 +453,7 @@ $config['csrf_token_name'] = 'csrf_test_name';
 $config['csrf_cookie_name'] = 'csrf_cookie_name';
 $config['csrf_expire'] = 7200;
 $config['csrf_regenerate'] = FALSE;
-$config['csrf_exclude_uris'] = array(
-	'admin/laporan_pegawai/cetak_laporan_pegawai',
-	'admin/laporan_gaji/cetak_laporan_gaji',
-	'admin/slip_gaji/cetak_slip_gaji',
-	'admin/laporan_tahunan/cetak_laporan_tahunan',
-	'admin/laporan_absensi/cetak_laporan_absensi',
-	'admin/laporan_lembur/cetak_laporan_lembur',
-	'admin/laporan_cuti/cetak_laporan_cuti',
-	'admin/laporan_potongan/cetak_laporan_potongan'
-);
+$config['csrf_exclude_uris'] = array();
 
 /*
 |--------------------------------------------------------------------------

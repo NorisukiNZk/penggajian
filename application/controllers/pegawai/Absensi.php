@@ -36,10 +36,14 @@ class Absensi extends CI_Controller {
 	}
 
 	/**
-	 * Proses absen masuk
+	 * Proses absen masuk (Wajib POST + CSRF)
 	 */
 	public function absen_masuk()
 	{
+		if (strtoupper((string)$this->input->method()) !== 'POST') {
+			redirect('pegawai/absensi');
+			return;
+		}
 		$nik = $this->session->userdata('nik');
 
 		// Cek apakah sudah absen hari ini
@@ -73,6 +77,7 @@ class Absensi extends CI_Controller {
 
 		// Otomatis sinkronkan absensi harian ke data_kehadiran untuk payroll realtime
 		$this->ModelAbsensiHarian->sinkron_ke_kehadiran(date('m'), date('Y'));
+		$this->ModelAudit->catat('absensi', 'absen_masuk', $nik, 'Pegawai NIK ' . $nik . ' mencatat absen masuk pukul ' . $absensi->jam_masuk . ' (' . $status_text . ').');
 
 		$this->session->set_flashdata('pesan','<div class="alert alert-success alert-dismissible fade show" role="alert">
 			<strong>Absen masuk berhasil!</strong> Jam: ' . $absensi->jam_masuk . ' | Status: ' . $status_text . '
@@ -84,10 +89,14 @@ class Absensi extends CI_Controller {
 	}
 
 	/**
-	 * Proses absen pulang
+	 * Proses absen pulang (Wajib POST + CSRF)
 	 */
 	public function absen_pulang()
 	{
+		if (strtoupper((string)$this->input->method()) !== 'POST') {
+			redirect('pegawai/absensi');
+			return;
+		}
 		$nik = $this->session->userdata('nik');
 
 		// Cek apakah sudah absen masuk
@@ -130,6 +139,7 @@ class Absensi extends CI_Controller {
 
 		// Otomatis sinkronkan absensi harian ke data_kehadiran untuk payroll realtime
 		$this->ModelAbsensiHarian->sinkron_ke_kehadiran(date('m'), date('Y'));
+		$this->ModelAudit->catat('absensi', 'absen_pulang', $nik, 'Pegawai NIK ' . $nik . ' mencatat absen pulang pukul ' . date('H:i:s') . '.');
 
 		$this->session->set_flashdata('pesan','<div class="alert alert-success alert-dismissible fade show" role="alert">
 			<strong>Absen pulang berhasil!</strong> Jam: ' . date('H:i:s') . '

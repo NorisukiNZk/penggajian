@@ -206,18 +206,26 @@
                                     <div class="mb-2">
                                         <!-- Pratinjau KTP -->
                                         <?php if (!empty($p->file_ktp)) : ?>
-                                            <a href="<?php echo base_url('uploads/pinjaman/' . $p->file_ktp); ?>" target="_blank" class="btn btn-xs btn-outline-primary py-1 px-2 mb-1" style="font-size: 0.78rem;">
+                                            <button type="button"
+                                                    class="btn btn-xs btn-outline-primary py-1 px-2 mb-1 btn-preview-pinj"
+                                                    data-title="Foto / Scan KTP: <?php echo htmlspecialchars($p->nama_pegawai, ENT_QUOTES, 'UTF-8'); ?>"
+                                                    data-url="<?php echo base_url('uploads/pinjaman/' . $p->file_ktp); ?>"
+                                                    style="font-size: 0.78rem;">
                                                 <i class="fas fa-id-card mr-1"></i> Foto KTP
-                                            </a>
+                                            </button>
                                         <?php else : ?>
                                             <span class="badge badge-light border text-muted small">No KTP</span>
                                         <?php endif; ?>
 
                                         <!-- Pratinjau Dokumen Jaminan -->
                                         <?php if (!empty($p->file_jaminan)) : ?>
-                                            <a href="<?php echo base_url('uploads/pinjaman/' . $p->file_jaminan); ?>" target="_blank" class="btn btn-xs btn-outline-warning text-dark py-1 px-2 mb-1" style="font-size: 0.78rem;">
+                                            <button type="button"
+                                                    class="btn btn-xs btn-outline-warning text-dark py-1 px-2 mb-1 btn-preview-pinj"
+                                                    data-title="Dokumen Jaminan: <?php echo htmlspecialchars($p->nama_pegawai, ENT_QUOTES, 'UTF-8'); ?>"
+                                                    data-url="<?php echo base_url('uploads/pinjaman/' . $p->file_jaminan); ?>"
+                                                    style="font-size: 0.78rem;">
                                                 <i class="fas fa-award mr-1"></i> Jaminan/Ijazah
-                                            </a>
+                                            </button>
                                         <?php endif; ?>
                                     </div>
 
@@ -286,12 +294,20 @@
                                                title="Cetak Surat Perjanjian Pinjaman Karyawan">
                                                 <i class="fas fa-print mr-1"></i> Cetak SPPK
                                             </a>
-                                            <a href="<?php echo base_url('admin/pinjaman/lunas/' . $p->id_pinjaman); ?>" 
-                                               class="btn btn-sm btn-outline-success btn-lunas-pinjaman btn-block py-1"
-                                               data-nama="<?php echo htmlspecialchars($p->nama_pegawai, ENT_QUOTES, 'UTF-8'); ?>"
-                                               title="Tandai Pinjaman Lunas Penuh">
-                                                <i class="fas fa-check-double mr-1"></i> Tandai Lunas
+                                            <a href="<?php echo base_url('admin/pinjaman/download_sppk_pdf/' . $p->id_pinjaman); ?>" 
+                                               class="btn btn-sm btn-primary btn-block py-1 mb-1 font-weight-bold shadow-sm"
+                                               title="Unduh Arsip SPPK Format PDF">
+                                                <i class="fas fa-file-pdf mr-1"></i> Unduh PDF SPPK
                                             </a>
+                                            <form method="POST" action="<?php echo base_url('admin/pinjaman/lunas/' . $p->id_pinjaman); ?>" class="w-100">
+                                                <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
+                                                <button type="submit"
+                                                   class="btn btn-sm btn-outline-success btn-lunas-pinjaman btn-block py-1"
+                                                   data-nama="<?php echo htmlspecialchars($p->nama_pegawai, ENT_QUOTES, 'UTF-8'); ?>"
+                                                   title="Tandai Pinjaman Lunas Penuh">
+                                                    <i class="fas fa-check-double mr-1"></i> Tandai Lunas
+                                                </button>
+                                            </form>
                                         <?php else : ?>
                                             <?php if ($p->status == 'Lunas') : ?>
                                                 <a href="<?php echo base_url('admin/pinjaman/cetak_sppk/' . $p->id_pinjaman); ?>" 
@@ -300,13 +316,21 @@
                                                    title="Cetak Arsip SPPK">
                                                     <i class="fas fa-print mr-1"></i> Cetak SPPK
                                                 </a>
+                                                <a href="<?php echo base_url('admin/pinjaman/download_sppk_pdf/' . $p->id_pinjaman); ?>" 
+                                                   class="btn btn-sm btn-primary btn-block py-1 mb-1 font-weight-bold shadow-sm"
+                                                   title="Unduh Arsip SPPK Format PDF">
+                                                    <i class="fas fa-file-pdf mr-1"></i> Unduh PDF SPPK
+                                                </a>
                                             <?php endif; ?>
-                                            <a href="<?php echo base_url('admin/pinjaman/hapus/' . $p->id_pinjaman); ?>" 
-                                               class="btn btn-sm btn-outline-danger btn-hapus btn-block py-1"
-                                               data-nama="Pinjaman <?php echo htmlspecialchars($p->nama_pegawai, ENT_QUOTES, 'UTF-8'); ?>"
-                                               title="Hapus Rekap Pinjaman">
-                                                <i class="fas fa-trash-can mr-1"></i> Hapus
-                                            </a>
+                                            <form method="POST" action="<?php echo base_url('admin/pinjaman/hapus/' . $p->id_pinjaman); ?>" class="w-100">
+                                                <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
+                                                <button type="submit"
+                                                   class="btn btn-sm btn-outline-danger btn-hapus btn-block py-1"
+                                                   data-nama="Pinjaman <?php echo htmlspecialchars($p->nama_pegawai, ENT_QUOTES, 'UTF-8'); ?>"
+                                                   title="Hapus Rekap Pinjaman">
+                                                    <i class="fas fa-trash-can mr-1"></i> Hapus
+                                                </button>
+                                            </form>
                                         <?php endif; ?>
                                     </div>
                                 </td>
@@ -464,10 +488,10 @@ document.addEventListener('DOMContentLoaded', function() {
         $('#modalRejectPinjaman').modal('show');
     });
 
-    // 3. Mark as Paid (Lunas) - Clean Confirmation
+    // 3. Mark as Paid (Lunas) via POST + Modal Preview Lampiran
     $(document).on('click', '.btn-lunas-pinjaman', function(e) {
         e.preventDefault();
-        const href = $(this).attr('href');
+        const form = $(this).closest('form');
         const nama = $(this).data('nama');
 
         Swal.fire({
@@ -481,10 +505,41 @@ document.addEventListener('DOMContentLoaded', function() {
             cancelButtonText: 'Batal',
             reverseButtons: true
         }).then((result) => {
-            if (result.isConfirmed) {
-                window.location.href = href;
+            if (result.isConfirmed && form.length) {
+                form[0].submit();
             }
         });
     });
+
+    $(document).on('click', '.btn-preview-pinj', function() {
+        const title = $(this).data('title') || 'Pratinjau Dokumen';
+        const url   = $(this).data('url');
+        $('#modalPreviewPinjTitle').text(title);
+        $('#modalPreviewPinjLink').attr('href', url);
+
+        if (url && url.toLowerCase().endsWith('.pdf')) {
+            $('#modalPreviewPinjBody').html('<iframe src="' + url + '" style="width:100%; height:460px; border:0; border-radius:8px;" title="Dokumen PDF"></iframe>');
+        } else {
+            $('#modalPreviewPinjBody').html('<img src="' + url + '" alt="Pratinjau Dokumen" class="img-fluid rounded border" style="max-height:460px;">');
+        }
+        $('#modalPreviewLampiranPinj').modal('show');
+    });
 });
 </script>
+
+<!-- Modal Preview Berkas KTP / Jaminan -->
+<div class="modal fade" id="modalPreviewLampiranPinj" tabindex="-1" role="dialog" aria-labelledby="modalPreviewPinjTitle" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title font-weight-bold" id="modalPreviewPinjTitle">Pratinjau Berkas</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Tutup"><span aria-hidden="true">&times;</span></button>
+      </div>
+      <div class="modal-body text-center" id="modalPreviewPinjBody"></div>
+      <div class="modal-footer">
+        <a id="modalPreviewPinjLink" href="#" target="_blank" class="btn btn-primary btn-sm"><i class="fas fa-arrow-up-right-from-square mr-1"></i> Buka di Tab Baru</a>
+        <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Tutup</button>
+      </div>
+    </div>
+  </div>
+</div>

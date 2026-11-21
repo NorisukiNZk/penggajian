@@ -1,65 +1,159 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
+$root_url = function_exists('base_url') ? base_url() : '/penggajian/';
+$logo_url = $root_url . 'assets/img/kpmh.png';
 ?><!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
-<meta charset="utf-8">
-<title>404 Page Not Found</title>
-<link rel="icon" type="image/png" href="<?php echo function_exists('base_url') ? base_url('assets/img/kpmh.png') : '/penggajian/assets/img/kpmh.png'; ?>">
-<style type="text/css">
-
-::selection { background-color: #E13300; color: white; }
-::-moz-selection { background-color: #E13300; color: white; }
-
-body {
-	background-color: #fff;
-	margin: 40px;
-	font: 13px/20px normal Helvetica, Arial, sans-serif;
-	color: #4F5155;
-}
-
-a {
-	color: #003399;
-	background-color: transparent;
-	font-weight: normal;
-}
-
-h1 {
-	color: #444;
-	background-color: transparent;
-	border-bottom: 1px solid #D0D0D0;
-	font-size: 19px;
-	font-weight: normal;
-	margin: 0 0 14px 0;
-	padding: 14px 15px 10px 15px;
-}
-
-code {
-	font-family: Consolas, Monaco, Courier New, Courier, monospace;
-	font-size: 12px;
-	background-color: #f9f9f9;
-	border: 1px solid #D0D0D0;
-	color: #002166;
-	display: block;
-	margin: 14px 0 14px 0;
-	padding: 12px 10px 12px 10px;
-}
-
-#container {
-	margin: 10px;
-	border: 1px solid #D0D0D0;
-	box-shadow: 0 0 8px #D0D0D0;
-}
-
-p {
-	margin: 12px 15px 12px 15px;
-}
-</style>
+  <script>
+    if (localStorage.getItem('darkMode') === 'enabled') {
+      document.documentElement.classList.add('dark-mode');
+    }
+  </script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>404 Halaman Tidak Ditemukan | HRIS Klinik Pratama Dr. H.M. Hidayatullah</title>
+  <link rel="icon" type="image/png" href="<?php echo htmlspecialchars($logo_url, ENT_QUOTES, 'UTF-8'); ?>">
+  <style>
+    :root {
+      --err-bg: #F6F4EF;
+      --err-surface: #FFFDF9;
+      --err-border: #C9BFAE;
+      --err-ink: #141D26;
+      --err-muted: #525E6B;
+      --err-navy: #18293D;
+      --err-accent: #854D0E;
+      --err-accent-bg: #F7ECD8;
+    }
+    html.dark-mode {
+      --err-bg: #0F141B;
+      --err-surface: #171F2A;
+      --err-border: #3C4D63;
+      --err-ink: #F1EFEA;
+      --err-muted: #A4B0BD;
+      --err-navy: #26415E;
+      --err-accent: #E0A449;
+      --err-accent-bg: rgba(224, 164, 73, 0.14);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100dvh;
+      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      background-color: var(--err-bg);
+      color: var(--err-ink);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+    .err-card {
+      width: 100%;
+      max-width: 560px;
+      background: var(--err-surface);
+      border: 1px solid var(--err-border);
+      border-radius: 12px;
+      padding: 2rem;
+    }
+    .err-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--err-border);
+    }
+    .err-brand img {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      object-fit: contain;
+      background: #FFFDF9;
+      padding: 3px;
+      border: 1px solid var(--err-border);
+    }
+    .err-brand-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+    .err-brand-sub {
+      font-size: 0.78rem;
+      color: var(--err-muted);
+    }
+    .err-code {
+      display: inline-block;
+      padding: 0.25rem 0.65rem;
+      border-radius: 4px;
+      background: var(--err-accent-bg);
+      color: var(--err-accent);
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      margin-bottom: 0.75rem;
+    }
+    h1 {
+      font-family: 'Source Serif 4', Georgia, serif;
+      font-size: 1.75rem;
+      line-height: 1.25;
+      margin: 0 0 0.65rem;
+    }
+    .err-msg p {
+      margin: 0 0 1rem;
+      color: var(--err-muted);
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+    .err-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.65rem;
+      margin-top: 1.5rem;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      padding: 0.55rem 1.15rem;
+      border-radius: 6px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      text-decoration: none;
+    }
+    .btn-primary {
+      background-color: var(--err-navy);
+      color: #FFFFFF;
+      border: 1px solid var(--err-navy);
+    }
+    .btn-outline {
+      background-color: transparent;
+      color: var(--err-ink);
+      border: 1px solid var(--err-border);
+    }
+    a:focus-visible {
+      outline: 2px solid var(--err-accent);
+      outline-offset: 2px;
+    }
+  </style>
 </head>
 <body>
-	<div id="container">
-		<h1><?php echo $heading; ?></h1>
-		<?php echo $message; ?>
-	</div>
+  <main class="err-card" role="main">
+    <div class="err-brand">
+      <img src="<?php echo htmlspecialchars($logo_url, ENT_QUOTES, 'UTF-8'); ?>" alt="Logo Klinik Hidayatullah">
+      <div>
+        <div class="err-brand-title">HRIS Klinik Pratama Dr. H.M. Hidayatullah</div>
+        <div class="err-brand-sub">Banjarbaru, Kalimantan Selatan</div>
+      </div>
+    </div>
+    <span class="err-code">KODE STATUS 404</span>
+    <h1><?php echo htmlspecialchars(strip_tags((string)$heading), ENT_QUOTES, 'UTF-8'); ?></h1>
+    <div class="err-msg">
+      <p>Halaman atau dokumen yang Anda tuju tidak ditemukan, telah dipindahkan, atau alamat URL tidak lengkap.</p>
+    </div>
+    <div class="err-actions">
+      <a href="<?php echo htmlspecialchars($root_url . 'landing_page', ENT_QUOTES, 'UTF-8'); ?>" class="btn btn-primary">Kembali ke Beranda</a>
+      <a href="<?php echo htmlspecialchars($root_url . 'login', ENT_QUOTES, 'UTF-8'); ?>" class="btn btn-outline">Buka Portal Login</a>
+    </div>
+  </main>
 </body>
 </html>

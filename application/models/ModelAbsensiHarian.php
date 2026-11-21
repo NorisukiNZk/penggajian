@@ -145,12 +145,19 @@ class ModelAbsensiHarian extends CI_Model
     }
 
     /**
-     * Rekap bulanan semua pegawai
+     * Rekap bulanan pegawai (semua atau filter 1 NIK agar ringkasan pegawai bebas kueri massal)
      */
-    public function get_rekap_bulanan($bulan, $tahun)
+    public function get_rekap_bulanan($bulan, $tahun, $filter_nik = null)
     {
+        if ($filter_nik !== null) {
+            $this->db->where('nik', $filter_nik);
+        }
         $pegawai_list = $this->db->get('data_pegawai')->result();
         $rekap = array();
+
+        if (empty($pegawai_list)) {
+            return $rekap;
+        }
 
         $cur_year = (int)date('Y');
         $cur_month = (int)date('n');
@@ -160,61 +167,57 @@ class ModelAbsensiHarian extends CI_Model
         $is_future = ($req_year > $cur_year) || ($req_year == $cur_year && $req_month > $cur_month);
         $is_current_month = ($req_year == $cur_year && $req_month == $cur_month);
 
-        // 1. Hitung Batas Hari dalam bulan tersebut
         $total_hari_bulan = (int)date('t', mktime(0, 0, 0, $req_month, 1, $req_year));
-        
+
         if ($is_future) {
-            $hari_evaluasi = 0; // Periode masa depan belum berjalan
+            $hari_evaluasi = 0;
         } elseif ($is_current_month) {
-            $hari_evaluasi = min($total_hari_bulan, (int)date('j')); // Hanya evaluasi hingga hari ini
+            $hari_evaluasi = min($total_hari_bulan, (int)date('j'));
         } else {
-            $hari_evaluasi = $total_hari_bulan; // Sebulan penuh untuk bulan yang telah lampau
+            $hari_evaluasi = $total_hari_bulan;
         }
 
-        // Ambil Hari Libur Nasional di bulan & tahun tersebut
-        $libur_nasional = $this->db->query("SELECT * FROM hari_libur WHERE MONTH(tanggal) = ? AND YEAR(tanggal) = ?", array($req_month, $req_year))->result();
+        $libur_rows = $this->db->query("SELECT tanggal FROM hari_libur WHERE MONTH(tanggal) = ? AND YEAR(tanggal) = ?", array($req_month, $req_year))->result();
+        $libur_set = array();
+        foreach ($libur_rows as $lr) {
+            $libur_set[$lr->tanggal] = true;
+        }
 
-        // Ambil pengaturan batas toleransi keterlambatan
+        // Ambil seluruh catatan absensi bulan tersebut dalam 1 kueri
+        $this->db->where('MONTH(tanggal)', $req_month);
+        $this->db->where('YEAR(tanggal)', $req_year);
+        if ($filter_nik !== null) {
+            $this->db->where('nik', $filter_nik);
+        }
+        $absensi_rows = $this->db->get('absensi_harian')->result();
+        $absensi_by_nik = array();
+        foreach ($absensi_rows as $ar) {
+            $absensi_by_nik[$ar->nik][] = $ar;
+        }
+
         $setting = $this->get_setting();
         $maks_terlambat = (!empty($setting->maks_terlambat_jadi_alpha) && (int)$setting->maks_terlambat_jadi_alpha > 0) ? (int)$setting->maks_terlambat_jadi_alpha : 3;
 
         foreach ($pegawai_list as $p) {
-            // Hitung hari kerja wajib yang telah berjalan khusus untuk pegawai ini (memperhatikan tanggal_masuk)
             $hari_kerja_wajib = 0;
             if ($hari_evaluasi > 0) {
                 for ($i = 1; $i <= $hari_evaluasi; $i++) {
                     $tanggal = sprintf('%04d-%02d-%02d', $req_year, $req_month, $i);
 
-                    // Jangan bebankan hari sebelum tanggal pegawai resmi mulai bekerja
                     if (!empty($p->tanggal_masuk) && $p->tanggal_masuk != '0000-00-00' && $tanggal < $p->tanggal_masuk) {
                         continue;
                     }
-
-                    // Abaikan hari Minggu
                     if (date('N', strtotime($tanggal)) == 7) {
                         continue;
                     }
-
-                    // Abaikan Hari Libur Nasional
-                    $is_libur = false;
-                    foreach ($libur_nasional as $ln) {
-                        if ($ln->tanggal == $tanggal) {
-                            $is_libur = true;
-                            break;
-                        }
-                    }
-                    if ($is_libur) {
+                    if (isset($libur_set[$tanggal])) {
                         continue;
                     }
-
                     $hari_kerja_wajib++;
                 }
             }
 
-            $this->db->where('nik', $p->nik);
-            $this->db->where('MONTH(tanggal)', $req_month);
-            $this->db->where('YEAR(tanggal)', $req_year);
-            $absensi = $this->db->get('absensi_harian')->result();
+            $absensi = isset($absensi_by_nik[$p->nik]) ? $absensi_by_nik[$p->nik] : array();
 
             $hadir = 0;
             $terlambat = 0;
@@ -239,11 +242,8 @@ class ModelAbsensiHarian extends CI_Model
                 }
             }
 
-            // Hitung Alpha Pintar (Hari Kerja Wajib yang sudah lewat - Kehadiran Sah)
             $total_kehadiran_sah = $hadir + $sakit + $izin;
             $alpha_hari_kosong = max(0, $hari_kerja_wajib - $total_kehadiran_sah);
-
-            // Hitung terlambat yang dikonversi jadi penalti alpha
             $alpha_dari_terlambat = floor($terlambat / $maks_terlambat);
 
             $rekap[] = array(
@@ -392,16 +392,15 @@ class ModelAbsensiHarian extends CI_Model
     }
 
     /**
-     * Hitung ringkasan bulan ini untuk dashboard pegawai
+     * Hitung ringkasan bulan ini untuk 1 pegawai saja (tanpa menghitung seluruh staf klinik)
      */
     public function get_ringkasan_bulan_ini($nik)
     {
         $bulan = date('m');
         $tahun = date('Y');
 
-        // Gunakan fungsi rekap bulanan yang sudah pintar (menghitung alpha secara matematis)
-        $semua_rekap = $this->get_rekap_bulanan($bulan, $tahun);
-        
+        $rekap_pegawai = $this->get_rekap_bulanan($bulan, $tahun, $nik);
+
         $ringkasan = array(
             'hadir'     => 0,
             'terlambat' => 0,
@@ -410,16 +409,13 @@ class ModelAbsensiHarian extends CI_Model
             'izin'      => 0
         );
 
-        // Cari data pegawai yang bersangkutan
-        foreach ($semua_rekap as $rekap) {
-            if ($rekap['nik'] == $nik) {
-                $ringkasan['hadir']     = $rekap['hadir'];
-                $ringkasan['terlambat'] = $rekap['terlambat'];
-                $ringkasan['sakit']     = $rekap['sakit'];
-                $ringkasan['alpha']     = $rekap['total_alpha'];
-                $ringkasan['izin']      = $rekap['izin'];
-                break;
-            }
+        if (!empty($rekap_pegawai)) {
+            $r = $rekap_pegawai[0];
+            $ringkasan['hadir']     = $r['hadir'];
+            $ringkasan['terlambat'] = $r['terlambat'];
+            $ringkasan['sakit']     = $r['sakit'];
+            $ringkasan['alpha']     = $r['total_alpha'];
+            $ringkasan['izin']      = $r['izin'];
         }
 
         return $ringkasan;

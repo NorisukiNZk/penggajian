@@ -32,9 +32,12 @@ class Ganti_Password extends CI_Controller {
 		$passBaru = $this->input->post('passBaru');
 		$ulangPass = $this->input->post('ulangPass');
 
-		$this->form_validation->set_rules('passLama','password lama','required');
-		$this->form_validation->set_rules('passBaru','password baru','required|matches[ulangPass]');
-		$this->form_validation->set_rules('ulangPass','ulangi password baru','required');
+		$min_len = (int)($this->config->item('min_password_length') ?: 8);
+		$this->form_validation->set_rules('passLama', 'password lama', 'required');
+		$this->form_validation->set_rules('passBaru', 'password baru', 'required|min_length[' . $min_len . ']|matches[ulangPass]', array(
+			'min_length' => 'Password baru minimal harus ' . $min_len . ' karakter.'
+		));
+		$this->form_validation->set_rules('ulangPass', 'ulangi password baru', 'required');
 
 		if($this->form_validation->run() != FALSE) {
 			// Cek password lama di database
@@ -47,6 +50,8 @@ class Ganti_Password extends CI_Controller {
 					$data = array('password' => password_hash($passBaru, PASSWORD_BCRYPT));
 					$id = array('id_pegawai' => $id_pegawai);
 					$this->ModelPenggajian->update_data('data_pegawai', $data, $id);
+					$this->ModelAudit->catat('autentikasi', 'ganti_password', $pegawai->nik, $pegawai->nama_pegawai . ' memperbarui kata sandi akun Pegawai.');
+					$this->session->sess_regenerate(TRUE);
 					
 					$this->session->set_flashdata('pesan','<div class="alert alert-success alert-dismissible fade show" role="alert">
 						<strong>Berhasil!</strong> Password Anda telah diperbarui. Silakan login kembali.

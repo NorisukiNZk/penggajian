@@ -81,6 +81,7 @@ class Data_Pegawai extends CI_Controller {
 			);
 
 			$this->ModelPenggajian->insert_data($data, 'data_pegawai');
+			$this->ModelAudit->catat('pegawai', 'tambah_pegawai', $nik, 'Menambahkan pegawai baru ' . $nama_pegawai . ' (' . $jabatan . ').', null, $data);
 			$this->session->set_flashdata('pesan','<div class="alert alert-success alert-dismissible fade show" role="alert">
 				<strong>Data berhasil ditambahkan!</strong>
 				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -160,6 +161,7 @@ class Data_Pegawai extends CI_Controller {
 			);
 
 			$this->ModelPenggajian->update_data('data_pegawai', $data, $where);
+			$this->ModelAudit->catat('pegawai', 'update_pegawai', $nik, 'Memperbarui profil kepegawaian ' . $nama_pegawai . ' (' . $jabatan . ').', null, $data);
 			
 			// Jika admin mengubah datanya sendiri, update session secara real-time
 			if ($this->session->userdata('id_pegawai') == $id) {
@@ -217,6 +219,10 @@ class Data_Pegawai extends CI_Controller {
 	}
 
 	public function delete_data($id) {
+		if (strtoupper((string)$this->input->method()) !== 'POST') {
+			redirect('admin/data_pegawai');
+			return;
+		}
 		$pegawai = $this->db->get_where('data_pegawai', array('id_pegawai' => $id))->row();
 		if (!$pegawai) {
 			redirect('admin/data_pegawai');
@@ -291,6 +297,7 @@ class Data_Pegawai extends CI_Controller {
 				</button>
 				</div>');
 		} else {
+			$this->ModelAudit->catat('pegawai', 'hapus_pegawai', $nik, 'Menghapus pegawai ' . $pegawai->nama_pegawai . ' beserta riwayat terkait.', $pegawai, null);
 			$this->session->set_flashdata('pesan','<div class="alert alert-success alert-dismissible fade show" role="alert">
 				<strong>Sukses!</strong> Data pegawai beserta seluruh riwayat terkait berhasil dihapus secara bersih.
 				<button type="button" class="close" data-dismiss="alert" aria-label="Close">

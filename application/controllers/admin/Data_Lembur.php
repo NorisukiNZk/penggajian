@@ -37,11 +37,21 @@ class Data_Lembur extends CI_Controller {
 
 	public function aksi_approval()
 	{
-		$id_lembur = $this->input->post('id_lembur');
-		$status = $this->input->post('status'); // 'Disetujui' atau 'Ditolak'
+		if (strtoupper((string)$this->input->method()) !== 'POST') {
+			redirect('admin/data_lembur');
+			return;
+		}
+		$id_lembur = $this->input->post('id_lembur', TRUE);
+		$status = $this->input->post('status', TRUE);
+		if (!in_array($status, array('Disetujui', 'Ditolak'), true)) {
+			redirect('admin/data_lembur');
+			return;
+		}
 
+		$lembur = $this->db->get_where('data_lembur', array('id_lembur' => $id_lembur))->row();
 		$this->db->where('id_lembur', $id_lembur);
 		$this->db->update('data_lembur', array('status' => $status));
+		$this->ModelAudit->catat('lembur', strtolower($status) . '_admin', $id_lembur, 'HRD menetapkan lembur ' . ($lembur ? 'NIK ' . $lembur->nik : 'ID ' . $id_lembur) . ' => ' . $status);
 
 		if ($status == 'Disetujui') {
 			$pesan = "Pengajuan lembur disetujui.";

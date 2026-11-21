@@ -135,23 +135,27 @@
 											<?php endif; ?>
 										</td>
 										<td class="text-center align-middle">
-											<a href="<?php echo base_url('admin/komponen_gaji/toggle/' . $k->id_komponen) ?>" 
-											   class="btn btn-sm <?php echo ($k->is_aktif == 1) ? 'btn-success' : 'btn-secondary' ?>"
-											   title="Klik untuk mengubah status aktif">
-												<?php echo ($k->is_aktif == 1) ? '<i class="fas fa-check mr-1"></i> Aktif' : '<i class="fas fa-times mr-1"></i> Nonaktif' ?>
-											</a>
+											<form method="POST" action="<?php echo base_url('admin/komponen_gaji/toggle/' . $k->id_komponen) ?>" class="d-inline">
+												<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
+												<button type="submit" class="btn btn-sm <?php echo ($k->is_aktif == 1) ? 'btn-success' : 'btn-secondary' ?>" title="Klik untuk mengubah status aktif">
+													<?php echo ($k->is_aktif == 1) ? '<i class="fas fa-check mr-1"></i> Aktif' : '<i class="fas fa-times mr-1"></i> Nonaktif' ?>
+												</button>
+											</form>
 										</td>
 										<td class="text-center align-middle">
-											<div class="btn-group btn-group-sm" role="group">
-												<a href="<?php echo base_url('admin/komponen_gaji/edit/' . $k->id_komponen) ?>" class="btn btn-warning" title="Edit Komponen">
+											<div class="d-inline-flex gap-1" role="group">
+												<a href="<?php echo base_url('admin/komponen_gaji/edit/' . $k->id_komponen) ?>" class="btn btn-sm btn-warning" title="Edit Komponen">
 													<i class="fas fa-edit mr-1"></i> Edit
 												</a>
-												<a href="<?php echo base_url('admin/komponen_gaji/kelola_pegawai/' . $k->id_komponen) ?>" class="btn btn-info" title="Kelola Penyesuaian per Pegawai">
+												<a href="<?php echo base_url('admin/komponen_gaji/kelola_pegawai/' . $k->id_komponen) ?>" class="btn btn-sm btn-info" title="Kelola Penyesuaian per Pegawai">
 													<i class="fas fa-users mr-1"></i> Pegawai
 												</a>
-												<a href="<?php echo base_url('admin/komponen_gaji/hapus/' . $k->id_komponen) ?>" class="btn btn-danger btn-hapus" title="Hapus Komponen" data-nama="<?php echo htmlspecialchars($k->nama_komponen, ENT_QUOTES, 'UTF-8') ?>">
-													<i class="fas fa-trash"></i>
-												</a>
+												<form method="POST" action="<?php echo base_url('admin/komponen_gaji/hapus/' . $k->id_komponen) ?>" class="d-inline">
+													<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
+													<button type="submit" class="btn btn-sm btn-danger btn-hapus" title="Hapus Komponen" data-nama="<?php echo htmlspecialchars($k->nama_komponen, ENT_QUOTES, 'UTF-8') ?>">
+														<i class="fas fa-trash"></i>
+													</button>
+												</form>
 											</div>
 										</td>
 									</tr>
@@ -224,13 +228,16 @@
 											Rp <?php echo number_format($p->jml_potongan, 0, ',', '.') ?>
 										</td>
 										<td class="text-center align-middle">
-											<div class="btn-group btn-group-sm" role="group">
-												<button class="btn btn-warning" data-toggle="modal" data-target="#editModalPotongan<?php echo $p->id ?>" title="Edit Tarif">
+											<div class="d-inline-flex gap-1" role="group">
+												<button class="btn btn-sm btn-warning" data-toggle="modal" data-target="#editModalPotongan<?php echo $p->id ?>" title="Edit Tarif">
 													<i class="fas fa-edit mr-1"></i> Edit
 												</button>
-												<a class="btn btn-danger btn-hapus" href="<?php echo base_url('admin/komponen_gaji/delete_potongan/' . $p->id) ?>" data-nama="<?php echo htmlspecialchars($p->potongan, ENT_QUOTES, 'UTF-8') ?>" title="Hapus Tarif">
-													<i class="fas fa-trash"></i>
-												</a>
+												<form method="POST" action="<?php echo base_url('admin/komponen_gaji/delete_potongan/' . $p->id) ?>" class="d-inline">
+													<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
+													<button type="submit" class="btn btn-sm btn-danger btn-hapus" data-nama="<?php echo htmlspecialchars($p->potongan, ENT_QUOTES, 'UTF-8') ?>" title="Hapus Tarif">
+														<i class="fas fa-trash"></i>
+													</button>
+												</form>
 											</div>
 										</td>
 									</tr>

@@ -29,112 +29,25 @@ class Laporan extends CI_Controller {
 	}
 
 	public function cetak_gaji() {
-		$data['title'] = 'Cetak Laporan Gaji Pegawai';
 		$bulan = $this->input->get_post('bulan', TRUE) ?: date('m');
 		$tahun = $this->input->get_post('tahun', TRUE) ?: date('Y');
-		$bulantahun = $bulan . $tahun;
+		$payroll = $this->ModelPenggajian->hitung_payroll_bulan($bulan, $tahun, true);
 
-		$this->ModelAbsensiHarian->sinkron_ke_kehadiran($bulan, $tahun);
-		$data['potongan'] = $this->ModelPenggajian->get_data('potongan_gaji')->result();
-
-		$data['cetak_gaji'] = $this->db->query("
-			SELECT data_pegawai.nik, data_pegawai.nama_pegawai,
-				   data_pegawai.jenis_kelamin, data_jabatan.nama_jabatan, data_jabatan.gaji_pokok,
-				   data_jabatan.tj_transport, data_jabatan.uang_makan, data_kehadiran.alpha
-			FROM data_pegawai
-			INNER JOIN data_kehadiran ON data_kehadiran.nik = data_pegawai.nik
-			INNER JOIN data_jabatan ON data_jabatan.nama_jabatan = data_pegawai.jabatan
-			WHERE data_kehadiran.bulan = ?
-			GROUP BY data_pegawai.nik
-			ORDER BY data_pegawai.nama_pegawai ASC
-		", array($bulantahun))->result();
-
-		$data['komponen_per_pegawai'] = array();
-		foreach ($data['cetak_gaji'] as $g) {
-			$tunjangan        = $this->ModelKomponen->hitung_total_tunjangan($g->nik, $bulantahun, $g->gaji_pokok);
-			$potongan_dinamis = $this->ModelKomponen->hitung_total_potongan($g->nik, $bulantahun, $g->gaji_pokok);
-			$lembur           = $this->ModelPenggajian->hitung_uang_lembur($g->nik, $bulan, $tahun);
-			$pinjaman         = $this->ModelPenggajian->hitung_potongan_pinjaman($g->nik, $bulan, $tahun);
-
-			$data['komponen_per_pegawai'][$g->nik] = array(
-				'tunjangan'   => $tunjangan,
-				'potongan'    => $potongan_dinamis,
-				'uang_lembur' => $lembur['uang_lembur'],
-				'jam_lembur'  => $lembur['total_jam'],
-				'pinjaman'    => $pinjaman
-			);
-		}
-
-		$data['bulan'] = $bulan;
-		$data['tahun'] = $tahun;
+		$data['title']                = 'Cetak Laporan Gaji Pegawai';
+		$data['potongan']             = $payroll['potongan'];
+		$data['cetak_gaji']           = $payroll['rows'];
+		$data['komponen_per_pegawai'] = $payroll['komponen_per_pegawai'];
+		$data['bulan']                = $payroll['bulan'];
+		$data['tahun']                = $payroll['tahun'];
 
 		$this->load->view('admin/gaji/cetak_gaji', $data);
 	}
 
 	public function cetak_tahunan() {
-		$data['title'] = 'Cetak Laporan Gaji Tahunan';
 		$tahun = $this->input->get_post('tahun', TRUE) ?: date('Y');
-
-		$potongan_master = $this->ModelPenggajian->get_data('potongan_gaji')->result();
-		$alpha_deduction = 0;
-		foreach ($potongan_master as $pm) {
-			if (strtolower($pm->potongan) === 'alpha') {
-				$alpha_deduction = $pm->jml_potongan;
-			}
-		}
-
-		$pegawai = $this->db->query("
-			SELECT p.nik, p.nama_pegawai, j.nama_jabatan, j.gaji_pokok, j.tj_transport, j.uang_makan
-			FROM data_pegawai p
-			INNER JOIN data_jabatan j ON p.jabatan = j.nama_jabatan
-			ORDER BY p.nama_pegawai ASC
-		")->result();
-
-		$rekap_tahunan = array();
-		foreach ($pegawai as $p) {
-			$total_gaji      = 0;
-			$total_tunjangan = 0;
-			$total_potongan  = 0;
-			$total_lembur    = 0;
-			$total_bersih    = 0;
-
-			for ($i = 1; $i <= 12; $i++) {
-				$bulan_loop = str_pad($i, 2, '0', STR_PAD_LEFT);
-				$bulantahun = $bulan_loop . $tahun;
-				$kehadiran  = $this->db->query("SELECT alpha FROM data_kehadiran WHERE nik = ? AND bulan = ?", array($p->nik, $bulantahun))->row();
-
-				if ($kehadiran) {
-					$gaji_bln        = $p->gaji_pokok + $p->tj_transport + $p->uang_makan;
-					$total_gaji     += $gaji_bln;
-					$lembur          = $this->ModelPenggajian->hitung_uang_lembur($p->nik, $bulan_loop, $tahun);
-					$total_lembur   += $lembur['uang_lembur'];
-					$tj_dinamis      = $this->ModelKomponen->hitung_total_tunjangan($p->nik, $bulantahun, $p->gaji_pokok);
-					$total_tunjangan += $tj_dinamis['total'];
-					$pot_alpha       = $kehadiran->alpha * $alpha_deduction;
-					$pot_dinamis     = $this->ModelKomponen->hitung_total_potongan($p->nik, $bulantahun, $p->gaji_pokok);
-					$pinjaman        = $this->ModelPenggajian->hitung_potongan_pinjaman($p->nik, $bulan_loop, $tahun);
-					$pot_pinjaman    = isset($pinjaman['total']) ? (int)$pinjaman['total'] : 0;
-
-					$total_potongan += ($pot_alpha + $pot_dinamis['total'] + $pot_pinjaman);
-					$total_bersih   += ($gaji_bln + $lembur['uang_lembur'] + $tj_dinamis['total'] - ($pot_alpha + $pot_dinamis['total'] + $pot_pinjaman));
-				}
-			}
-
-			if ($total_bersih > 0) {
-				$rekap_tahunan[] = array(
-					'nik'            => $p->nik,
-					'nama_pegawai'   => $p->nama_pegawai,
-					'jabatan'        => $p->nama_jabatan,
-					'gaji_tunjangan' => $total_gaji + $total_tunjangan,
-					'uang_lembur'    => $total_lembur,
-					'potongan'       => $total_potongan,
-					'gaji_bersih'    => $total_bersih
-				);
-			}
-		}
-
+		$data['title'] = 'Cetak Laporan Gaji Tahunan';
 		$data['tahun'] = $tahun;
-		$data['rekap'] = $rekap_tahunan;
+		$data['rekap'] = $this->ModelPenggajian->hitung_payroll_tahunan($tahun);
 
 		$this->load->view('admin/gaji/cetak_laporan_tahunan', $data);
 	}
@@ -318,55 +231,39 @@ class Laporan extends CI_Controller {
 	public function export_gaji_csv() {
 		$bulan = $this->input->get_post('bulan', TRUE) ?: date('m');
 		$tahun = $this->input->get_post('tahun', TRUE) ?: date('Y');
-		$bulantahun = $bulan . $tahun;
-
-		$this->ModelAbsensiHarian->sinkron_ke_kehadiran($bulan, $tahun);
-		$potongan_master = $this->ModelPenggajian->get_data('potongan_gaji')->result();
-		$alpha_deduction = 0;
-		foreach ($potongan_master as $pm) {
-			if (strtolower($pm->potongan) === 'alpha') {
-				$alpha_deduction = (float)$pm->jml_potongan;
-			}
-		}
-
-		$list = $this->db->query("
-			SELECT data_pegawai.nik, data_pegawai.nama_pegawai, data_jabatan.nama_jabatan,
-				   data_jabatan.gaji_pokok, data_jabatan.tj_transport, data_jabatan.uang_makan, data_kehadiran.alpha
-			FROM data_pegawai
-			INNER JOIN data_kehadiran ON data_kehadiran.nik = data_pegawai.nik
-			INNER JOIN data_jabatan ON data_jabatan.nama_jabatan = data_pegawai.jabatan
-			WHERE data_kehadiran.bulan = ?
-			GROUP BY data_pegawai.nik
-			ORDER BY data_pegawai.nama_pegawai ASC
-		", array($bulantahun))->result();
+		$payroll = $this->ModelPenggajian->hitung_payroll_bulan($bulan, $tahun, true);
 
 		$rows = array();
 		$no = 1;
-		foreach ($list as $g) {
-			$tj   = $this->ModelKomponen->hitung_total_tunjangan($g->nik, $bulantahun, $g->gaji_pokok);
-			$pot  = $this->ModelKomponen->hitung_total_potongan($g->nik, $bulantahun, $g->gaji_pokok);
-			$lemb = $this->ModelPenggajian->hitung_uang_lembur($g->nik, $bulan, $tahun);
-			$pinj = $this->ModelPenggajian->hitung_potongan_pinjaman($g->nik, $bulan, $tahun);
-
-			$total_tunj = (float)$g->tj_transport + (float)$g->uang_makan + (float)$tj['total'];
-			$total_pot  = ((float)$g->alpha * $alpha_deduction) + (float)$pot['total'] + (float)$pinj['total'];
-			$thp        = (float)$g->gaji_pokok + $total_tunj + (float)$lemb['uang_lembur'] - $total_pot;
+		foreach ($payroll['rows'] as $g) {
+			$komp = $payroll['komponen_per_pegawai'][$g->nik];
+			$calc = Payroll_calculator::calculateSlip(array(
+				'gaji_pokok'        => $g->gaji_pokok,
+				'tj_transport'      => $g->tj_transport,
+				'uang_makan'        => $g->uang_makan,
+				'tunjangan_dinamis' => $komp['tunjangan']['total'],
+				'uang_lembur'       => $komp['uang_lembur'],
+				'alpha'             => $g->alpha,
+				'alpha_rate'        => $payroll['alpha_rate'],
+				'potongan_dinamis'  => $komp['potongan']['total'],
+				'potongan_pinjaman' => $komp['pinjaman']['total']
+			));
 
 			$rows[] = array(
 				$no++,
 				$g->nik,
 				$g->nama_pegawai,
 				$g->nama_jabatan,
-				$g->gaji_pokok,
-				$total_tunj,
-				$lemb['uang_lembur'],
-				$total_pot,
-				$thp
+				$calc['gaji_pokok'],
+				$calc['total_tunjangan'],
+				$calc['uang_lembur'],
+				$calc['total_potongan'],
+				$calc['gaji_bersih_raw']
 			);
 		}
 
 		$this->_output_csv(
-			'Laporan_Gaji_' . $bulan . '_' . $tahun . '.csv',
+			'Laporan_Gaji_' . $payroll['bulan'] . '_' . $payroll['tahun'] . '.csv',
 			array('No', 'NIK', 'Nama Pegawai', 'Jabatan', 'Gaji Pokok', 'Total Tunjangan', 'Uang Lembur', 'Total Potongan', 'Take Home Pay'),
 			$rows
 		);

@@ -17,11 +17,11 @@
     <!-- Quick Stats Metric Strip -->
     <div class="row mb-4">
         <div class="col-xl-3 col-md-6 mb-3">
-            <div class="card border-0 shadow-sm h-100 py-2" style="border-radius: 14px; border-left: 4px solid #0284c7 !important;">
+            <div class="card shadow-sm h-100 py-2">
                 <div class="card-body py-2 px-3">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Total Staf & Nakes</div>
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Total Staf &amp; Nakes</div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $total_pegawai; ?> Pegawai</div>
                         </div>
                         <div class="col-auto">
@@ -35,7 +35,7 @@
         </div>
 
         <div class="col-xl-3 col-md-6 mb-3">
-            <div class="card border-0 shadow-sm h-100 py-2" style="border-radius: 14px; border-left: 4px solid #f59e0b !important;">
+            <div class="card shadow-sm h-100 py-2">
                 <div class="card-body py-2 px-3">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
@@ -53,7 +53,7 @@
         </div>
 
         <div class="col-xl-3 col-md-6 mb-3">
-            <div class="card border-0 shadow-sm h-100 py-2" style="border-radius: 14px; border-left: 4px solid #6366f1 !important;">
+            <div class="card shadow-sm h-100 py-2">
                 <div class="card-body py-2 px-3">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
@@ -71,7 +71,7 @@
         </div>
 
         <div class="col-xl-3 col-md-6 mb-3">
-            <div class="card border-0 shadow-sm h-100 py-2" style="border-radius: 14px; border-left: 4px solid #10b981 !important;">
+            <div class="card shadow-sm h-100 py-2">
                 <div class="card-body py-2 px-3">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">

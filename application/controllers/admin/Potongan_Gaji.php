@@ -37,6 +37,7 @@ class Potongan_Gaji extends CI_Controller {
 				'jml_potongan' 	=> $jml_potongan,
 			);
 			$this->ModelPenggajian->insert_data($data, 'potongan_gaji');
+			$this->ModelAudit->catat('payroll', 'tambah_potongan', $potongan, 'Menambahkan tarif potongan ' . $potongan . ' sebesar Rp ' . number_format((float)$jml_potongan, 0, ',', '.'));
 			$this->session->set_flashdata('pesan','<div class="alert alert-success alert-dismissible fade show" role="alert">
 				<strong>Sukses!</strong> Data potongan berhasil ditambahkan.
 				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -86,8 +87,16 @@ class Potongan_Gaji extends CI_Controller {
 	}
 
 	public function delete_data($id) {
+		if (strtoupper((string)$this->input->method()) !== 'POST') {
+			redirect('admin/komponen_gaji?tab=potongan');
+			return;
+		}
+		$old = $this->db->get_where('potongan_gaji', array('id' => $id))->row();
 		$where = array('id' => $id);
 		$this->ModelPenggajian->delete_data($where, 'potongan_gaji');
+		if ($old) {
+			$this->ModelAudit->catat('payroll', 'hapus_potongan', $id, 'Menghapus tarif potongan ' . $old->potongan, $old, null);
+		}
 		$this->session->set_flashdata('pesan','<div class="alert alert-danger alert-dismissible fade show" role="alert">
 				<strong>Data berhasil dihapus!</strong>
 				<button type="button" class="close" data-dismiss="alert" aria-label="Close">

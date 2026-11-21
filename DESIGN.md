@@ -69,3 +69,28 @@ Setiap peran memiliki pekerjaan utama dan frekuensi penggunaan yang berbeda, seh
   - Pratinjau arsitektur 3 portal interaktif diletakkan di pusat halaman agar pembeda proyek langsung terlihat.
   - Ilustrasi aset proyek (`payroll.svg`, `administrator.svg`, `others-fitur.svg`) disertakan atas permintaan pemilik proyek dalam bingkai matte archival `.lp-illus-frame` yang menjaga keterbacaan di Light maupun Dark Mode dan terhubung langsung pada konteks Hero/Payroll, Panel Admin HRD, serta Panel Kolaborasi & FAQ.
 
+---
+
+## 5. Portal Autentikasi Terpadu (`login.php`, `lupa_password.php`, `reset_password.php`)
+
+- **Design Read**: Gerbang autentikasi Single Sign-On dan pemulihan kata sandi bergaya editorial-klinis tanpa ketergantungan template admin generik.
+- **Dial**: `ENERGY 2 / RHYTHM 2 / MOTION 1`
+- **Stylesheet Bersama**: `assets/css/auth-portal.css` (menghapus `sb-admin-2.min.css` dan ratusan baris CSS inline yang sebelumnya terduplikasi di 3 file).
+- **Keputusan & Konsistensi (R-09, R-19, R-36)**:
+  - Menghapus elemen dekoratif menyesatkan seperti pill berdenyut (`SSL 256-Bit`) pada halaman autentikasi.
+  - Quick Demo Chips pada halaman login dikendalikan oleh konfigurasi `$config['show_demo_chips']` dan hanya tampil pada lingkungan non-produksi.
+  - Kunci sitekey Google reCAPTCHA v2 dimuat dinamis dari `application/config/app_security.php`.
+  - Kebijakan panjang kata sandi seragam minimal 8 karakter (`reset_password.php`, `lupa_password.php`, dan seluruh halaman ganti kata sandi).
+
+---
+
+## 6. Penyelarasan Portal Admin & Halaman Error (`admin-portal.css`, `admin/dashboard.php`, `errors/html/*`)
+
+- **Design Read**: Antarmuka backoffice HRD berbasis kertas klinis hangat (`#F6F4EF` / `#FFFDF9`) dan sidebar navy kontras tinggi (`#142233`) yang selaras dengan Portal Pegawai, Portal Pimpinan, dan Landing Page.
+- **Perbaikan Struktural**:
+  - Ekstraksi CSS dari `template_admin/header.php` ke stylesheet tercache `assets/css/admin-portal.css`.
+  - Penghapusan aksen garis kiri kartu dekoratif (`.border-left-*`) dan penguatan kontras label sidebar serta tabel/kartu pada Light & Dark Mode.
+  - Penambahan panel analitik **Estimasi Payroll Bulan Ini**, **Grafik Tren Beban Penggajian 6 Bulan**, dan **Audit Log Terbaru** pada `admin/dashboard.php`.
+  - Pembaruan halaman galat (`error_404.php`, `error_db.php`, `error_general.php`) dengan identitas Klinik Hidayatullah, dukungan Dark Mode, serta penyembunyian rincian teknis saat `ENVIRONMENT === 'production'`.
+
+

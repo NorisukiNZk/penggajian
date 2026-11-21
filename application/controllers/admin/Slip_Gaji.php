@@ -1,4 +1,5 @@
 <?php
+defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Slip_Gaji extends CI_Controller {
 
@@ -12,14 +13,14 @@ class Slip_Gaji extends CI_Controller {
 				<span aria-hidden="true">&times;</span>
 				</button>
 				</div>');
-				redirect('login');
+			redirect('login');
 		}
 	}
 
-	public function index() 
+	public function index()
 	{
 		$data['title'] = "Slip Gaji Pegawai";
-		$data['pegawai'] = $this->ModelPenggajian->get_data('data_pegawai')-> result();
+		$data['pegawai'] = $this->ModelPenggajian->get_data('data_pegawai')->result();
 
 		$this->load->view('template_admin/header', $data);
 		$this->load->view('template_admin/sidebar');
@@ -27,53 +28,51 @@ class Slip_Gaji extends CI_Controller {
 		$this->load->view('template_admin/footer');
 	}
 
-	public function cetak_slip_gaji(){
+	private function _prepare_slip_data()
+	{
+		$nama  = $this->input->get_post('nama_pegawai', TRUE);
+		$nik   = $this->input->get_post('nik', TRUE);
+		$bulan = $this->input->get_post('bulan', TRUE) ?: date('m');
+		$tahun = $this->input->get_post('tahun', TRUE) ?: date('Y');
 
-	$data['title'] = "Cetak Laporan Absensi Pegawai";
-	$data['potongan'] = $this->ModelPenggajian->get_data('potongan_gaji')-> result();
-	$nama = $this->input->post('nama_pegawai', TRUE) ? $this->input->post('nama_pegawai', TRUE) : $this->input->get('nama_pegawai', TRUE);
-	$nik = $this->input->post('nik', TRUE) ? $this->input->post('nik', TRUE) : $this->input->get('nik', TRUE);
-	$bulan = $this->input->post('bulan', TRUE) ? $this->input->post('bulan', TRUE) : $this->input->get('bulan', TRUE);
-	$tahun = $this->input->post('tahun', TRUE) ? $this->input->post('tahun', TRUE) : $this->input->get('tahun', TRUE);
-	$bulantahun = $bulan . $tahun;
+		$target_nik = $nik;
+		if (empty($target_nik) && !empty($nama)) {
+			$row = $this->db->get_where('data_pegawai', array('nama_pegawai' => $nama))->row();
+			if ($row) {
+				$target_nik = $row->nik;
+			}
+		}
 
-	if (!empty($bulan) && !empty($tahun)) {
-		$this->ModelAbsensiHarian->sinkron_ke_kehadiran($bulan, $tahun);
-	}
+		$payroll = $this->ModelPenggajian->hitung_payroll_bulan($bulan, $tahun, true, $target_nik ?: '__NONE__');
 
-	if (!empty($nik)) {
-		$data['print_slip'] = $this->db->query("SELECT data_pegawai.nik,data_pegawai.nama_pegawai,data_jabatan.nama_jabatan,data_jabatan.gaji_pokok,data_jabatan.tj_transport,data_jabatan.uang_makan,data_kehadiran.alpha,data_kehadiran.bulan FROM data_pegawai INNER JOIN data_kehadiran ON data_kehadiran.nik=data_pegawai.nik
-			INNER JOIN data_jabatan ON data_jabatan.nama_jabatan=data_pegawai.jabatan
-			WHERE data_kehadiran.bulan=? AND data_pegawai.nik=?", array($bulantahun, $nik))->result();
-	} else {
-		$data['print_slip'] = $this->db->query("SELECT data_pegawai.nik,data_pegawai.nama_pegawai,data_jabatan.nama_jabatan,data_jabatan.gaji_pokok,data_jabatan.tj_transport,data_jabatan.uang_makan,data_kehadiran.alpha,data_kehadiran.bulan FROM data_pegawai INNER JOIN data_kehadiran ON data_kehadiran.nik=data_pegawai.nik
-			INNER JOIN data_jabatan ON data_jabatan.nama_jabatan=data_pegawai.jabatan
-			WHERE data_kehadiran.bulan=? AND data_kehadiran.nama_pegawai=?", array($bulantahun, $nama))->result();
-	}
-
-	// Komponen dinamis per pegawai
-	$data['komponen_per_pegawai'] = array();
-	foreach ($data['print_slip'] as $ps) {
-		$tunjangan = $this->ModelKomponen->hitung_total_tunjangan($ps->nik, $bulantahun, $ps->gaji_pokok);
-		$potongan_dinamis = $this->ModelKomponen->hitung_total_potongan($ps->nik, $bulantahun, $ps->gaji_pokok);
-		
-		// Hitung Lembur
-		$lembur = $this->ModelPenggajian->hitung_uang_lembur($ps->nik, $bulan, $tahun);
-
-        // Hitung Pinjaman
-        $pinjaman = $this->ModelPenggajian->hitung_potongan_pinjaman($ps->nik, $bulan, $tahun);
-
-		$data['komponen_per_pegawai'][$ps->nik] = array(
-			'tunjangan'   => $tunjangan,
-			'potongan'    => $potongan_dinamis,
-			'uang_lembur' => $lembur['uang_lembur'],
-			'jam_lembur'  => $lembur['total_jam'],
-            'pinjaman'    => $pinjaman
+		return array(
+			'title'                => 'Slip Gaji Resmi Pegawai',
+			'potongan'             => $payroll['potongan'],
+			'print_slip'           => $payroll['rows'],
+			'komponen_per_pegawai' => $payroll['komponen_per_pegawai'],
+			'bulan'                => $payroll['bulan'],
+			'tahun'                => $payroll['tahun']
 		);
 	}
 
-	$this->load->view('template_admin/header',$data);
-	$this->load->view('admin/gaji/cetak_slip_gaji', $data);
+	public function cetak_slip_gaji()
+	{
+		$data = $this->_prepare_slip_data();
+		$this->load->view('template_admin/header', $data);
+		$this->load->view('admin/gaji/cetak_slip_gaji', $data);
+	}
+
+	public function download_pdf()
+	{
+		$data = $this->_prepare_slip_data();
+		if (empty($data['print_slip'])) {
+			$this->session->set_flashdata('pesan', '<div class="alert alert-warning alert-dismissible fade show" role="alert"><strong>Slip Tidak Ditemukan!</strong> Data absensi/gaji pegawai pada periode tersebut belum tersedia.<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+			redirect('admin/slip_gaji');
+			return;
+		}
+		$this->load->library('pdf_exporter');
+		$html = $this->load->view('pdf/slip_gaji', $data, true);
+		$nik  = $data['print_slip'][0]->nik;
+		$this->pdf_exporter->stream($html, 'Slip_Gaji_' . $nik . '_' . $data['bulan'] . '_' . $data['tahun'], 'A4', 'portrait', true);
 	}
 }
-?>

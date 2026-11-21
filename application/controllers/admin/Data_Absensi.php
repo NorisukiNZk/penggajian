@@ -1,112 +1,29 @@
 <?php
+defined('BASEPATH') OR exit('No direct script access allowed');
 
+/**
+ * Controller warisan (legacy) Data_Absensi.
+ * Dipertahankan hanya sebagai pengalihan aman agar tautan lama tetap mengarah
+ * ke modul modern Absensi Harian & Rekap Bulanan.
+ */
 class Data_Absensi extends CI_Controller {
 
-	public function __construct(){
+	public function __construct()
+	{
 		parent::__construct();
 
-		if($this->session->userdata('hak_akses') != '1'){
-			$this->session->set_flashdata('pesan','<div class="alert alert-danger alert-dismissible fade show" role="alert">
-				<strong>Anda Belum Login!</strong>
-				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-				<span aria-hidden="true">&times;</span>
-				</button>
-				</div>');
-				redirect('login');
+		if ($this->session->userdata('hak_akses') != '1') {
+			redirect('login');
 		}
 	}
-	
-	public function index() 
+
+	public function index()
 	{
-		$data['title'] = "Data Absensi Pegawai";
-
-		$bulan = $this->input->get('bulan', TRUE);
-		$tahun = $this->input->get('tahun', TRUE);
-		if(!empty($bulan) && !empty($tahun)){
-			$bulantahun = $bulan.$tahun;
-		}else{
-			$bulan = date('m');
-			$tahun = date('Y');
-			$bulantahun = $bulan.$tahun;
-		}
-
-		// Otomatis sinkronkan absensi harian ke data_kehadiran secara realtime
-		$this->ModelAbsensiHarian->sinkron_ke_kehadiran($bulan, $tahun);
-
-		$data['absensi'] = $this->db->query("SELECT data_kehadiran.*, data_pegawai.nama_pegawai, data_pegawai.jenis_kelamin, data_pegawai.jabatan
-			FROM data_kehadiran
-			INNER JOIN data_pegawai ON data_kehadiran.nik= data_pegawai.nik
-			INNER JOIN data_jabatan ON data_pegawai.jabatan = data_jabatan.nama_jabatan
-			WHERE data_kehadiran.bulan=? ORDER BY data_pegawai.nama_pegawai ASC", array($bulantahun))->result();
-
-		$this->load->view('template_admin/header', $data);
-		$this->load->view('template_admin/sidebar');
-		$this->load->view('admin/absensi/data_absensi', $data);
-		$this->load->view('template_admin/footer');
+		redirect('admin/absensi_harian/rekap');
 	}
 
 	public function input_absensi()
 	{
-		if($this->input->post('submit', TRUE) == 'submit') {
-			$post = $this->input->post();
-			$simpan = array();
-
-			if (!empty($post['bulan']) && is_array($post['bulan'])) {
-				foreach ($post['bulan'] as $key => $value) {
-					if(!empty($post['bulan'][$key]) && !empty($post['nik'][$key]))
-					{
-						$simpan[] = array(
-							'bulan'			=> $post['bulan'][$key],
-							'nik'			=> $post['nik'][$key],
-							'nama_pegawai'	=> $post['nama_pegawai'][$key],
-							'jenis_kelamin'	=> $post['jenis_kelamin'][$key],
-							'nama_jabatan'	=> $post['nama_jabatan'][$key],
-							'hadir'			=> (int)$post['hadir'][$key],
-							'sakit'			=> (int)$post['sakit'][$key],
-							'alpha'			=> (int)$post['alpha'][$key],
-						);
-					}
-				}
-			}
-
-			if (!empty($simpan)) {
-				$this->ModelPenggajian->insert_batch('data_kehadiran', $simpan);
-				$this->session->set_flashdata('pesan','<div class="alert alert-success alert-dismissible fade show" role="alert">
-					<strong>Data berhasil ditambahkan!</strong>
-					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-					</button>
-					</div>');
-			} else {
-				$this->session->set_flashdata('pesan','<div class="alert alert-warning alert-dismissible fade show" role="alert">
-					<strong>Tidak ada data yang disimpan!</strong> Semua pegawai pada periode ini sudah memiliki data kehadiran atau tidak ada data yang dipilih.
-					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-					</button>
-					</div>');
-			}
-			redirect('admin/data_absensi');
-
-		}
-
-		$data['title'] = "Form Input Absensi";
-
-		$bulan = $this->input->get('bulan', TRUE);
-		$tahun = $this->input->get('tahun', TRUE);
-		if(!empty($bulan) && !empty($tahun)){
-			$bulantahun = $bulan.$tahun;
-		}else{
-			$bulan = date('m');
-			$tahun = date('Y');
-			$bulantahun = $bulan.$tahun;
-		}
-		$data['input_absensi'] = $this->db->query("SELECT data_pegawai.*, data_jabatan.nama_jabatan FROM data_pegawai
-			INNER JOIN data_jabatan ON data_pegawai.jabatan = data_jabatan.nama_jabatan
-			WHERE NOT EXISTS (SELECT * FROM data_kehadiran WHERE bulan=? AND data_pegawai.nik=data_kehadiran.nik) ORDER BY data_pegawai.nama_pegawai ASC", array($bulantahun))->result();
-		$this->load->view('template_admin/header', $data);
-		$this->load->view('template_admin/sidebar');
-		$this->load->view('admin/absensi/tambah_dataAbsensi', $data);
-		$this->load->view('template_admin/footer');
+		redirect('admin/absensi_harian');
 	}
 }
-?>

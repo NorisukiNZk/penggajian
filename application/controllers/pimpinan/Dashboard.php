@@ -98,93 +98,16 @@ class Dashboard extends CI_Controller {
 		$data['count_pending_pinjaman'] = $q_p ? (int)$q_p->total : 0;
 		$data['total_pending']          = $data['count_pending_cuti'] + $data['count_pending_lembur'] + $data['count_pending_pinjaman'];
 
-		// 4. Tren Kehadiran 6 Bulan Terakhir (Chart.js)
-		$trend_query = $this->db->query("
-			SELECT bulan, SUM(hadir) AS total_hadir, SUM(sakit) AS total_sakit, SUM(alpha) AS total_alpha
-			FROM data_kehadiran
-			GROUP BY bulan
-			ORDER BY STR_TO_DATE(CONCAT('01', bulan), '%d%m%Y') DESC
-			LIMIT 6
-		")->result();
-		$trend_query = array_reverse($trend_query);
-
-		$nama_bulan  = array('01'=>'Jan','02'=>'Feb','03'=>'Mar','04'=>'Apr','05'=>'Mei','06'=>'Jun','07'=>'Jul','08'=>'Agt','09'=>'Sep','10'=>'Okt','11'=>'Nov','12'=>'Des');
-		$label_bulan = array();
-		$trend_hadir = array();
-		$trend_sakit = array();
-		$trend_alpha = array();
-
-		foreach ($trend_query as $tq) {
-			$b = substr($tq->bulan, 0, 2);
-			$y = substr($tq->bulan, 2, 4);
-			$label_bulan[] = (isset($nama_bulan[$b]) ? $nama_bulan[$b] : $b) . ' ' . $y;
-			$trend_hadir[] = (int)$tq->total_hadir;
-			$trend_sakit[] = (int)$tq->total_sakit;
-			$trend_alpha[] = (int)$tq->total_alpha;
-		}
-		$data['label_bulan'] = json_encode($label_bulan);
-		$data['trend_hadir'] = json_encode($trend_hadir);
-		$data['trend_sakit'] = json_encode($trend_sakit);
-		$data['trend_alpha'] = json_encode($trend_alpha);
-
-		// 4B. Tren Pengeluaran Payroll 6 Bulan Terakhir (Data Aktual)
-		$potongan_master = $this->ModelPenggajian->get_data('potongan_gaji')->result();
-		$alpha_deduction = 0;
-		foreach ($potongan_master as $pm) {
-			if (strtolower($pm->potongan) === 'alpha') {
-				$alpha_deduction = (float)$pm->jml_potongan;
-			}
-		}
-
-		$payroll_labels   = array();
-		$payroll_bersih   = array();
-		$payroll_lembur   = array();
-		$payroll_potongan = array();
-
-		foreach ($trend_query as $tq) {
-			$bln_code = $tq->bulan;
-			$b = substr($bln_code, 0, 2);
-			$y = substr($bln_code, 2, 4);
-			$payroll_labels[] = (isset($nama_bulan[$b]) ? $nama_bulan[$b] : $b) . ' ' . $y;
-
-			$rows_gaji = $this->db->query("
-				SELECT p.nik, j.gaji_pokok, j.tj_transport, j.uang_makan, k.alpha
-				FROM data_kehadiran k
-				INNER JOIN data_pegawai p ON k.nik = p.nik
-				INNER JOIN data_jabatan j ON p.jabatan = j.nama_jabatan
-				WHERE k.bulan = ?
-				GROUP BY p.nik
-			", array($bln_code))->result();
-
-			$sum_bersih   = 0;
-			$sum_lembur   = 0;
-			$sum_potongan = 0;
-
-			foreach ($rows_gaji as $rg) {
-				$tj_din  = $this->ModelKomponen->hitung_total_tunjangan($rg->nik, $bln_code, $rg->gaji_pokok);
-				$pot_din = $this->ModelKomponen->hitung_total_potongan($rg->nik, $bln_code, $rg->gaji_pokok);
-				$lemb    = $this->ModelPenggajian->hitung_uang_lembur($rg->nik, $b, $y);
-				$pinj    = $this->ModelPenggajian->hitung_potongan_pinjaman($rg->nik, $b, $y);
-
-				$tunj_tot = (float)$rg->tj_transport + (float)$rg->uang_makan + (float)$tj_din['total'];
-				$lemb_tot = (float)$lemb['uang_lembur'];
-				$pot_tot  = ((float)$rg->alpha * $alpha_deduction) + (float)$pot_din['total'] + (float)$pinj['total'];
-				$thp      = max(0, (float)$rg->gaji_pokok + $tunj_tot + $lemb_tot - $pot_tot);
-
-				$sum_bersih   += $thp;
-				$sum_lembur   += $lemb_tot;
-				$sum_potongan += $pot_tot;
-			}
-
-			$payroll_bersih[]   = round($sum_bersih);
-			$payroll_lembur[]   = round($sum_lembur);
-			$payroll_potongan[] = round($sum_potongan);
-		}
-
-		$data['payroll_labels']   = json_encode($payroll_labels);
-		$data['payroll_bersih']   = json_encode($payroll_bersih);
-		$data['payroll_lembur']   = json_encode($payroll_lembur);
-		$data['payroll_potongan'] = json_encode($payroll_potongan);
+		// 4. Tren Kehadiran & Pengeluaran Payroll 6 Bulan Terakhir (Terpusat)
+		$tren = $this->ModelPenggajian->hitung_tren_6_bulan();
+		$data['label_bulan']      = json_encode($tren['labels']);
+		$data['trend_hadir']      = json_encode($tren['hadir']);
+		$data['trend_sakit']      = json_encode($tren['sakit']);
+		$data['trend_alpha']      = json_encode($tren['alpha']);
+		$data['payroll_labels']   = json_encode($tren['labels']);
+		$data['payroll_bersih']   = json_encode($tren['payroll_bersih']);
+		$data['payroll_lembur']   = json_encode($tren['payroll_lembur']);
+		$data['payroll_potongan'] = json_encode($tren['payroll_potongan']);
 
 		// 5. Komposisi Staf per Jabatan & Jadwal Libur Terdekat
 		$data['komposisi_jabatan'] = $this->db->query("

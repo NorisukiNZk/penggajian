@@ -25,6 +25,28 @@
   </a>
 </div>
 
+<?php
+  $status_options = array(
+    'semua'     => 'Semua Status',
+    'menunggu'  => 'Menunggu Keputusan',
+    'disetujui' => 'Disetujui',
+    'ditolak'   => 'Ditolak',
+  );
+  $current_status = isset($status_filter) ? $status_filter : 'semua';
+?>
+<div class="d-flex flex-wrap align-items-center justify-content-between mb-3 pb-2" style="gap: 0.5rem; border-bottom: 1px solid var(--exec-border);">
+  <span class="small font-weight-bold text-muted text-uppercase" style="letter-spacing: 0.05em;">Filter Status:</span>
+  <div class="d-flex flex-wrap" style="gap: 0.4rem;" role="group" aria-label="Filter status pengajuan">
+    <?php foreach ($status_options as $st_key => $st_label) : ?>
+      <?php $is_st_active = ($current_status === $st_key); ?>
+      <a href="<?php echo base_url('pimpinan/persetujuan?tab=' . urlencode($active_tab) . '&status=' . urlencode($st_key)); ?>"
+         class="btn btn-sm <?php echo $is_st_active ? 'btn-exec-primary' : 'btn-exec-outline'; ?>">
+        <?php echo $st_label; ?>
+      </a>
+    <?php endforeach; ?>
+  </div>
+</div>
+
 <?php if ($active_tab === 'cuti') : ?>
   <!-- TAB 1: PERSETUJUAN CUTI -->
   <div class="exec-panel">
@@ -80,9 +102,9 @@
                       <div class="small text-muted mt-1"><strong>Telaah HRD:</strong> <?php echo htmlspecialchars($c->catatan_hrd, ENT_QUOTES, 'UTF-8'); ?></div>
                     <?php endif; ?>
                     <?php if (!empty($c->file_lampiran)) : ?>
-                      <a href="<?php echo base_url('uploads/cuti/' . $c->file_lampiran); ?>" target="_blank" class="small font-weight-bold d-inline-block mt-1" style="color: var(--exec-accent);">
-                        <i class="fas fa-paperclip"></i> Lihat Lampiran
-                      </a>
+                      <button type="button" class="btn btn-link btn-sm p-0 mt-1 font-weight-bold btn-exec-preview" data-title="Lampiran Cuti - <?php echo htmlspecialchars($c->nama_pegawai, ENT_QUOTES, 'UTF-8'); ?>" data-url="<?php echo base_url('uploads/cuti/' . $c->file_lampiran); ?>" style="color: var(--exec-accent); min-height: 28px;">
+                        <i class="fas fa-paperclip"></i> Pratinjau Lampiran
+                      </button>
                     <?php endif; ?>
                   </td>
                   <td>
@@ -163,9 +185,14 @@
                         </div>
                       </div>
                     <?php elseif ($c->status_cuti === 'Disetujui') : ?>
-                      <a href="<?php echo base_url('pimpinan/persetujuan/cetak_surat_cuti/' . $c->id_cuti); ?>" target="_blank" class="btn btn-sm btn-exec-outline">
-                        <i class="fas fa-print"></i> Cetak SK
-                      </a>
+                      <div class="d-flex flex-wrap justify-content-center" style="gap: 0.35rem;">
+                        <a href="<?php echo base_url('pimpinan/persetujuan/cetak_surat_cuti/' . $c->id_cuti); ?>" target="_blank" class="btn btn-sm btn-exec-outline">
+                          <i class="fas fa-print"></i> SK
+                        </a>
+                        <a href="<?php echo base_url('pimpinan/persetujuan/download_cuti_pdf/' . $c->id_cuti); ?>" class="btn btn-sm btn-exec-primary" title="Unduh Surat Keputusan Cuti PDF">
+                          <i class="fas fa-file-pdf"></i> PDF
+                        </a>
+                      </div>
                     <?php else : ?>
                       <span class="small text-muted">Selesai</span>
                     <?php endif; ?>
@@ -306,10 +333,14 @@
                   <td style="max-width: 240px;">
                     <div class="small"><?php echo htmlspecialchars($p->alasan, ENT_QUOTES, 'UTF-8'); ?></div>
                     <?php if (!empty($p->file_ktp)) : ?>
-                      <a href="<?php echo base_url('uploads/pinjaman/' . $p->file_ktp); ?>" target="_blank" class="small font-weight-bold mr-2" style="color: var(--exec-accent);">KTP</a>
+                      <button type="button" class="btn btn-link btn-sm p-0 mr-2 font-weight-bold btn-exec-preview" data-title="Berkas KTP - <?php echo htmlspecialchars($p->nama_pegawai, ENT_QUOTES, 'UTF-8'); ?>" data-url="<?php echo base_url('uploads/pinjaman/' . $p->file_ktp); ?>" style="color: var(--exec-accent); min-height: 28px;">
+                        <i class="fas fa-id-card"></i> KTP
+                      </button>
                     <?php endif; ?>
                     <?php if (!empty($p->file_jaminan)) : ?>
-                      <a href="<?php echo base_url('uploads/pinjaman/' . $p->file_jaminan); ?>" target="_blank" class="small font-weight-bold" style="color: var(--exec-accent);">Jaminan</a>
+                      <button type="button" class="btn btn-link btn-sm p-0 font-weight-bold btn-exec-preview" data-title="Berkas Jaminan - <?php echo htmlspecialchars($p->nama_pegawai, ENT_QUOTES, 'UTF-8'); ?>" data-url="<?php echo base_url('uploads/pinjaman/' . $p->file_jaminan); ?>" style="color: var(--exec-accent); min-height: 28px;">
+                        <i class="fas fa-file-shield"></i> Jaminan
+                      </button>
                     <?php endif; ?>
                   </td>
                   <td>
@@ -385,9 +416,14 @@
                         </div>
                       </div>
                     <?php elseif ($p->status === 'Disetujui' || $p->status === 'Lunas') : ?>
-                      <a href="<?php echo base_url('pimpinan/persetujuan/cetak_sppk/' . $p->id_pinjaman); ?>" target="_blank" class="btn btn-sm btn-exec-outline">
-                        <i class="fas fa-print"></i> Cetak SPPK
-                      </a>
+                      <div class="d-flex flex-wrap justify-content-center" style="gap: 0.35rem;">
+                        <a href="<?php echo base_url('pimpinan/persetujuan/cetak_sppk/' . $p->id_pinjaman); ?>" target="_blank" class="btn btn-sm btn-exec-outline">
+                          <i class="fas fa-print"></i> SPPK
+                        </a>
+                        <a href="<?php echo base_url('pimpinan/persetujuan/download_sppk_pdf/' . $p->id_pinjaman); ?>" class="btn btn-sm btn-exec-primary" title="Unduh Surat Perjanjian Pinjaman PDF">
+                          <i class="fas fa-file-pdf"></i> PDF
+                        </a>
+                      </div>
                     <?php else : ?>
                       <span class="small text-muted">Selesai</span>
                     <?php endif; ?>
@@ -401,3 +437,44 @@
     </div>
   </div>
 <?php endif; ?>
+
+<!-- Modal Pratinjau Lampiran In-Page (Cuti / KTP / Jaminan) -->
+<div class="modal fade" id="modalExecPreview" tabindex="-1" role="dialog" aria-labelledby="modalExecPreviewTitle" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title font-weight-bold" id="modalExecPreviewTitle">Pratinjau Dokumen</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Tutup">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body text-center" id="modalExecPreviewBody"></div>
+      <div class="modal-footer">
+        <a id="modalExecPreviewLink" href="#" target="_blank" rel="noopener" class="btn btn-sm btn-exec-outline">
+          <i class="fas fa-arrow-up-right-from-square"></i> Buka di Tab Baru
+        </a>
+        <button type="button" class="btn btn-sm btn-exec-primary" data-dismiss="modal">Tutup</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  if (!window.jQuery) return;
+  var $ = window.jQuery;
+  $(document).on('click', '.btn-exec-preview', function() {
+    var title = $(this).data('title') || 'Pratinjau Dokumen';
+    var url   = $(this).data('url') || '';
+    $('#modalExecPreviewTitle').text(title);
+    $('#modalExecPreviewLink').attr('href', url);
+
+    if (url.toLowerCase().endsWith('.pdf')) {
+      $('#modalExecPreviewBody').html('<iframe src="' + url + '" style="width:100%; height:480px; border:1px solid var(--exec-border); border-radius:6px;" title="' + title.replace(/"/g, '&quot;') + '"></iframe>');
+    } else {
+      $('#modalExecPreviewBody').html('<img src="' + url + '" alt="' + title.replace(/"/g, '&quot;') + '" class="img-fluid rounded border" style="max-height:480px; border-color: var(--exec-border);">');
+    }
+    $('#modalExecPreview').modal('show');
+  });
+});
+</script>

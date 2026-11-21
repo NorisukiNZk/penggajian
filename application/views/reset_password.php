@@ -4,11 +4,10 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title><?php echo isset($title) ? $title : 'Atur Ulang Password | HRIS Klinik Pratama Dr. H.M. Hidayatullah'; ?></title>
-  <meta name="description" content="Portal Pembaruan Kata Sandi HRIS Klinik Pratama Dr. H.M. Hidayatullah Banjarbaru.">
+  <title>Buat Kata Sandi Baru | HRIS Klinik Pratama Dr. H.M. Hidayatullah</title>
+  <meta name="description" content="Tahap Pembaruan Kata Sandi Baru Akun Kepegawaian HRIS Klinik Pratama Dr. H.M. Hidayatullah Banjarbaru.">
 
-  <!-- Favicon -->
-  <link rel="shortcut icon" href="<?php echo base_url(); ?>assets/img/kpmh.png" type="image/x-icon">
+  <link rel="shortcut icon" href="<?php echo base_url('assets/img/kpmh.png'); ?>" type="image/png">
 
   <!-- Pre-render Theme Check (Anti-FOUC) -->
   <script>
@@ -17,812 +16,16 @@
     }
   </script>
 
-  <!-- Google Fonts: Plus Jakarta Sans -->
+  <!-- Typography: Source Serif 4 + Plus Jakarta Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&display=swap" rel="stylesheet">
 
   <!-- FontAwesome 6 Free -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-  <!-- Base Stylesheet (SB Admin 2) -->
-  <link href="<?php echo base_url(); ?>assets/css/sb-admin-2.min.css" rel="stylesheet">
-
-  <style>
-    /* =========================================================
-       DESIGN SYSTEM TOKENS (LIGHT & DARK MODE)
-       ========================================================= */
-    :root {
-      --font-main: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      --navy-deep: #061528;
-      --navy-main: #0c2b4d;
-      --navy-light: #164070;
-      --sky-main: #0284c7;
-      --sky-hover: #0369a1;
-      --sky-light: #f0f9ff;
-      --sky-glow: rgba(2, 132, 199, 0.18);
-      
-      --bg-page: #f8fafc;
-      --bg-mesh-1: rgba(14, 165, 233, 0.08);
-      --bg-mesh-2: rgba(12, 43, 77, 0.07);
-      
-      --card-bg: #ffffff;
-      --card-border: rgba(226, 232, 240, 0.95);
-      --card-shadow: 0 25px 60px -15px rgba(12, 43, 77, 0.16), 0 10px 25px -5px rgba(12, 43, 77, 0.05);
-      
-      --text-title: #0f172a;
-      --text-body: #334155;
-      --text-muted: #64748b;
-      
-      --input-bg: #f8fafc;
-      --input-border: #e2e8f0;
-      --input-text: #0f172a;
-      --input-hover-border: #cbd5e1;
-      --input-focus-border: #0284c7;
-      
-      --emerald-accent: #10b981;
-      --amber-accent: #f59e0b;
-      --rose-accent: #f43f5e;
-      --topbar-bg: rgba(255, 255, 255, 0.85);
-      --topbar-border: rgba(226, 232, 240, 0.8);
-      
-      --verified-box-bg: #f8fafc;
-      --verified-box-border: #e2e8f0;
-    }
-
-    html.dark-mode {
-      --bg-page: #070d18;
-      --bg-mesh-1: rgba(14, 165, 233, 0.05);
-      --bg-mesh-2: rgba(15, 23, 42, 0.6);
-      
-      --card-bg: #0f1c2e;
-      --card-border: rgba(51, 65, 85, 0.6);
-      --card-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.6), 0 10px 30px -5px rgba(0, 0, 0, 0.4);
-      
-      --text-title: #f8fafc;
-      --text-body: #cbd5e1;
-      --text-muted: #94a3b8;
-      
-      --input-bg: #142338;
-      --input-border: #1e3a5f;
-      --input-text: #f8fafc;
-      --input-hover-border: #2563eb;
-      --input-focus-border: #38bdf8;
-      
-      --topbar-bg: rgba(15, 28, 46, 0.85);
-      --topbar-border: rgba(51, 65, 85, 0.5);
-      
-      --verified-box-bg: #132237;
-      --verified-box-border: #1e3a5f;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: var(--font-main) !important;
-      background-color: var(--bg-page);
-      background-image: 
-        radial-gradient(at 0% 0%, var(--bg-mesh-1) 0px, transparent 50%),
-        radial-gradient(at 100% 100%, var(--bg-mesh-2) 0px, transparent 50%);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      margin: 0;
-      padding: 1.5rem 1rem 2rem;
-      color: var(--text-body);
-      -webkit-font-smoothing: antialiased;
-      transition: background-color 0.3s ease, color 0.3s ease;
-    }
-
-    /* Top Floating Utility Bar */
-    .top-utility-bar {
-      width: 100%;
-      max-width: 1020px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 1.25rem;
-      padding: 0 0.25rem;
-    }
-
-    .btn-utility-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-size: 0.84rem;
-      font-weight: 700;
-      color: var(--text-muted);
-      text-decoration: none;
-      padding: 0.45rem 0.95rem;
-      background: var(--topbar-bg);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      border: 1px solid var(--topbar-border);
-      border-radius: 999px;
-      transition: all 0.2s ease;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-    }
-
-    .btn-utility-link:hover {
-      color: var(--sky-main);
-      border-color: var(--sky-main);
-      transform: translateY(-1px);
-      text-decoration: none;
-    }
-
-    .top-actions-right {
-      display: flex;
-      align-items: center;
-      gap: 0.65rem;
-    }
-
-    .status-pill-secure {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.45rem;
-      font-size: 0.76rem;
-      font-weight: 700;
-      color: var(--emerald-accent);
-      background: rgba(16, 185, 129, 0.08);
-      border: 1px solid rgba(16, 185, 129, 0.25);
-      padding: 0.4rem 0.85rem;
-      border-radius: 999px;
-    }
-
-    .pulse-dot {
-      width: 8px;
-      height: 8px;
-      background-color: var(--emerald-accent);
-      border-radius: 50%;
-      box-shadow: 0 0 8px var(--emerald-accent);
-      animation: pulseGlow 2s infinite;
-    }
-
-    @keyframes pulseGlow {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.45; transform: scale(1.2); }
-    }
-
-    .theme-toggle-btn {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      background: var(--topbar-bg);
-      backdrop-filter: blur(8px);
-      border: 1px solid var(--topbar-border);
-      color: var(--text-muted);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      font-size: 0.95rem;
-      transition: all 0.25s ease;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-    }
-
-    .theme-toggle-btn:hover {
-      color: var(--sky-main);
-      border-color: var(--sky-main);
-      transform: rotate(15deg) scale(1.05);
-    }
-
-    /* Main Auth Container */
-    .auth-wrapper {
-      width: 100%;
-      max-width: 1020px;
-    }
-
-    .auth-card {
-      background: var(--card-bg);
-      border-radius: 24px;
-      border: 1px solid var(--card-border);
-      box-shadow: var(--card-shadow);
-      overflow: hidden;
-      display: flex;
-      flex-wrap: wrap;
-      transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    /* Sisi Kiri: Brand Panel */
-    .brand-panel {
-      flex: 1.05;
-      background: linear-gradient(155deg, #041021 0%, #0c2b4d 55%, #13457b 100%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: space-between;
-      padding: 3.5rem 2.85rem;
-      color: #ffffff;
-      text-align: center;
-      position: relative;
-    }
-
-    .brand-panel::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: 
-        radial-gradient(circle at 15% 15%, rgba(14, 165, 233, 0.2), transparent 45%),
-        radial-gradient(circle at 85% 85%, rgba(16, 185, 129, 0.12), transparent 45%);
-      pointer-events: none;
-    }
-
-    .brand-content {
-      position: relative;
-      z-index: 2;
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .brand-logo-pod {
-      width: 98px;
-      height: 98px;
-      background: rgba(255, 255, 255, 0.12);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border: 1.5px solid rgba(255, 255, 255, 0.25);
-      border-radius: 26px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 1.5rem;
-      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.3);
-      transition: transform 0.3s ease;
-    }
-
-    .brand-logo-pod:hover {
-      transform: translateY(-3px) scale(1.03);
-    }
-
-    .brand-logo {
-      width: 66px;
-      height: auto;
-      filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.25));
-    }
-
-    .brand-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.45rem;
-      background: rgba(16, 185, 129, 0.18);
-      border: 1px solid rgba(52, 211, 153, 0.4);
-      color: #6ee7b7;
-      padding: 0.35rem 0.95rem;
-      border-radius: 999px;
-      font-size: 0.725rem;
-      font-weight: 800;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      margin-bottom: 1.15rem;
-    }
-
-    .brand-title {
-      font-size: 1.55rem;
-      font-weight: 800;
-      color: #ffffff;
-      letter-spacing: -0.025em;
-      line-height: 1.28;
-      margin-bottom: 0.65rem;
-    }
-
-    .brand-description {
-      color: #94a3b8;
-      font-size: 0.885rem;
-      line-height: 1.6;
-      max-width: 325px;
-      margin: 0 auto 2rem auto;
-    }
-
-    /* 3-Step Breadcrumb Stepper */
-    .recovery-steps-list {
-      width: 100%;
-      max-width: 335px;
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-      margin-bottom: 2rem;
-    }
-
-    .recovery-step-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 0.85rem;
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      padding: 0.85rem 1rem;
-      border-radius: 14px;
-      text-align: left;
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      transition: all 0.25s ease;
-    }
-
-    .recovery-step-item.is-active {
-      background: rgba(16, 185, 129, 0.18);
-      border-color: rgba(52, 211, 153, 0.45);
-      box-shadow: 0 4px 16px rgba(16, 185, 129, 0.2);
-    }
-
-    .step-number-badge {
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.12);
-      border: 1px solid rgba(255, 255, 255, 0.25);
-      color: #cbd5e1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.785rem;
-      font-weight: 800;
-      flex-shrink: 0;
-      margin-top: 1px;
-    }
-
-    .recovery-step-item.is-active .step-number-badge {
-      background: #10b981;
-      border-color: #34d399;
-      color: #ffffff;
-      box-shadow: 0 0 10px rgba(16, 185, 129, 0.6);
-    }
-
-    .step-text-group h4 {
-      font-size: 0.835rem;
-      font-weight: 700;
-      color: #f1f5f9;
-      margin: 0 0 2px 0;
-    }
-
-    .step-text-group p {
-      font-size: 0.725rem;
-      color: #94a3b8;
-      margin: 0;
-      line-height: 1.35;
-    }
-
-    .brand-footer-pill {
-      position: relative;
-      z-index: 2;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-size: 0.735rem;
-      color: #94a3b8;
-      background: rgba(255, 255, 255, 0.05);
-      padding: 0.4rem 0.95rem;
-      border-radius: 999px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    /* Sisi Kanan: Form Container */
-    .form-container {
-      flex: 1.02;
-      padding: 3.5rem 3.25rem;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      background: var(--card-bg);
-      transition: background 0.3s ease;
-    }
-
-    .form-header-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      font-size: 0.735rem;
-      font-weight: 800;
-      color: var(--emerald-accent);
-      background: rgba(16, 185, 129, 0.1);
-      padding: 0.25rem 0.75rem;
-      border-radius: 6px;
-      margin-bottom: 0.75rem;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-    }
-
-    .auth-title {
-      font-weight: 800;
-      color: var(--text-title);
-      font-size: 1.65rem;
-      letter-spacing: -0.025em;
-      margin-bottom: 0.4rem;
-    }
-
-    .auth-subtitle {
-      color: var(--text-muted);
-      font-size: 0.895rem;
-      margin-bottom: 1.5rem;
-      line-height: 1.5;
-    }
-
-    /* Verified Employee Profile Card */
-    .verified-user-box {
-      background: var(--verified-box-bg);
-      border: 1.5px solid var(--verified-box-border);
-      border-radius: 16px;
-      padding: 1rem 1.15rem;
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      margin-bottom: 1.65rem;
-      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.03);
-    }
-
-    .verified-avatar {
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 2px solid var(--emerald-accent);
-      flex-shrink: 0;
-    }
-
-    .verified-avatar-fallback {
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(14, 165, 233, 0.15));
-      border: 2px solid var(--emerald-accent);
-      color: var(--emerald-accent);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.35rem;
-      flex-shrink: 0;
-    }
-
-    .verified-meta {
-      flex: 1;
-      min-width: 0;
-    }
-
-    .verified-meta h5 {
-      font-size: 0.965rem;
-      font-weight: 800;
-      color: var(--text-title);
-      margin: 0 0 3px 0;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .verified-meta p {
-      font-size: 0.785rem;
-      color: var(--text-muted);
-      margin: 0;
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-      flex-wrap: wrap;
-    }
-
-    .verified-meta .badge-sso {
-      background: var(--card-bg);
-      border: 1px solid var(--input-border);
-      color: var(--sky-main);
-      font-weight: 700;
-      font-size: 0.735rem;
-      padding: 0.15rem 0.5rem;
-      border-radius: 6px;
-    }
-
-    .form-label {
-      font-size: 0.84rem;
-      font-weight: 700;
-      color: var(--text-body);
-      margin-bottom: 0.45rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .input-wrapper {
-      position: relative;
-    }
-
-    .form-control-modern {
-      border-radius: 12px;
-      padding: 0.8rem 2.85rem 0.8rem 2.95rem;
-      border: 1.5px solid var(--input-border);
-      background-color: var(--input-bg);
-      font-size: 0.925rem;
-      font-family: var(--font-main);
-      color: var(--input-text);
-      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-      width: 100%;
-      outline: none;
-      min-height: 48px;
-    }
-
-    .form-control-modern:hover {
-      border-color: var(--input-hover-border);
-    }
-
-    .form-control-modern:focus {
-      border-color: var(--input-focus-border);
-      box-shadow: 0 0 0 4px var(--sky-glow);
-      background-color: var(--card-bg);
-    }
-
-    .input-icon-left {
-      position: absolute;
-      left: 15px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: var(--text-muted);
-      font-size: 0.95rem;
-      pointer-events: none;
-      transition: color 0.2s;
-    }
-
-    .form-control-modern:focus ~ .input-icon-left {
-      color: var(--sky-main);
-    }
-
-    /* Password Eye Toggle */
-    .password-toggle-btn {
-      position: absolute;
-      right: 14px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: var(--text-muted);
-      font-size: 0.95rem;
-      cursor: pointer;
-      padding: 4px 6px;
-      border-radius: 6px;
-      transition: all 0.15s;
-    }
-
-    .password-toggle-btn:hover {
-      color: var(--sky-main);
-      background: rgba(2, 132, 199, 0.08);
-    }
-
-    /* Caps Lock Warning Banner */
-    .caps-lock-warning {
-      display: none;
-      align-items: center;
-      gap: 0.4rem;
-      font-size: 0.74rem;
-      font-weight: 700;
-      color: #b45309;
-      background: #fef3c7;
-      border: 1px solid #fde68a;
-      padding: 0.3rem 0.65rem;
-      border-radius: 6px;
-      margin-top: 0.4rem;
-    }
-
-    html.dark-mode .caps-lock-warning {
-      background: rgba(245, 158, 11, 0.15);
-      border-color: rgba(245, 158, 11, 0.35);
-      color: #fcd34d;
-    }
-
-    /* Live Password Strength Meter */
-    .strength-meter-wrap {
-      margin-top: 0.5rem;
-      display: none;
-    }
-
-    .strength-bars-track {
-      display: flex;
-      gap: 4px;
-      height: 4px;
-      margin-bottom: 0.35rem;
-    }
-
-    .strength-bar {
-      flex: 1;
-      height: 100%;
-      background: var(--input-border);
-      border-radius: 2px;
-      transition: background 0.25s ease;
-    }
-
-    .strength-label-text {
-      font-size: 0.74rem;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      color: var(--text-muted);
-    }
-
-    /* Live Password Match Badge */
-    .match-status-badge {
-      font-size: 0.735rem;
-      font-weight: 700;
-      display: none;
-      align-items: center;
-      gap: 0.3rem;
-    }
-
-    .match-status-badge.is-match {
-      display: inline-flex;
-      color: var(--emerald-accent);
-    }
-
-    .match-status-badge.is-mismatch {
-      display: inline-flex;
-      color: var(--rose-accent);
-    }
-
-    /* Submit & Back Buttons */
-    .btn-auth-primary {
-      background: linear-gradient(135deg, var(--navy-main) 0%, #114277 50%, var(--sky-main) 100%);
-      color: #ffffff;
-      border-radius: 12px;
-      padding: 0.85rem 1.5rem;
-      font-weight: 700;
-      font-size: 0.95rem;
-      letter-spacing: -0.01em;
-      border: none;
-      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
-      box-shadow: 0 8px 20px -4px rgba(12, 43, 77, 0.35);
-      min-height: 50px;
-      width: 100%;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      margin-bottom: 0.85rem;
-    }
-
-    .btn-auth-primary:hover {
-      transform: translateY(-1.5px);
-      box-shadow: 0 12px 28px -4px rgba(2, 132, 199, 0.45);
-      color: #ffffff;
-    }
-
-    .btn-auth-primary:active {
-      transform: scale(0.985);
-    }
-
-    .btn-arrow {
-      transition: transform 0.2s ease;
-    }
-
-    .btn-auth-primary:hover .btn-arrow {
-      transform: translateX(4px);
-    }
-
-    .btn-back-outline {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      width: 100%;
-      padding: 0.75rem 1.5rem;
-      background: transparent;
-      border: 1.5px solid var(--input-border);
-      border-radius: 12px;
-      color: var(--text-body);
-      font-weight: 700;
-      font-size: 0.9rem;
-      text-decoration: none;
-      transition: all 0.2s ease;
-      min-height: 46px;
-    }
-
-    .btn-back-outline:hover {
-      background: var(--input-bg);
-      border-color: var(--input-hover-border);
-      color: var(--rose-accent);
-      text-decoration: none;
-      transform: translateY(-1px);
-    }
-
-    .form-footer-copyright {
-      text-align: center;
-      margin-top: 2rem;
-      padding-top: 1.25rem;
-      border-top: 1px solid var(--input-border);
-      color: var(--text-muted);
-      font-size: 0.785rem;
-    }
-
-    /* SweetAlert2 Modern Corporate Styles */
-    .swal2-container {
-      font-family: var(--font-main) !important;
-      backdrop-filter: blur(4px) !important;
-      -webkit-backdrop-filter: blur(4px) !important;
-    }
-    .swal2-modern-card {
-      border-radius: 24px !important;
-      padding: 2.25rem 2rem 2rem !important;
-      border: 1px solid var(--card-border) !important;
-      box-shadow: 0 25px 60px -15px rgba(12, 43, 77, 0.28), 0 0 0 1px rgba(255, 255, 255, 0.8) inset !important;
-      width: 440px !important;
-      max-width: 92vw !important;
-      background: var(--card-bg) !important;
-      color: var(--text-body) !important;
-    }
-    .swal-icon-shield {
-      width: 68px;
-      height: 68px;
-      border-radius: 20px;
-      background: linear-gradient(135deg, rgba(2, 132, 199, 0.12) 0%, rgba(14, 165, 233, 0.05) 100%);
-      border: 1.5px solid rgba(2, 132, 199, 0.25);
-      box-shadow: 0 8px 20px -4px rgba(2, 132, 199, 0.2);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 2rem;
-      color: #0284c7;
-      margin-bottom: 1rem;
-    }
-    .swal-badge-security {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      font-size: 0.725rem;
-      font-weight: 800;
-      color: #0284c7;
-      background: rgba(2, 132, 199, 0.08);
-      border: 1px solid rgba(2, 132, 199, 0.2);
-      padding: 0.3rem 0.8rem;
-      border-radius: 999px;
-      letter-spacing: 0.05em;
-      margin-bottom: 0.85rem;
-      text-transform: uppercase;
-    }
-    .swal-title-modern {
-      font-size: 1.35rem;
-      font-weight: 800;
-      color: var(--text-title);
-      letter-spacing: -0.025em;
-      line-height: 1.3;
-      margin-bottom: 0.5rem;
-    }
-    .swal-text-modern {
-      font-size: 0.885rem;
-      color: var(--text-muted);
-      line-height: 1.6;
-      margin-bottom: 1.25rem;
-    }
-    .swal2-modern-actions {
-      margin-top: 1.35rem !important;
-      width: 100% !important;
-    }
-    .btn-swal-confirm {
-      width: 100% !important;
-      background: linear-gradient(135deg, var(--navy-main) 0%, #114277 50%, var(--sky-main) 100%) !important;
-      color: #ffffff !important;
-      border: none !important;
-      border-radius: 12px !important;
-      padding: 0.85rem 1.5rem !important;
-      font-weight: 700 !important;
-      font-size: 0.95rem !important;
-      cursor: pointer !important;
-      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
-      box-shadow: 0 8px 20px -4px rgba(12, 43, 77, 0.35) !important;
-      display: inline-flex !important;
-      align-items: center !important;
-      justify-content: center !important;
-      gap: 0.5rem !important;
-      text-decoration: none !important;
-    }
-    .btn-swal-confirm:hover {
-      transform: translateY(-1.5px) !important;
-      box-shadow: 0 12px 28px -4px rgba(2, 132, 199, 0.45) !important;
-      color: #ffffff !important;
-    }
-
-    @media (max-width: 880px) {
-      .brand-panel { display: none; }
-      .form-container { padding: 2.75rem 2rem; }
-      .auth-card { border-radius: 20px; }
-      .top-utility-bar { padding: 0 0.5rem; }
-    }
-  </style>
+  <!-- Unified Auth Portal Stylesheet -->
+  <link href="<?php echo base_url('assets/css/auth-portal.css'); ?>?v=20261121" rel="stylesheet">
 </head>
 
 <body>
@@ -830,18 +33,13 @@
   <!-- Top Floating Utility Bar -->
   <header class="top-utility-bar" aria-label="Navigasi Akses Cepat">
     <a href="<?php echo base_url('lupa_password/batal'); ?>" class="btn-utility-link">
-      <i class="fas fa-arrow-left"></i>
-      <span>Batal & Kembali ke Login</span>
+      <i class="fas fa-arrow-left" aria-hidden="true"></i>
+      <span>Batal &amp; Kembali ke Login</span>
     </a>
 
     <div class="top-actions-right">
-      <div class="status-pill-secure" title="Koneksi Sistem Terenkripsi">
-        <span class="pulse-dot"></span>
-        <span>SSL 256-Bit</span>
-      </div>
-
       <button type="button" class="theme-toggle-btn" id="themeToggleBtn" title="Beralih Tema Gelap/Terang" aria-label="Beralih Tema">
-        <i class="fas fa-moon" id="themeIcon"></i>
+        <i class="fas fa-moon" id="themeIcon" aria-hidden="true"></i>
       </button>
     </div>
   </header>
@@ -849,27 +47,27 @@
   <!-- Main Auth Card -->
   <main class="auth-wrapper">
     <div class="auth-card">
-      
+
       <!-- Sisi Kiri: Panel Informasi Pengaturan Sandi -->
       <section class="brand-panel" aria-label="Informasi Pembaruan Sandi">
         <div class="brand-content">
           <div class="brand-logo-pod">
-            <img src="<?php echo base_url(); ?>assets/img/kpmh.png" alt="Logo Klinik Pratama Hidayatullah" class="brand-logo">
+            <img src="<?php echo base_url('assets/img/kpmh.png'); ?>" alt="Logo Klinik Pratama Hidayatullah" class="brand-logo">
           </div>
-          
+
           <span class="brand-badge">
-            <i class="fas fa-check-circle"></i> IDENTITAS TERVERIFIKASI
+            <i class="fas fa-check-circle" aria-hidden="true"></i> IDENTITAS TERVERIFIKASI
           </span>
-          
+
           <h1 class="brand-title">Atur Sandi Baru</h1>
           <p class="brand-description">
-            Buat kombinasi kata sandi baru yang kuat untuk melindungi akun dan privasi data kepegawaian Anda.
+            Buat kombinasi kata sandi baru minimal 8 karakter untuk melindungi akun dan privasi data kepegawaian Anda.
           </p>
 
           <!-- 3-Step Breadcrumb Stepper -->
           <div class="recovery-steps-list">
             <div class="recovery-step-item">
-              <span class="step-number-badge"><i class="fas fa-check"></i></span>
+              <span class="step-number-badge"><i class="fas fa-check" aria-hidden="true"></i></span>
               <div class="step-text-group">
                 <h4>Input Identitas Kepegawaian</h4>
                 <p>Identitas SSO dan NIK pegawai cocok</p>
@@ -877,7 +75,7 @@
             </div>
 
             <div class="recovery-step-item">
-              <span class="step-number-badge"><i class="fas fa-check"></i></span>
+              <span class="step-number-badge"><i class="fas fa-check" aria-hidden="true"></i></span>
               <div class="step-text-group">
                 <h4>Validasi Database Klinik</h4>
                 <p>Status kepegawaian aktif di sistem</p>
@@ -888,15 +86,15 @@
               <span class="step-number-badge">3</span>
               <div class="step-text-group">
                 <h4>Atur Kata Sandi Baru</h4>
-                <p>Buat kata sandi baru berenkripsi BCRYPT</p>
+                <p>Buat kata sandi baru minimal 8 karakter berenkripsi BCRYPT</p>
               </div>
             </div>
           </div>
         </div>
 
         <div class="brand-footer-pill">
-          <i class="fas fa-lock text-info"></i>
-          <span>Enkripsi Standar BCRYPT 60-Char Salt</span>
+          <i class="fas fa-lock" aria-hidden="true"></i>
+          <span>Enkripsi Standar BCRYPT Password Hash</span>
         </div>
       </section>
 
@@ -904,7 +102,7 @@
       <section class="form-container" aria-label="Formulir Buat Kata Sandi Baru">
         <div>
           <span class="form-header-badge">
-            <i class="fas fa-shield-halved"></i> TAHAP 3 &bull; PEMBARUAN SANDI
+            <i class="fas fa-shield-halved" aria-hidden="true"></i> TAHAP 3 &bull; PEMBARUAN SANDI
           </span>
           <h2 class="auth-title">Atur Ulang Kata Sandi</h2>
           <p class="auth-subtitle">Identitas pegawai telah diverifikasi. Silakan tentukan kata sandi baru Anda.</p>
@@ -912,7 +110,7 @@
 
         <!-- Kartu Identitas Pegawai Terverifikasi -->
         <div class="verified-user-box">
-          <?php 
+          <?php
           $photo_url = (!empty($photo) && file_exists(FCPATH . 'assets/photo/' . $photo))
             ? base_url('assets/photo/' . $photo)
             : ((!empty($photo) && file_exists(FCPATH . 'photo/' . $photo)) ? base_url('photo/' . $photo) : '');
@@ -921,7 +119,7 @@
             <img src="<?php echo $photo_url; ?>" alt="<?php echo htmlspecialchars($nama_pegawai, ENT_QUOTES, 'UTF-8'); ?>" class="verified-avatar">
           <?php else : ?>
             <div class="verified-avatar-fallback">
-              <i class="fas fa-user-check"></i>
+              <i class="fas fa-user-check" aria-hidden="true"></i>
             </div>
           <?php endif; ?>
           <div class="verified-meta">
@@ -937,21 +135,21 @@
         <?php echo $this->session->flashdata('pesan'); ?>
 
         <form method="POST" action="<?php echo base_url('lupa_password/simpan_password'); ?>" novalidate id="formReset">
-          
+
           <!-- Kata Sandi Baru Input -->
           <div class="form-group mb-3">
             <label class="form-label" for="password_baru">
               <span>Kata Sandi Baru</span>
-              <small class="text-muted font-weight-normal">(Minimal 4 Karakter)</small>
+              <small class="text-muted">(Minimal 8 Karakter)</small>
             </label>
             <div class="input-wrapper">
-              <input type="password" class="form-control-modern" name="password_baru" id="password_baru" placeholder="Masukkan kata sandi baru..." required autofocus autocomplete="new-password">
+              <input type="password" class="form-control-modern" name="password_baru" id="password_baru" placeholder="Minimal 8 karakter..." minlength="8" required autofocus autocomplete="new-password">
               <i class="fas fa-lock input-icon-left" aria-hidden="true"></i>
               <i class="fas fa-eye password-toggle-btn" id="togglePassword1" title="Tampilkan Kata Sandi" aria-label="Tampilkan Kata Sandi" role="button" tabindex="0"></i>
             </div>
-            
+
             <div class="caps-lock-warning" id="capsLockWarning1">
-              <i class="fas fa-triangle-exclamation"></i>
+              <i class="fas fa-triangle-exclamation" aria-hidden="true"></i>
               <span>Peringatan: <strong>Caps Lock</strong> sedang aktif</span>
             </div>
 
@@ -976,40 +174,40 @@
             <label class="form-label" for="konfirmasi_password">
               <span>Konfirmasi Kata Sandi Baru</span>
               <span class="match-status-badge" id="matchBadge">
-                <i class="fas fa-circle-check"></i> <span>Cocok</span>
+                <i class="fas fa-circle-check" aria-hidden="true"></i> <span>Cocok</span>
               </span>
             </label>
             <div class="input-wrapper">
-              <input type="password" class="form-control-modern" name="konfirmasi_password" id="konfirmasi_password" placeholder="Ulangi kata sandi baru..." required autocomplete="new-password">
+              <input type="password" class="form-control-modern" name="konfirmasi_password" id="konfirmasi_password" placeholder="Ulangi kata sandi baru..." minlength="8" required autocomplete="new-password">
               <i class="fas fa-shield-alt input-icon-left" aria-hidden="true"></i>
               <i class="fas fa-eye password-toggle-btn" id="togglePassword2" title="Tampilkan Kata Sandi" aria-label="Tampilkan Kata Sandi" role="button" tabindex="0"></i>
             </div>
 
             <div class="caps-lock-warning" id="capsLockWarning2">
-              <i class="fas fa-triangle-exclamation"></i>
+              <i class="fas fa-triangle-exclamation" aria-hidden="true"></i>
               <span>Peringatan: <strong>Caps Lock</strong> sedang aktif</span>
             </div>
 
             <?php echo form_error('konfirmasi_password', '<div class="text-small text-danger mt-1 font-weight-bold">', '</div>'); ?>
           </div>
-          
+
           <!-- Submit Button -->
           <button type="submit" class="btn-auth-primary" id="btnSubmitReset">
             <span>Simpan Kata Sandi Baru</span>
-            <i class="fas fa-check btn-arrow"></i>
+            <i class="fas fa-check" aria-hidden="true"></i>
           </button>
 
           <!-- Back / Cancel Button -->
           <a href="<?php echo base_url('lupa_password/batal'); ?>" class="btn-back-outline">
-            <i class="fas fa-times"></i>
+            <i class="fas fa-times" aria-hidden="true"></i>
             <span>Batal dan Kembali ke Login</span>
           </a>
-        
+
           <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
         </form>
 
         <div class="form-footer-copyright">
-          <small>&copy; <?php echo date('Y'); ?> Klinik Pratama Dr. H.M. Hidayatullah &bull; All Rights Reserved</small>
+          <small>&copy; <?php echo date('Y'); ?> Klinik Pratama Dr. H.M. Hidayatullah &bull; Seluruh Hak Dilindungi</small>
         </div>
       </section>
 
@@ -1017,22 +215,23 @@
   </main>
 
   <!-- Scripts -->
-  <script src="<?php echo base_url(); ?>assets/vendor/jquery/jquery.min.js"></script>
-  <script src="<?php echo base_url(); ?>assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="<?php echo base_url('assets/vendor/jquery/jquery.min.js'); ?>"></script>
+  <script src="<?php echo base_url('assets/vendor/bootstrap/js/bootstrap.bundle.min.js'); ?>"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.17.2/dist/sweetalert2.all.min.js"></script>
-  
+
   <script>
-    // =========================================================
-    // 1. SEAMLESS DARK MODE ENGINE
-    // =========================================================
     const themeToggleBtn = document.getElementById('themeToggleBtn');
     const themeIcon = document.getElementById('themeIcon');
+
+    function isDarkModeActive() {
+      return document.documentElement.classList.contains('dark-mode');
+    }
 
     function syncThemeUI(isDark) {
       if (isDark) {
         document.documentElement.classList.add('dark-mode');
         localStorage.setItem('darkMode', 'enabled');
-        if (themeIcon) themeIcon.className = 'fas fa-sun text-warning';
+        if (themeIcon) themeIcon.className = 'fas fa-sun';
       } else {
         document.documentElement.classList.remove('dark-mode');
         localStorage.setItem('darkMode', 'disabled');
@@ -1046,14 +245,16 @@
 
     if (themeToggleBtn) {
       themeToggleBtn.addEventListener('click', () => {
-        const isDark = document.documentElement.classList.contains('dark-mode');
-        syncThemeUI(!isDark);
+        syncThemeUI(!isDarkModeActive());
       });
     }
 
-    // =========================================================
-    // 2. PASSWORD TOGGLES & CAPS LOCK DETECTOR
-    // =========================================================
+    function swalThemeOptions() {
+      return isDarkModeActive()
+        ? { background: '#171F2A', color: '#F1EFEA' }
+        : { background: '#FFFDF9', color: '#141D26' };
+    }
+
     function setupToggle(buttonId, inputId, warningId) {
       const btn = document.querySelector(buttonId);
       const input = document.querySelector(inputId);
@@ -1078,11 +279,7 @@
 
       if (warning) {
         input.addEventListener('keyup', (e) => {
-          if (e.getModifierState && e.getModifierState('CapsLock')) {
-            warning.style.display = 'inline-flex';
-          } else {
-            warning.style.display = 'none';
-          }
+          warning.style.display = (e.getModifierState && e.getModifierState('CapsLock')) ? 'inline-flex' : 'none';
         });
         input.addEventListener('blur', () => {
           warning.style.display = 'none';
@@ -1093,9 +290,6 @@
     setupToggle('#togglePassword1', '#password_baru', '#capsLockWarning1');
     setupToggle('#togglePassword2', '#konfirmasi_password', '#capsLockWarning2');
 
-    // =========================================================
-    // 3. LIVE PASSWORD STRENGTH METER & MATCH CHECKER
-    // =========================================================
     const pwd1 = document.getElementById('password_baru');
     const pwd2 = document.getElementById('konfirmasi_password');
     const strengthMeterWrap = document.getElementById('strengthMeterWrap');
@@ -1114,32 +308,36 @@
       strengthMeterWrap.style.display = 'block';
 
       let score = 0;
-      if (val.length >= 4) score++;
-      if (val.length >= 8 && (/[0-9]/.test(val) || /[^A-Za-z0-9]/.test(val))) score++;
-      if (val.length >= 10 && /[A-Z]/.test(val) && /[0-9]/.test(val) && /[^A-Za-z0-9]/.test(val)) score++;
+      if (val.length >= 8) score = 1;
+      if (val.length >= 8 && (/[0-9]/.test(val) || /[^A-Za-z0-9]/.test(val))) score = 2;
+      if (val.length >= 10 && /[A-Z]/.test(val) && /[0-9]/.test(val) && /[^A-Za-z0-9]/.test(val)) score = 3;
 
-      // Reset
-      strBar1.style.background = 'var(--input-border)';
-      strBar2.style.background = 'var(--input-border)';
-      strBar3.style.background = 'var(--input-border)';
+      strBar1.style.background = 'var(--auth-border-strong)';
+      strBar2.style.background = 'var(--auth-border-strong)';
+      strBar3.style.background = 'var(--auth-border-strong)';
 
-      if (score === 1) {
-        strBar1.style.background = 'var(--rose-accent)';
-        strengthText.textContent = 'Kekuatan: Cukup (Minimal)';
-        strengthText.style.color = 'var(--rose-accent)';
-        strengthAdvice.textContent = 'Tambahkan angka/simbol';
+      if (score === 0) {
+        strBar1.style.background = 'var(--auth-danger)';
+        strengthText.textContent = 'Belum Memenuhi Minimal 8 Karakter';
+        strengthText.style.color = 'var(--auth-danger)';
+        strengthAdvice.textContent = 'Tambah panjang kata sandi';
+      } else if (score === 1) {
+        strBar1.style.background = 'var(--auth-accent)';
+        strengthText.textContent = 'Kekuatan: Cukup';
+        strengthText.style.color = 'var(--auth-accent)';
+        strengthAdvice.textContent = 'Tambahkan angka atau simbol';
       } else if (score === 2) {
-        strBar1.style.background = 'var(--amber-accent)';
-        strBar2.style.background = 'var(--amber-accent)';
-        strengthText.textContent = 'Kekuatan: Sedang (Baik)';
-        strengthText.style.color = 'var(--amber-accent)';
-        strengthAdvice.textContent = 'Bagus dan aman';
+        strBar1.style.background = 'var(--auth-accent)';
+        strBar2.style.background = 'var(--auth-accent)';
+        strengthText.textContent = 'Kekuatan: Baik';
+        strengthText.style.color = 'var(--auth-accent)';
+        strengthAdvice.textContent = 'Kombinasi cukup aman';
       } else {
-        strBar1.style.background = 'var(--emerald-accent)';
-        strBar2.style.background = 'var(--emerald-accent)';
-        strBar3.style.background = 'var(--emerald-accent)';
+        strBar1.style.background = 'var(--auth-emerald)';
+        strBar2.style.background = 'var(--auth-emerald)';
+        strBar3.style.background = 'var(--auth-emerald)';
         strengthText.textContent = 'Kekuatan: Sangat Kuat';
-        strengthText.style.color = 'var(--emerald-accent)';
+        strengthText.style.color = 'var(--auth-emerald)';
         strengthAdvice.textContent = 'Tingkat keamanan optimal';
       }
       return score;
@@ -1175,138 +373,87 @@
       pwd2.addEventListener('input', checkMatch);
     }
 
-    // =========================================================
-    // 4. FORM RESET SUBMISSION VALIDATION
-    // =========================================================
     const formReset = document.getElementById('formReset');
     if (formReset) {
       formReset.addEventListener('submit', function(e) {
         const p1 = document.getElementById('password_baru');
         const p2 = document.getElementById('konfirmasi_password');
+        const themeOpts = swalThemeOptions();
 
         if (!p1 || !p1.value.trim()) {
           e.preventDefault();
-          p1.focus();
-          Swal.fire({
+          if (p1) p1.focus();
+          Swal.fire(Object.assign({}, themeOpts, {
             html: `
-              <div class="text-center pt-2">
-                <div class="swal-icon-shield" style="color: #0284c7; background: rgba(2, 132, 199, 0.08); border-color: rgba(2, 132, 199, 0.2);">
-                  <i class="fas fa-lock"></i>
-                </div>
-                <div>
-                  <span class="swal-badge-security">
-                    <i class="fas fa-key"></i> KATA SANDI BARU
-                  </span>
-                </div>
+              <div class="text-center py-2">
+                <div class="swal-icon-shield"><i class="fas fa-lock"></i></div>
+                <div><span class="swal-badge-security"><i class="fas fa-key"></i> KATA SANDI BARU</span></div>
                 <h3 class="swal-title-modern">Kata Sandi Baru Diperlukan</h3>
-                <p class="swal-text-modern">
-                  Silakan masukkan kata sandi baru untuk akun Anda terlebih dahulu.
-                </p>
+                <p class="swal-text-modern">Silakan masukkan kata sandi baru untuk akun Anda terlebih dahulu.</p>
               </div>
             `,
             showConfirmButton: true,
             confirmButtonText: '<span>Lengkapi Sandi</span><i class="fas fa-arrow-right"></i>',
             buttonsStyling: false,
-            customClass: {
-              popup: 'swal2-modern-card',
-              actions: 'swal2-modern-actions',
-              confirmButton: 'btn-swal-confirm'
-            }
-          });
+            customClass: { popup: 'swal2-modern-card', actions: 'swal2-modern-actions', confirmButton: 'btn-swal-confirm' }
+          }));
           return false;
         }
 
-        if (p1.value.trim().length < 4) {
+        if (p1.value.trim().length < 8) {
           e.preventDefault();
           p1.focus();
-          Swal.fire({
+          Swal.fire(Object.assign({}, themeOpts, {
             html: `
-              <div class="text-center pt-2">
-                <div class="swal-icon-shield" style="color: #f59e0b; background: rgba(245, 158, 11, 0.08); border-color: rgba(245, 158, 11, 0.25);">
-                  <i class="fas fa-triangle-exclamation"></i>
-                </div>
-                <div>
-                  <span class="swal-badge-security" style="color: #f59e0b; background: rgba(245, 158, 11, 0.1); border-color: rgba(245, 158, 11, 0.25);">
-                    <i class="fas fa-shield"></i> PERSYARATAN MINIMAL
-                  </span>
-                </div>
+              <div class="text-center py-2">
+                <div class="swal-icon-shield"><i class="fas fa-triangle-exclamation"></i></div>
+                <div><span class="swal-badge-security"><i class="fas fa-shield"></i> PERSYARATAN MINIMAL</span></div>
                 <h3 class="swal-title-modern">Panjang Sandi Kurang</h3>
-                <p class="swal-text-modern">
-                  Kata sandi baru minimal harus terdiri dari <strong>4 karakter</strong>.
-                </p>
+                <p class="swal-text-modern">Kata sandi baru minimal harus terdiri dari <strong>8 karakter</strong>.</p>
               </div>
             `,
             showConfirmButton: true,
             confirmButtonText: '<span>Perbaiki Sandi</span><i class="fas fa-arrow-right"></i>',
             buttonsStyling: false,
-            customClass: {
-              popup: 'swal2-modern-card',
-              actions: 'swal2-modern-actions',
-              confirmButton: 'btn-swal-confirm'
-            }
-          });
+            customClass: { popup: 'swal2-modern-card', actions: 'swal2-modern-actions', confirmButton: 'btn-swal-confirm' }
+          }));
           return false;
         }
 
         if (!p2 || !p2.value.trim() || p1.value !== p2.value) {
           e.preventDefault();
           if (p2) p2.focus();
-          Swal.fire({
+          Swal.fire(Object.assign({}, themeOpts, {
             html: `
-              <div class="text-center pt-2">
-                <div class="swal-icon-shield" style="color: #f43f5e; background: rgba(244, 63, 94, 0.08); border-color: rgba(244, 63, 94, 0.25);">
-                  <i class="fas fa-circle-xmark"></i>
-                </div>
-                <div>
-                  <span class="swal-badge-security" style="color: #f43f5e; background: rgba(244, 63, 94, 0.1); border-color: rgba(244, 63, 94, 0.25);">
-                    <i class="fas fa-shield-virus"></i> KONFIRMASI TIDAK COCOK
-                  </span>
-                </div>
+              <div class="text-center py-2">
+                <div class="swal-icon-shield"><i class="fas fa-circle-xmark"></i></div>
+                <div><span class="swal-badge-security"><i class="fas fa-shield-virus"></i> KONFIRMASI TIDAK COCOK</span></div>
                 <h3 class="swal-title-modern">Kata Sandi Tidak Cocok</h3>
-                <p class="swal-text-modern">
-                  Pastikan kolom konfirmasi kata sandi diisi sama persis dengan kata sandi baru Anda.
-                </p>
+                <p class="swal-text-modern">Pastikan kolom konfirmasi kata sandi diisi sama persis dengan kata sandi baru Anda.</p>
               </div>
             `,
             showConfirmButton: true,
             confirmButtonText: '<span>Periksa Ulang</span><i class="fas fa-arrow-right"></i>',
             buttonsStyling: false,
-            customClass: {
-              popup: 'swal2-modern-card',
-              actions: 'swal2-modern-actions',
-              confirmButton: 'btn-swal-confirm'
-            }
-          });
+            customClass: { popup: 'swal2-modern-card', actions: 'swal2-modern-actions', confirmButton: 'btn-swal-confirm' }
+          }));
           return false;
         }
 
-        // Show loading state
-        Swal.fire({
+        Swal.fire(Object.assign({}, themeOpts, {
           html: `
             <div class="py-2 text-center">
-              <div class="mb-3 d-inline-flex align-items-center justify-content-center" style="width: 58px; height: 58px; border-radius: 50%; background: rgba(16, 185, 129, 0.15);">
-                <i class="fas fa-lock text-success" style="font-size: 1.75rem;"></i>
-              </div>
-              <h4 class="font-weight-bold text-gray-900 mb-1" style="font-size: 1.25rem; letter-spacing: -0.01em;">
-                Mengenkripsi Kata Sandi...
-              </h4>
-              <p class="text-muted small mb-3">
-                Menyimpan pembaruan kata sandi berenkripsi BCRYPT ke sistem...
-              </p>
-              <div class="spinner-border text-success" style="width: 2rem; height: 2rem; border-width: 2.5px;" role="status">
-                <span class="sr-only">Memuat...</span>
-              </div>
+              <h4 class="swal-title-modern mb-1">Mengenkripsi Kata Sandi...</h4>
+              <p class="swal-text-modern mb-3">Menyimpan pembaruan kata sandi berenkripsi BCRYPT ke sistem...</p>
+              <div class="spinner-border" role="status"><span class="sr-only">Memuat...</span></div>
             </div>
           `,
           showConfirmButton: false,
           allowOutsideClick: false,
           allowEscapeKey: false,
-          customClass: {
-            popup: 'swal2-modern-card'
-          },
-          width: 380,
-          background: '#ffffff'
-        });
+          customClass: { popup: 'swal2-modern-card' },
+          width: 360
+        }));
       });
     }
   </script>

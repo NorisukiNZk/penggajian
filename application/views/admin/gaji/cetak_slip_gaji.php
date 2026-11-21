@@ -446,7 +446,7 @@
                     <?php foreach ($tj_detail['detail'] as $td) : ?>
                     <tr>
                         <td class="text-center"><?php echo $no++; ?></td>
-                        <td><?php echo htmlspecialchars($td['nama_komponen'], ENT_QUOTES, 'UTF-8'); ?> <?php echo $td['is_persentase'] ? '(' . $td['nominal'] . '%)' : '' ?></td>
+                        <td><?php echo htmlspecialchars($td['nama_komponen'], ENT_QUOTES, 'UTF-8'); ?> <?php echo ($td['is_persentase'] && !empty($td['persen_raw'])) ? '(' . $td['persen_raw'] . '%)' : ''; ?></td>
                         <td class="text-right">Rp <?php echo number_format($td['nominal'], 0, ',', '.'); ?></td>
                     </tr>
                     <?php endforeach; ?>

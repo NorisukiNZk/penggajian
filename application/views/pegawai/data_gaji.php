@@ -77,8 +77,23 @@
 <!-- Tabel Riwayat Slip Gaji -->
 <div class="emp-card">
   <div class="card-header d-flex flex-wrap align-items-center justify-content-between gap-2">
-    <h2 class="h6 font-weight-bold m-0">Rincian Gaji Bulanan</h2>
-    <span class="small text-muted">Klinik Pratama Dr. H.M. Hidayatullah</span>
+    <div>
+      <h2 class="h6 font-weight-bold m-0">Rincian Gaji Bulanan</h2>
+      <span class="small text-muted">Klinik Pratama Dr. H.M. Hidayatullah</span>
+    </div>
+    <?php if (!empty($available_years)) : ?>
+      <form method="GET" action="<?php echo base_url('pegawai/data_gaji'); ?>" class="form-inline">
+        <label for="filterTahun" class="small font-weight-bold text-muted mr-2">Filter Tahun:</label>
+        <select id="filterTahun" name="tahun" class="form-control form-control-sm" onchange="this.form.submit()">
+          <option value="">Semua Tahun</option>
+          <?php foreach ($available_years as $yr) : ?>
+            <option value="<?php echo htmlspecialchars($yr, ENT_QUOTES, 'UTF-8'); ?>" <?php echo (isset($tahun_filter) && $tahun_filter === $yr) ? 'selected' : ''; ?>>
+              <?php echo htmlspecialchars($yr, ENT_QUOTES, 'UTF-8'); ?>
+            </option>
+          <?php endforeach; ?>
+        </select>
+      </form>
+    <?php endif; ?>
   </div>
   <div class="card-body p-0">
     <div class="table-responsive">
@@ -140,9 +155,14 @@
                   Rp <?php echo number_format($total_gaji, 0, ',', '.'); ?>
                 </td>
                 <td class="text-center">
-                  <a class="btn btn-sm btn-primary" target="_blank" href="<?php echo base_url('pegawai/data_gaji/cetak_slip/' . $g->id_kehadiran); ?>">
-                    <i class="fas fa-print"></i> Cetak Slip
-                  </a>
+                  <div class="d-inline-flex flex-wrap gap-1 justify-content-center">
+                    <a class="btn btn-sm btn-primary" target="_blank" href="<?php echo base_url('pegawai/data_gaji/cetak_slip/' . $g->id_kehadiran); ?>">
+                      <i class="fas fa-print"></i> Cetak Slip
+                    </a>
+                    <a class="btn btn-sm btn-light border" href="<?php echo base_url('pegawai/data_gaji/download_pdf/' . $g->id_kehadiran); ?>">
+                      <i class="fas fa-file-pdf"></i> PDF
+                    </a>
+                  </div>
                 </td>
               </tr>
             <?php endforeach; ?>

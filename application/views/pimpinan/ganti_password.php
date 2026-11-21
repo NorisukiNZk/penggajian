@@ -33,7 +33,7 @@
           <div class="form-group">
             <label for="passBaru" class="small font-weight-bold">Kata Sandi Baru</label>
             <div class="input-group">
-              <input type="password" name="passBaru" id="passBaru" class="form-control" placeholder="Minimal 8 karakter dengan huruf & angka" required>
+              <input type="password" name="passBaru" id="passBaru" class="form-control" placeholder="Minimal 8 karakter dengan huruf & angka" minlength="8" required>
               <div class="input-group-append">
                 <button type="button" class="btn btn-exec-outline toggle-pw" data-target="#passBaru" aria-label="Tampilkan kata sandi baru">
                   <i class="fas fa-eye"></i>

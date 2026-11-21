@@ -45,6 +45,10 @@ class Data_Cuti extends CI_Controller {
 
     // Alur 1: Meneruskan ke Direktur Utama dengan Rekomendasi/Telaah HRD
     public function teruskan_direktur($id) {
+        if (strtoupper((string)$this->input->method()) !== 'POST') {
+            redirect('admin/data_cuti');
+            return;
+        }
         $cuti = $this->db->get_where('data_cuti', ['id_cuti' => $id])->row();
         if (!$cuti) {
             $this->session->set_flashdata('pesan', '<div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -66,6 +70,7 @@ class Data_Cuti extends CI_Controller {
         ]);
 
         if ($update) {
+            $this->ModelAudit->catat('cuti', 'teruskan_direktur', $id, 'HRD meneruskan cuti NIK ' . $cuti->nik . ' ke Direktur.');
             $this->session->set_flashdata('pesan', '<div class="alert alert-info alert-dismissible fade show" role="alert">
                 <strong>Berhasil Diteruskan!</strong> Pengajuan cuti telah ditelaah dan diteruskan ke Direktur Utama dengan catatan rekomendasi HRD.
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
@@ -82,6 +87,10 @@ class Data_Cuti extends CI_Controller {
 
     // Alur 2: Pengesahan & Persetujuan Final (Direct / Delegated Approval)
     public function approve($id) {
+        if (strtoupper((string)$this->input->method()) !== 'POST') {
+            redirect('admin/data_cuti');
+            return;
+        }
         $cuti = $this->db->get_where('data_cuti', ['id_cuti' => $id])->row();
         if (!$cuti) {
             $this->session->set_flashdata('pesan', '<div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -153,6 +162,7 @@ class Data_Cuti extends CI_Controller {
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
             </div>');
         } else {
+            $this->ModelAudit->catat('cuti', 'disetujui_admin', $id, 'HRD menyetujui cuti NIK ' . $cuti->nik . ' (' . $cuti->tanggal_mulai . ' s/d ' . $cuti->tanggal_akhir . ').');
             $this->session->set_flashdata('pesan', '<div class="alert alert-success alert-dismissible fade show" role="alert">
                 <strong>Berhasil Disetujui!</strong> Pengajuan cuti telah disahkan atas wewenang Direktur Utama dan disinkronkan ke Absensi Harian.
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
@@ -163,6 +173,10 @@ class Data_Cuti extends CI_Controller {
     }
 
     public function reject($id) {
+        if (strtoupper((string)$this->input->method()) !== 'POST') {
+            redirect('admin/data_cuti');
+            return;
+        }
         $cuti = $this->db->get_where('data_cuti', ['id_cuti' => $id])->row();
         if (!$cuti) {
             $this->session->set_flashdata('pesan', '<div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -193,6 +207,7 @@ class Data_Cuti extends CI_Controller {
             'status_approval' => 'Ditolak',
             'pesan_admin'     => $pesan_admin
         ]);
+        $this->ModelAudit->catat('cuti', 'ditolak_admin', $id, 'HRD menolak cuti NIK ' . $cuti->nik . ': ' . $pesan_admin);
 
         $this->session->set_flashdata('pesan', '<div class="alert alert-danger alert-dismissible fade show" role="alert">
             <strong>Ditolak!</strong> Pengajuan cuti telah ditolak dengan catatan: <em>"' . htmlspecialchars($pesan_admin, ENT_QUOTES, 'UTF-8') . '"</em>.
@@ -203,6 +218,10 @@ class Data_Cuti extends CI_Controller {
     }
 
     public function hapus($id) {
+        if (strtoupper((string)$this->input->method()) !== 'POST') {
+            redirect('admin/data_cuti');
+            return;
+        }
         $cuti = $this->db->get_where('data_cuti', ['id_cuti' => $id])->row();
         if ($cuti) {
             // Jika sebelumnya disetujui, bersihkan data absensi izin/cuti yang sempat di-inject
@@ -220,6 +239,7 @@ class Data_Cuti extends CI_Controller {
 
             $this->db->where('id_cuti', $id);
             $this->db->delete('data_cuti');
+            $this->ModelAudit->catat('cuti', 'hapus_cuti', $id, 'HRD menghapus rekap cuti NIK ' . $cuti->nik . '.', $cuti, null);
         }
 
         $this->session->set_flashdata('pesan', '<div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -228,6 +248,31 @@ class Data_Cuti extends CI_Controller {
         </div>');
 
         redirect('admin/data_cuti');
+    }
+
+    public function download_pdf($id = null) {
+        if (!$id) {
+            redirect('admin/data_cuti');
+            return;
+        }
+        $cuti = $this->db->query("
+            SELECT c.*, 
+                   p.nama_pegawai, p.jabatan, p.jenis_kelamin, p.status as status_karyawan, p.tanggal_masuk, p.photo,
+                   p2.nama_pegawai as nama_pengganti, p2.jabatan as jabatan_pengganti
+            FROM data_cuti c
+            JOIN data_pegawai p ON c.nik = p.nik
+            LEFT JOIN data_pegawai p2 ON c.nik_pengganti = p2.nik
+            WHERE c.id_cuti = ?
+        ", array($id))->row();
+        if (!$cuti) {
+            redirect('admin/data_cuti');
+            return;
+        }
+        $data['title'] = "Surat Keputusan Izin Cuti";
+        $data['cuti']  = $cuti;
+        $this->load->library('pdf_exporter');
+        $html = $this->load->view('pdf/surat_cuti', $data, true);
+        $this->pdf_exporter->stream($html, 'SK_Cuti_' . $cuti->nik . '_' . $cuti->id_cuti, 'A4', 'portrait', true);
     }
 
     public function cetak_surat($id = null) {
