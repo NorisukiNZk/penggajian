@@ -135,6 +135,12 @@ class Data_Cuti extends CI_Controller {
 
         foreach($daterange as $date){
             $tgl = $date->format("Y-m-d");
+
+            // Lewati hari libur akhir pekan & tanggal merah agar tidak menggandakan kehadiran sah
+            $cek_libur = $this->ModelAbsensiHarian->cek_hari_libur($tgl);
+            if ($cek_libur['is_libur']) {
+                continue;
+            }
             
             // Cek apakah tanggal sudah tercatat di absensi harian
             $cek = $this->db->get_where('absensi_harian', [

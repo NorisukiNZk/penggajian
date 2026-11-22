@@ -4,33 +4,65 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class ModelAbsensiHarian extends CI_Model
 {
     // =====================================================
-    // Setting Absensi
+    // Setting Absensi & Evaluasi Hari Libur
     // =====================================================
 
-    /**
-     * Ambil setting absensi
-     */
     public function get_setting()
     {
-        return $this->db->get_where('setting_absensi', array('id' => 1))->row();
+        $row = $this->db->get_where('setting_absensi', array('id' => 1))->row();
+        if ($row && !isset($row->hari_libur_mingguan)) {
+            $row->hari_libur_mingguan = '6,7';
+        }
+        return $row;
     }
 
-    /**
-     * Update setting absensi
-     */
     public function update_setting($data)
     {
+        if (isset($data['hari_libur_mingguan']) && !$this->db->field_exists('hari_libur_mingguan', 'setting_absensi')) {
+            unset($data['hari_libur_mingguan']);
+        }
         $this->db->where('id', 1);
         return $this->db->update('setting_absensi', $data);
     }
 
+    public function get_lembur_disetujui_tanggal($nik, $tanggal = null)
+    {
+        if (empty($nik)) {
+            return null;
+        }
+        $tgl = $tanggal ? $tanggal : date('Y-m-d');
+        return $this->db
+            ->where('nik', $nik)
+            ->where('tanggal_lembur', $tgl)
+            ->where('status', 'Disetujui')
+            ->order_by('jam_mulai', 'ASC')
+            ->get('data_lembur')
+            ->row();
+    }
+
+    public function cek_hari_libur($tanggal = null)
+    {
+        $tgl = $tanggal ? $tanggal : date('Y-m-d');
+        $setting = $this->get_setting();
+        $holidayRow = $this->db->get_where('hari_libur', array('tanggal' => $tgl))->row();
+        return Attendance_policy::evaluateHoliday($tgl, $setting, $holidayRow);
+    }
+
+    public function get_status_hari_ini($nik = null, $tanggal = null, $jamSekarang = null)
+    {
+        $tgl = $tanggal ? $tanggal : date('Y-m-d');
+        $jam = $jamSekarang ? $jamSekarang : date('H:i:s');
+        $setting = $this->get_setting();
+        $holidayRow = $this->db->get_where('hari_libur', array('tanggal' => $tgl))->row();
+        $approvedOvertime = $nik ? $this->get_lembur_disetujui_tanggal($nik, $tgl) : null;
+
+        return Attendance_policy::evaluateAttendanceGate($tgl, $jam, $setting, $holidayRow, $approvedOvertime);
+    }
+
     // =====================================================
-    // Absensi Harian — Pegawai
+    // Absensi Harian - Pegawai
     // =====================================================
 
-    /**
-     * Cek apakah pegawai sudah absen hari ini
-     */
     public function get_absensi_hari_ini($nik)
     {
         return $this->db->get_where('absensi_harian', array(
@@ -39,45 +71,46 @@ class ModelAbsensiHarian extends CI_Model
         ))->row();
     }
 
-    /**
-     * Proses absen masuk
-     */
     public function absen_masuk($nik)
     {
         $setting = $this->get_setting();
+        $tanggal = date('Y-m-d');
         $jam_sekarang = date('H:i:s');
+        $gate = $this->get_status_hari_ini($nik, $tanggal, $jam_sekarang);
 
-        // Proteksi Gerbang Waktu (Backend)
-        if ($jam_sekarang < $setting->mulai_absen_masuk || $jam_sekarang > $setting->batas_terlambat_berat) {
-            return false; // Di luar jam yang diizinkan
+        // Proteksi Hari Libur & Gerbang Waktu (Backend)
+        if (!$gate['boleh_absen_masuk']) {
+            return false;
         }
 
-        // Tentukan status otomatis
-        $jam_masuk_setting = $setting->jam_masuk;
-        $toleransi = $setting->toleransi_menit;
-
-        // Hitung batas toleransi
-        $batas_toleransi = date('H:i:s', strtotime($jam_masuk_setting . ' +' . $toleransi . ' minutes'));
-        $batas_terlambat_berat = $setting->batas_terlambat_berat;
-
-        if ($jam_sekarang <= $batas_toleransi) {
+        if ($gate['mode_lembur_libur']) {
+            $ot = $gate['lembur'];
             $status = 'tepat_waktu';
+            $keterangan = 'Lembur ' . $gate['keterangan_libur'] . ' (' . substr($ot['jam_mulai'], 0, 5) . ' - ' . substr($ot['jam_selesai'], 0, 5) . ')';
         } else {
-            $status = 'terlambat';
-        }
+            $jam_masuk_setting = $setting->jam_masuk;
+            $toleransi = (int)$setting->toleransi_menit;
+            $batas_toleransi = date('H:i:s', strtotime($jam_masuk_setting . ' +' . $toleransi . ' minutes'));
+            $batas_terlambat_berat = $setting->batas_terlambat_berat;
 
-        $keterangan = '';
-        if ($status == 'terlambat' && $jam_sekarang > $batas_terlambat_berat) {
-            $keterangan = 'Terlambat berat';
-        } elseif ($status == 'terlambat') {
-            // Hitung selisih menit terlambat
-            $selisih = (strtotime($jam_sekarang) - strtotime($batas_toleransi)) / 60;
-            $keterangan = 'Terlambat ' . ceil($selisih) . ' menit';
+            if ($jam_sekarang <= $batas_toleransi) {
+                $status = 'tepat_waktu';
+            } else {
+                $status = 'terlambat';
+            }
+
+            $keterangan = '';
+            if ($status == 'terlambat' && $jam_sekarang > $batas_terlambat_berat) {
+                $keterangan = 'Terlambat berat';
+            } elseif ($status == 'terlambat') {
+                $selisih = (strtotime($jam_sekarang) - strtotime($batas_toleransi)) / 60;
+                $keterangan = 'Terlambat ' . ceil($selisih) . ' menit';
+            }
         }
 
         $data = array(
             'nik'        => $nik,
-            'tanggal'    => date('Y-m-d'),
+            'tanggal'    => $tanggal,
             'jam_masuk'  => $jam_sekarang,
             'status'     => $status,
             'keterangan' => $keterangan
@@ -86,39 +119,35 @@ class ModelAbsensiHarian extends CI_Model
         return $this->db->insert('absensi_harian', $data);
     }
 
-    /**
-     * Proses absen pulang
-     */
     public function absen_pulang($nik)
     {
         $setting = $this->get_setting();
+        $tanggal = date('Y-m-d');
         $jam_sekarang = date('H:i:s');
+        $gate = $this->get_status_hari_ini($nik, $tanggal, $jam_sekarang);
 
-        // Proteksi Gerbang Waktu (Backend)
-        if ($jam_sekarang < $setting->mulai_absen_pulang) {
-            return false; // Belum waktunya pulang
+        // Proteksi Hari Libur & Gerbang Waktu (Backend)
+        if (!$gate['boleh_absen_pulang']) {
+            return false;
         }
 
         $data = array(
             'jam_pulang' => $jam_sekarang
         );
 
-        // Tambah keterangan jika pulang awal
-        if ($jam_sekarang < $setting->jam_pulang) {
+        // Tambah keterangan jika pulang awal (hanya pada hari kerja normal)
+        if (!$gate['mode_lembur_libur'] && $jam_sekarang < $setting->jam_pulang) {
             $absensi = $this->get_absensi_hari_ini($nik);
-            $keterangan_lama = $absensi->keterangan;
+            $keterangan_lama = $absensi ? $absensi->keterangan : '';
             $tambahan = 'Pulang awal';
             $data['keterangan'] = $keterangan_lama ? $keterangan_lama . ' | ' . $tambahan : $tambahan;
         }
 
         $this->db->where('nik', $nik);
-        $this->db->where('tanggal', date('Y-m-d'));
+        $this->db->where('tanggal', $tanggal);
         return $this->db->update('absensi_harian', $data);
     }
 
-    /**
-     * Riwayat absensi pegawai per bulan
-     */
     public function get_absensi_bulan($nik, $bulan, $tahun)
     {
         $this->db->where('nik', $nik);
@@ -129,12 +158,9 @@ class ModelAbsensiHarian extends CI_Model
     }
 
     // =====================================================
-    // Absensi Harian — Admin Monitoring
+    // Absensi Harian - Admin Monitoring & Rekap
     // =====================================================
 
-    /**
-     * Ambil semua absensi hari ini (monitoring)
-     */
     public function get_semua_absensi_hari_ini()
     {
         $this->db->select('data_pegawai.nik, data_pegawai.nama_pegawai, data_pegawai.jabatan, data_pegawai.photo, absensi_harian.jam_masuk, absensi_harian.jam_pulang, absensi_harian.status, absensi_harian.keterangan');
@@ -144,9 +170,6 @@ class ModelAbsensiHarian extends CI_Model
         return $this->db->get()->result();
     }
 
-    /**
-     * Rekap bulanan pegawai (semua atau filter 1 NIK agar ringkasan pegawai bebas kueri massal)
-     */
     public function get_rekap_bulanan($bulan, $tahun, $filter_nik = null)
     {
         if ($filter_nik !== null) {
@@ -183,7 +206,6 @@ class ModelAbsensiHarian extends CI_Model
             $libur_set[$lr->tanggal] = true;
         }
 
-        // Ambil seluruh catatan absensi bulan tersebut dalam 1 kueri
         $this->db->where('MONTH(tanggal)', $req_month);
         $this->db->where('YEAR(tanggal)', $req_year);
         if ($filter_nik !== null) {
@@ -196,10 +218,11 @@ class ModelAbsensiHarian extends CI_Model
         }
 
         $setting = $this->get_setting();
+        $weekend_days = Attendance_policy::parseWeekendDays($setting);
         $maks_terlambat = (!empty($setting->maks_terlambat_jadi_alpha) && (int)$setting->maks_terlambat_jadi_alpha > 0) ? (int)$setting->maks_terlambat_jadi_alpha : 3;
 
         foreach ($pegawai_list as $p) {
-            $hari_kerja_wajib = 0;
+            $hari_kerja_map = array();
             if ($hari_evaluasi > 0) {
                 for ($i = 1; $i <= $hari_evaluasi; $i++) {
                     $tanggal = sprintf('%04d-%02d-%02d', $req_year, $req_month, $i);
@@ -207,15 +230,16 @@ class ModelAbsensiHarian extends CI_Model
                     if (!empty($p->tanggal_masuk) && $p->tanggal_masuk != '0000-00-00' && $tanggal < $p->tanggal_masuk) {
                         continue;
                     }
-                    if (date('N', strtotime($tanggal)) == 7) {
+                    if (in_array((int)date('N', strtotime($tanggal)), $weekend_days, true)) {
                         continue;
                     }
                     if (isset($libur_set[$tanggal])) {
                         continue;
                     }
-                    $hari_kerja_wajib++;
+                    $hari_kerja_map[$tanggal] = true;
                 }
             }
+            $hari_kerja_wajib = count($hari_kerja_map);
 
             $absensi = isset($absensi_by_nik[$p->nik]) ? $absensi_by_nik[$p->nik] : array();
 
@@ -223,27 +247,32 @@ class ModelAbsensiHarian extends CI_Model
             $terlambat = 0;
             $sakit = 0;
             $izin = 0;
+            $kehadiran_pada_hari_kerja = 0;
 
             foreach ($absensi as $a) {
+                $pada_hari_kerja = isset($hari_kerja_map[$a->tanggal]);
                 switch ($a->status) {
                     case 'tepat_waktu':
                         $hadir++;
+                        if ($pada_hari_kerja) $kehadiran_pada_hari_kerja++;
                         break;
                     case 'terlambat':
                         $hadir++;
                         $terlambat++;
+                        if ($pada_hari_kerja) $kehadiran_pada_hari_kerja++;
                         break;
                     case 'sakit':
                         $sakit++;
+                        if ($pada_hari_kerja) $kehadiran_pada_hari_kerja++;
                         break;
                     case 'izin':
                         $izin++;
+                        if ($pada_hari_kerja) $kehadiran_pada_hari_kerja++;
                         break;
                 }
             }
 
-            $total_kehadiran_sah = $hadir + $sakit + $izin;
-            $alpha_hari_kosong = max(0, $hari_kerja_wajib - $total_kehadiran_sah);
+            $alpha_hari_kosong = max(0, $hari_kerja_wajib - $kehadiran_pada_hari_kerja);
             $alpha_dari_terlambat = floor($terlambat / $maks_terlambat);
 
             $rekap[] = array(
@@ -264,9 +293,6 @@ class ModelAbsensiHarian extends CI_Model
         return $rekap;
     }
 
-    /**
-     * Mengambil statistik komposisi hari kalender vs hari kerja efektif bulanan
-     */
     public function get_statistik_hari_kerja($bulan, $tahun)
     {
         $req_year = (int)$tahun;
@@ -286,16 +312,18 @@ class ModelAbsensiHarian extends CI_Model
             $hari_evaluasi = $total_hari_bulan;
         }
 
+        $setting = $this->get_setting();
+        $weekend_days = Attendance_policy::parseWeekendDays($setting);
         $libur_nasional = $this->db->query("SELECT * FROM hari_libur WHERE MONTH(tanggal) = ? AND YEAR(tanggal) = ?", array($req_month, $req_year))->result();
 
-        $jumlah_minggu = 0;
+        $jumlah_akhir_pekan = 0;
         $jumlah_libur = 0;
         $hari_kerja_efektif = 0;
 
         for ($i = 1; $i <= $total_hari_bulan; $i++) {
             $tanggal = sprintf('%04d-%02d-%02d', $req_year, $req_month, $i);
-            if (date('N', strtotime($tanggal)) == 7) {
-                $jumlah_minggu++;
+            if (in_array((int)date('N', strtotime($tanggal)), $weekend_days, true)) {
+                $jumlah_akhir_pekan++;
             } else {
                 $is_libur = false;
                 foreach ($libur_nasional as $ln) {
@@ -314,7 +342,9 @@ class ModelAbsensiHarian extends CI_Model
 
         return array(
             'total_hari'          => $total_hari_bulan,
-            'jumlah_minggu'       => $jumlah_minggu,
+            'jumlah_minggu'       => $jumlah_akhir_pekan,
+            'jumlah_akhir_pekan'  => $jumlah_akhir_pekan,
+            'label_akhir_pekan'   => Attendance_policy::formatWeekendLabel($weekend_days),
             'jumlah_libur'        => $jumlah_libur,
             'hari_kerja_efektif'  => $hari_kerja_efektif,
             'hari_evaluasi'       => $hari_evaluasi,
@@ -323,22 +353,17 @@ class ModelAbsensiHarian extends CI_Model
         );
     }
 
-    /**
-     * Sinkronisasi data absensi harian ke tabel data_kehadiran (untuk kompatibilitas gaji)
-     */
     public function sinkron_ke_kehadiran($bulan, $tahun)
     {
         $rekap = $this->get_rekap_bulanan($bulan, $tahun);
         $bulantahun = str_pad($bulan, 2, '0', STR_PAD_LEFT) . $tahun;
 
         foreach ($rekap as $r) {
-            // Cek apakah sudah ada data di data_kehadiran
             $existing = $this->db->get_where('data_kehadiran', array(
                 'nik'   => $r['nik'],
                 'bulan' => $bulantahun
             ))->row();
 
-            // Ambil data pegawai lengkap
             $pegawai = $this->db->get_where('data_pegawai', array('nik' => $r['nik']))->row();
 
             $data_kehadiran = array(
@@ -363,9 +388,6 @@ class ModelAbsensiHarian extends CI_Model
         return true;
     }
 
-    /**
-     * Detail absensi harian 1 pegawai per bulan (untuk admin)
-     */
     public function get_detail_pegawai($nik, $bulan, $tahun)
     {
         $this->db->select('absensi_harian.*, data_pegawai.nama_pegawai, data_pegawai.jabatan');
@@ -378,9 +400,6 @@ class ModelAbsensiHarian extends CI_Model
         return $this->db->get()->result();
     }
 
-    /**
-     * Update status absensi oleh admin (misal: set sakit/izin)
-     */
     public function update_status($id, $status, $keterangan = '')
     {
         $data = array('status' => $status);
@@ -391,9 +410,6 @@ class ModelAbsensiHarian extends CI_Model
         return $this->db->update('absensi_harian', $data);
     }
 
-    /**
-     * Hitung ringkasan bulan ini untuk 1 pegawai saja (tanpa menghitung seluruh staf klinik)
-     */
     public function get_ringkasan_bulan_ini($nik)
     {
         $bulan = date('m');

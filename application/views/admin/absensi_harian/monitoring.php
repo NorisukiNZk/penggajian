@@ -14,6 +14,16 @@
 
 	<?php echo $this->session->flashdata('pesan') ?>
 
+	<?php if (!empty($info_hari['is_libur'])) : ?>
+		<div class="alert alert-warning d-flex align-items-center" role="alert">
+			<i class="fas fa-calendar-day mr-2"></i>
+			<div>
+				<strong><?php echo htmlspecialchars($info_hari['keterangan'], ENT_QUOTES, 'UTF-8'); ?>.</strong>
+				Absensi reguler hari ini ditutup otomatis; hanya pegawai dengan pengajuan <strong>Lembur Disetujui</strong> pada hari ini yang dapat melakukan absensi.
+			</div>
+		</div>
+	<?php endif; ?>
+
 	<!-- Ringkasan Hari Ini -->
 	<?php
 	$sudah_masuk = 0;

@@ -144,6 +144,10 @@ class Persetujuan extends CI_Controller {
 
 		foreach ($daterange as $date) {
 			$tgl = $date->format('Y-m-d');
+			$cek_libur = $this->ModelAbsensiHarian->cek_hari_libur($tgl);
+			if ($cek_libur['is_libur']) {
+				continue;
+			}
 			$cek = $this->db->get_where('absensi_harian', array('nik' => $cuti->nik, 'tanggal' => $tgl))->num_rows();
 			if ($cek === 0) {
 				$this->db->insert('absensi_harian', array(

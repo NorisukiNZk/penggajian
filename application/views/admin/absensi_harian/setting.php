@@ -97,6 +97,29 @@
 							</div>
 						</div>
 
+						<?php $libur_terpilih = Attendance_policy::parseWeekendDays($setting); ?>
+						<div class="form-group row">
+							<label class="col-sm-4 col-form-label font-weight-bold">Hari Libur Mingguan</label>
+							<div class="col-sm-8">
+								<div class="d-flex flex-wrap" style="gap: 0.75rem 1.25rem;">
+									<?php foreach (Attendance_policy::$dayNamesId as $isoNum => $dayLabel) : ?>
+										<div class="custom-control custom-checkbox">
+											<input type="checkbox"
+												   class="custom-control-input"
+												   id="liburHari<?php echo $isoNum; ?>"
+												   name="hari_libur_mingguan[]"
+												   value="<?php echo $isoNum; ?>"
+												   <?php echo in_array($isoNum, $libur_terpilih, true) ? 'checked' : ''; ?>>
+											<label class="custom-control-label" for="liburHari<?php echo $isoNum; ?>"><?php echo $dayLabel; ?></label>
+										</div>
+									<?php endforeach; ?>
+								</div>
+								<small class="text-muted d-block mt-1">
+									Pada hari libur mingguan &amp; tanggal merah, absensi reguler ditutup otomatis (kecuali bagi pegawai yang memiliki jadwal <strong>Lembur Disetujui</strong> pada hari tersebut). Default: Sabtu &amp; Minggu.
+								</small>
+							</div>
+						</div>
+
 						<hr>
 						<button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Simpan Setting</button>
 						<a href="<?php echo base_url('admin/absensi_harian') ?>" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Kembali</a>
@@ -126,18 +149,19 @@
 						</tr>
 						<tr>
 							<td><span class="badge badge-danger">Alpha</span></td>
-							<td>Tidak absen sama sekali</td>
+							<td>Tidak absen pada hari kerja efektif</td>
 						</tr>
 					</table>
 
 					<hr>
 					<h6 class="font-weight-bold">Setting Saat Ini:</h6>
-					<ul class="list-unstyled">
-						<li>⏰ Masuk: <strong><?php echo date('H:i', strtotime($setting->jam_masuk)) ?></strong></li>
-						<li>⏳ Toleransi: <strong><?php echo $setting->toleransi_menit ?> menit</strong></li>
-						<li>✅ Batas tepat waktu: <strong><?php echo date('H:i', strtotime($setting->jam_masuk . ' +' . $setting->toleransi_menit . ' minutes')) ?></strong></li>
-						<li>🏠 Pulang: <strong><?php echo date('H:i', strtotime($setting->jam_pulang)) ?></strong></li>
-						<li>⚠️ <?php echo $setting->maks_terlambat_jadi_alpha ?>x terlambat = 1 Alpha</li>
+					<ul class="list-unstyled small mb-0">
+						<li class="mb-1"><i class="fas fa-clock text-primary mr-1"></i> Masuk: <strong><?php echo date('H:i', strtotime($setting->jam_masuk)) ?></strong></li>
+						<li class="mb-1"><i class="fas fa-hourglass-half text-info mr-1"></i> Toleransi: <strong><?php echo (int)$setting->toleransi_menit ?> menit</strong></li>
+						<li class="mb-1"><i class="fas fa-check-circle text-success mr-1"></i> Batas tepat waktu: <strong><?php echo date('H:i', strtotime($setting->jam_masuk . ' +' . $setting->toleransi_menit . ' minutes')) ?></strong></li>
+						<li class="mb-1"><i class="fas fa-right-from-bracket text-secondary mr-1"></i> Pulang: <strong><?php echo date('H:i', strtotime($setting->jam_pulang)) ?></strong></li>
+						<li class="mb-1"><i class="fas fa-triangle-exclamation text-warning mr-1"></i> <?php echo (int)$setting->maks_terlambat_jadi_alpha ?>x terlambat = 1 Alpha</li>
+						<li><i class="fas fa-calendar-times text-danger mr-1"></i> Libur Mingguan: <strong><?php echo htmlspecialchars(Attendance_policy::formatWeekendLabel($libur_terpilih), ENT_QUOTES, 'UTF-8'); ?></strong></li>
 					</ul>
 				</div>
 			</div>

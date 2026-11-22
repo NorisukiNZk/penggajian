@@ -28,8 +28,9 @@ class Dashboard extends CI_Controller {
 		// Ringkasan kehadiran bulan ini
 		$data['ringkasan'] = $this->ModelAbsensiHarian->get_ringkasan_bulan_ini($nik);
 
-		// Setting absensi
+		// Setting absensi & status gerbang hari ini (libur / lembur / jam kerja)
 		$data['setting'] = $this->ModelAbsensiHarian->get_setting();
+		$data['gate'] = $this->ModelAbsensiHarian->get_status_hari_ini($nik);
 
 		// Data Hari Libur Nasional (Terdekat)
 		$data['hari_libur'] = $this->db->query("SELECT * FROM hari_libur WHERE tanggal >= CURDATE() ORDER BY tanggal ASC LIMIT 5")->result();

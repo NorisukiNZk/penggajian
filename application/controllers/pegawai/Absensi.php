@@ -28,6 +28,7 @@ class Absensi extends CI_Controller {
 		$data['absensi_hari_ini'] = $this->ModelAbsensiHarian->get_absensi_hari_ini($nik);
 		$data['setting'] = $this->ModelAbsensiHarian->get_setting();
 		$data['ringkasan'] = $this->ModelAbsensiHarian->get_ringkasan_bulan_ini($nik);
+		$data['gate'] = $this->ModelAbsensiHarian->get_status_hari_ini($nik);
 
 		$this->load->view('template_pegawai/header', $data);
 		$this->load->view('template_pegawai/sidebar');
@@ -59,11 +60,24 @@ class Absensi extends CI_Controller {
 			return;
 		}
 
+		$gate = $this->ModelAbsensiHarian->get_status_hari_ini($nik);
+		if (!$gate['boleh_absen_masuk']) {
+			$pesan_tolak = !empty($gate['alasan_masuk']) ? $gate['alasan_masuk'] : 'Belum saatnya Absen Masuk atau sudah melewati batas maksimal keterlambatan.';
+			$this->session->set_flashdata('pesan','<div class="alert alert-warning alert-dismissible fade show" role="alert">
+				<strong>Absen Masuk Ditutup!</strong> ' . htmlspecialchars($pesan_tolak, ENT_QUOTES, 'UTF-8') . '
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+				</button>
+				</div>');
+			redirect('pegawai/absensi');
+			return;
+		}
+
 		$proses = $this->ModelAbsensiHarian->absen_masuk($nik);
 
 		if (!$proses) {
 			$this->session->set_flashdata('pesan','<div class="alert alert-danger alert-dismissible fade show" role="alert">
-				<strong>Gagal!</strong> Belum saatnya Absen Masuk atau sudah melewati batas maksimal keterlambatan.
+				<strong>Gagal!</strong> Tidak dapat mencatat absen masuk saat ini.
 				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 				<span aria-hidden="true">&times;</span>
 				</button>
@@ -116,6 +130,19 @@ class Absensi extends CI_Controller {
 		if ($absensi->jam_pulang) {
 			$this->session->set_flashdata('pesan','<div class="alert alert-warning alert-dismissible fade show" role="alert">
 				<strong>Anda sudah melakukan absen pulang hari ini!</strong>
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+				</button>
+				</div>');
+			redirect('pegawai/absensi');
+			return;
+		}
+
+		$gate = $this->ModelAbsensiHarian->get_status_hari_ini($nik);
+		if (!$gate['boleh_absen_pulang']) {
+			$pesan_tolak = !empty($gate['alasan_pulang']) ? $gate['alasan_pulang'] : 'Belum saatnya Absen Pulang.';
+			$this->session->set_flashdata('pesan','<div class="alert alert-warning alert-dismissible fade show" role="alert">
+				<strong>Absen Pulang Ditutup!</strong> ' . htmlspecialchars($pesan_tolak, ENT_QUOTES, 'UTF-8') . '
 				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 				<span aria-hidden="true">&times;</span>
 				</button>

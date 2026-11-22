@@ -480,6 +480,7 @@ CREATE TABLE `setting_absensi` (
   `batas_terlambat_berat` time NOT NULL DEFAULT '09:00:00',
   `maks_terlambat_jadi_alpha` int(11) NOT NULL DEFAULT 3,
   `tarif_lembur_per_jam` int(11) DEFAULT 20000,
+  `hari_libur_mingguan` varchar(20) NOT NULL DEFAULT '6,7',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -490,7 +491,7 @@ CREATE TABLE `setting_absensi` (
 
 LOCK TABLES `setting_absensi` WRITE;
 /*!40000 ALTER TABLE `setting_absensi` DISABLE KEYS */;
-INSERT INTO `setting_absensi` VALUES (1,'11:39:00','07:50:00',15,'17:00:00','16:59:00','10:00:00',3,20000);
+INSERT INTO `setting_absensi` VALUES (1,'11:39:00','07:50:00',15,'17:00:00','16:59:00','10:00:00',3,20000,'6,7');
 /*!40000 ALTER TABLE `setting_absensi` ENABLE KEYS */;
 UNLOCK TABLES;
 

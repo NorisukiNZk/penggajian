@@ -79,7 +79,7 @@ Proyek ini mengusung **Arsitektur Tiga Antarmuka Berbasis Peran (*Role-Different
 - **Log Aktivitas Audit** (`Log_aktivitas.php`): Pencatatan jejak audit login, persetujuan cuti/lembur/pinjaman, serta mutasi data master & payroll lengkap dengan filter modul dan pencarian kata kunci.
 
 ### 3. Portal Pegawai (`application/controllers/pegawai/`)
-- **Beranda & Presensi** (`Dashboard.php`, `Absensi.php`): Absen masuk/pulang dengan jam server WITA via POST berproteksi CSRF, unggah foto profil mandiri (`update_foto`), ringkasan kehadiran, dan jadwal libur.
+- **Beranda & Presensi** (`Dashboard.php`, `Absensi.php`): Absen masuk/pulang dengan jam server WITA via POST berproteksi CSRF, penutupan otomatis pada hari libur mingguan (default Sabtu & Minggu) dan tanggal merah nasional dengan pengecualian khusus bagi pegawai berjadwal **Lembur Disetujui**, unggah foto profil mandiri (`update_foto`), ringkasan kehadiran, dan jadwal libur.
 - **Layanan Mandiri** (`Cuti.php`, `Lembur.php`, `Pinjaman.php`, `Data_gaji.php`, `Ganti_Password.php`): Pengajuan cuti + delegasi shift, pembatalan aman via POST, simulator cicilan & DSR pinjaman, filter riwayat slip gaji berdasarkan tahun (`tahun`), cetak & unduh PDF slip gaji/SPPK/SK Cuti, dan pembaruan sandi minimal 8 karakter.
 
 ### 4. Portal Pimpinan (`application/controllers/pimpinan/`)
@@ -129,6 +129,7 @@ penggajian/
 ├── phpunit.xml                         # Konfigurasi suite uji unit
 ├── tests/
 │   ├── bootstrap.php                   # Bootstrap test terisolasi + shim kompatibilitas timer PHPUnit 5
+│   ├── AttendancePolicyTest.php        # Uji aturan libur akhir pekan, tanggal merah, & pengecualian lembur disetujui
 │   ├── PayrollCalculatorTest.php       # Uji perhitungan slip, komponen persentase/override, urutan periode, CSV
 │   └── QrDokumenTest.php               # Uji HMAC-SHA256, QR encoder, dan dekoder piksel PNG ISO 18004
 ├── assets/
@@ -161,6 +162,7 @@ penggajian/
     ├── helpers/
     │   └── qr_dokumen_helper.php       # Penandaan HMAC-SHA256 & penyematan QR PNG murni PHP
     ├── libraries/
+    │   ├── Attendance_policy.php       # Evaluasi hari libur mingguan, tanggal merah, & gerbang lembur hari libur
     │   ├── Payroll_calculator.php      # Mesin hitung payroll murni & sanitasi CSV
     │   ├── Pdf_exporter.php            # Wrapper Dompdf untuk ekspor PDF A4
     │   └── Qr_matrix.php               # Generator QR ISO/IEC 18004 Byte mode murni PHP

@@ -53,9 +53,9 @@
 		</div>
 		<div class="col-xl-3 col-md-6 mb-2">
 			<div class="card border-left-secondary shadow-xs py-2 px-3 h-100">
-				<div class="text-xs font-weight-bold text-secondary text-uppercase mb-1">Libur Resmi (Minggu + Libur)</div>
+				<div class="text-xs font-weight-bold text-secondary text-uppercase mb-1">Libur Resmi (Akhir Pekan + Libur)</div>
 				<div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo isset($stat_hari) ? ($stat_hari['jumlah_minggu'] + $stat_hari['jumlah_libur']) : 0 ?> Hari Libur</div>
-				<small class="text-muted"><?php echo isset($stat_hari) ? $stat_hari['jumlah_minggu'] : 0 ?> Minggu + <?php echo isset($stat_hari) ? $stat_hari['jumlah_libur'] : 0 ?> Tanggal Merah</small>
+				<small class="text-muted"><?php echo isset($stat_hari) ? $stat_hari['jumlah_minggu'] : 0 ?> Akhir Pekan (<?php echo isset($stat_hari['label_akhir_pekan']) ? htmlspecialchars($stat_hari['label_akhir_pekan'], ENT_QUOTES, 'UTF-8') : 'Sabtu &amp; Minggu'; ?>) + <?php echo isset($stat_hari) ? $stat_hari['jumlah_libur'] : 0 ?> Tanggal Merah</small>
 			</div>
 		</div>
 		<div class="col-xl-3 col-md-6 mb-2">
@@ -78,7 +78,7 @@
 	<div class="alert alert-light border shadow-xs d-flex align-items-center py-2 px-3 mb-4" style="border-radius: 10px;">
 		<i class="fas fa-info-circle text-primary fa-lg mr-3"></i>
 		<div class="small">
-			<strong>Aturan Evaluasi Kehadiran:</strong> Pegawai yang tidak hadir pada hari kerja efektif dihitung <strong>Alpha</strong>. Terlambat <?php echo $setting->maks_terlambat_jadi_alpha ?>x dalam sebulan dikonversi setara 1 hari Alpha. Hari Minggu dan Tanggal Merah <strong>tidak dihitung Alpha</strong> karena merupakan hak libur resmi.
+			<strong>Aturan Evaluasi Kehadiran:</strong> Pegawai yang tidak hadir pada hari kerja efektif dihitung <strong>Alpha</strong>. Terlambat <?php echo (int)$setting->maks_terlambat_jadi_alpha ?>x dalam sebulan dikonversi setara 1 hari Alpha. Hari Libur Mingguan (<strong><?php echo isset($stat_hari['label_akhir_pekan']) ? htmlspecialchars($stat_hari['label_akhir_pekan'], ENT_QUOTES, 'UTF-8') : 'Sabtu &amp; Minggu'; ?></strong>) dan Tanggal Merah <strong>tidak dihitung Alpha</strong>; absensi pada hari libur hanya dibuka khusus bagi pegawai dengan Lembur Disetujui.
 		</div>
 	</div>
 

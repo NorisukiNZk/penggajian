@@ -86,19 +86,43 @@
             </div>
           <?php endif; ?>
         <?php else : ?>
-          <div class="py-3 text-center">
-            <div class="font-weight-bold mb-1">Belum ada catatan absen masuk hari ini</div>
-            <p class="small text-muted mb-0">
-              Gerbang absen masuk aktif mulai pukul <?php echo date('H:i', strtotime($setting->mulai_absen_masuk)); ?> s/d <?php echo date('H:i', strtotime($setting->batas_terlambat_berat)); ?> WITA.
-            </p>
-          </div>
+          <?php if (!empty($gate['is_libur']) && empty($gate['mode_lembur_libur'])) : ?>
+            <div class="p-3 rounded border text-center" style="background: var(--emp-surface-alt);">
+              <span class="emp-status emp-status-info mb-2">
+                <i class="fas fa-calendar-day mr-1"></i> Hari Libur
+              </span>
+              <div class="font-weight-bold mb-1"><?php echo htmlspecialchars($gate['keterangan_libur'], ENT_QUOTES, 'UTF-8'); ?></div>
+              <p class="small text-muted mb-0">
+                Absensi reguler ditutup pada hari libur. Presensi otomatis terbuka hanya jika Anda memiliki pengajuan <strong>Lembur</strong> yang disetujui untuk hari ini.
+              </p>
+            </div>
+          <?php elseif (!empty($gate['mode_lembur_libur']) && !empty($gate['lembur'])) : ?>
+            <div class="p-3 rounded border" style="background: var(--emp-surface-alt);">
+              <span class="emp-status emp-status-ok mb-2">
+                <i class="fas fa-business-time mr-1"></i> Mode Lembur Hari Libur
+              </span>
+              <div class="font-weight-bold mb-1">
+                Jadwal Lembur Disetujui: <?php echo substr($gate['lembur']['jam_mulai'], 0, 5); ?> s/d <?php echo substr($gate['lembur']['jam_selesai'], 0, 5); ?> WITA
+              </div>
+              <p class="small text-muted mb-0">
+                Gerbang absen lembur terbuka mulai pukul <?php echo substr($gate['lembur']['buka_masuk'], 0, 5); ?> WITA (30 menit sebelum jadwal dimulai) pada <?php echo htmlspecialchars($gate['keterangan_libur'], ENT_QUOTES, 'UTF-8'); ?>.
+              </p>
+            </div>
+          <?php else : ?>
+            <div class="py-3 text-center">
+              <div class="font-weight-bold mb-1">Belum ada catatan absen masuk hari ini</div>
+              <p class="small text-muted mb-0">
+                Gerbang absen masuk aktif mulai pukul <?php echo date('H:i', strtotime($setting->mulai_absen_masuk)); ?> s/d <?php echo date('H:i', strtotime($setting->batas_terlambat_berat)); ?> WITA.
+              </p>
+            </div>
+          <?php endif; ?>
         <?php endif; ?>
       </div>
 
       <div class="pt-2">
         <?php if ($absensi_hari_ini) : ?>
           <?php if (!$absensi_hari_ini->jam_pulang) : ?>
-            <?php if ($jam_sekarang >= $setting->mulai_absen_pulang) : ?>
+            <?php if (!empty($gate['boleh_absen_pulang'])) : ?>
               <form method="POST" action="<?php echo base_url('pegawai/absensi/absen_pulang'); ?>" class="m-0">
                 <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
                 <button type="submit"
@@ -111,7 +135,7 @@
               </form>
             <?php else : ?>
               <button type="button" class="btn btn-light btn-block" disabled>
-                <i class="fas fa-lock"></i> Absen pulang dibuka jam <?php echo date('H:i', strtotime($setting->mulai_absen_pulang)); ?> WITA
+                <i class="fas fa-lock"></i> <?php echo htmlspecialchars(!empty($gate['alasan_pulang']) ? $gate['alasan_pulang'] : ('Absen pulang dibuka jam ' . date('H:i', strtotime($setting->mulai_absen_pulang)) . ' WITA'), ENT_QUOTES, 'UTF-8'); ?>
               </button>
             <?php endif; ?>
           <?php else : ?>
@@ -120,24 +144,20 @@
             </div>
           <?php endif; ?>
         <?php else : ?>
-          <?php if ($jam_sekarang >= $setting->mulai_absen_masuk && $jam_sekarang <= $setting->batas_terlambat_berat) : ?>
+          <?php if (!empty($gate['boleh_absen_masuk'])) : ?>
             <form method="POST" action="<?php echo base_url('pegawai/absensi/absen_masuk'); ?>" class="m-0">
               <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
               <button type="submit"
                  class="btn btn-primary btn-block btn-konfirmasi"
-                 data-judul="Absen Masuk Sekarang?"
-                 data-pesan="Catat kehadiran masuk kerja Anda hari ini?"
+                 data-judul="<?php echo !empty($gate['mode_lembur_libur']) ? 'Catat Absen Masuk Lembur?' : 'Absen Masuk Sekarang?'; ?>"
+                 data-pesan="<?php echo !empty($gate['mode_lembur_libur']) ? 'Catat kehadiran lembur hari libur Anda sekarang?' : 'Catat kehadiran masuk kerja Anda hari ini?'; ?>"
                  data-tipe="question">
-                <i class="fas fa-right-to-bracket"></i> Catat Absen Masuk
+                <i class="fas fa-right-to-bracket"></i> <?php echo !empty($gate['mode_lembur_libur']) ? 'Catat Absen Masuk Lembur' : 'Catat Absen Masuk'; ?>
               </button>
             </form>
-          <?php elseif ($jam_sekarang < $setting->mulai_absen_masuk) : ?>
-            <button type="button" class="btn btn-light btn-block" disabled>
-              <i class="fas fa-lock"></i> Belum waktunya masuk (dibuka jam <?php echo date('H:i', strtotime($setting->mulai_absen_masuk)); ?> WITA)
-            </button>
           <?php else : ?>
             <button type="button" class="btn btn-light btn-block" disabled>
-              <i class="fas fa-circle-xmark"></i> Gerbang absen ditutup (batas <?php echo date('H:i', strtotime($setting->batas_terlambat_berat)); ?> WITA)
+              <i class="fas fa-lock"></i> <?php echo htmlspecialchars(!empty($gate['alasan_masuk']) ? $gate['alasan_masuk'] : 'Gerbang absen masuk belum dibuka.', ENT_QUOTES, 'UTF-8'); ?>
             </button>
           <?php endif; ?>
         <?php endif; ?>

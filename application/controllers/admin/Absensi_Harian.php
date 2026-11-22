@@ -25,6 +25,7 @@ class Absensi_Harian extends CI_Controller {
 		$data['title'] = "Monitoring Absensi Hari Ini";
 		$data['absensi'] = $this->ModelAbsensiHarian->get_semua_absensi_hari_ini();
 		$data['setting'] = $this->ModelAbsensiHarian->get_setting();
+		$data['info_hari'] = $this->ModelAbsensiHarian->cek_hari_libur();
 		$data['tanggal'] = date('d F Y');
 
 		$this->load->view('template_admin/header', $data);
@@ -77,18 +78,38 @@ class Absensi_Harian extends CI_Controller {
 	 */
 	public function update_setting()
 	{
+		if (strtoupper((string)$this->input->method()) !== 'POST') {
+			redirect('admin/absensi_harian/setting');
+			return;
+		}
+
+		$raw_libur = $this->input->post('hari_libur_mingguan', TRUE);
+		$clean_days = array();
+		if (is_array($raw_libur)) {
+			foreach ($raw_libur as $d) {
+				$n = (int)$d;
+				if ($n >= 1 && $n <= 7) {
+					$clean_days[$n] = $n;
+				}
+			}
+			ksort($clean_days);
+		}
+		$hari_libur_csv = !empty($clean_days) ? implode(',', $clean_days) : '6,7';
+
 		$data = array(
-			'mulai_absen_masuk'         => $this->input->post('mulai_absen_masuk'),
-			'jam_masuk'                 => $this->input->post('jam_masuk'),
-			'toleransi_menit'           => $this->input->post('toleransi_menit'),
-			'mulai_absen_pulang'        => $this->input->post('mulai_absen_pulang'),
-			'jam_pulang'                => $this->input->post('jam_pulang'),
-			'batas_terlambat_berat'     => $this->input->post('batas_terlambat_berat'),
-			'maks_terlambat_jadi_alpha' => $this->input->post('maks_terlambat_jadi_alpha'),
-			'tarif_lembur_per_jam'      => $this->input->post('tarif_lembur_per_jam')
+			'mulai_absen_masuk'         => $this->input->post('mulai_absen_masuk', TRUE),
+			'jam_masuk'                 => $this->input->post('jam_masuk', TRUE),
+			'toleransi_menit'           => (int)$this->input->post('toleransi_menit', TRUE),
+			'mulai_absen_pulang'        => $this->input->post('mulai_absen_pulang', TRUE),
+			'jam_pulang'                => $this->input->post('jam_pulang', TRUE),
+			'batas_terlambat_berat'     => $this->input->post('batas_terlambat_berat', TRUE),
+			'maks_terlambat_jadi_alpha' => max(1, (int)$this->input->post('maks_terlambat_jadi_alpha', TRUE)),
+			'tarif_lembur_per_jam'      => max(0, (int)$this->input->post('tarif_lembur_per_jam', TRUE)),
+			'hari_libur_mingguan'       => $hari_libur_csv
 		);
 
 		$this->ModelAbsensiHarian->update_setting($data);
+		$this->ModelAudit->catat('absensi', 'update_setting', 1, 'HRD memperbarui pengaturan absensi (libur mingguan: ' . Attendance_policy::formatWeekendLabel(array_values($clean_days ?: array(6, 7))) . ').');
 
 		$this->session->set_flashdata('pesan','<div class="alert alert-success alert-dismissible fade show" role="alert">
 			<strong>Setting absensi berhasil diupdate!</strong>
