@@ -324,7 +324,10 @@ $config['cache_query_string'] = FALSE;
 | https://codeigniter.com/user_guide/libraries/encryption.html
 |
 */
-$config['encryption_key'] = getenv('APP_ENCRYPTION_KEY') ? getenv('APP_ENCRYPTION_KEY') : 'kpmh_hris_2026_9f3c7a1b8e4d206a5c3f8b1e7d4a92c1';
+$is_prod_cfg = (defined('ENVIRONMENT') && ENVIRONMENT === 'production');
+$config['encryption_key'] = getenv('APP_ENCRYPTION_KEY')
+	? getenv('APP_ENCRYPTION_KEY')
+	: ($is_prod_cfg ? '' : 'kpmh_hris_2026_9f3c7a1b8e4d206a5c3f8b1e7d4a92c1');
 
 /*
 |--------------------------------------------------------------------------

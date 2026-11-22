@@ -29,3 +29,21 @@ user_guide_src/cilexer/pycilexer.egg-info/*
 *.sublime-project
 /tests/tests/
 /tests/results/
+
+# Local Environment, Editor & OS Files
+#-------------------------
+.env
+.env.*
+.vscode/
+Thumbs.db
+*.log
+*.bak
+
+# User-Uploaded Sensitive Files (keep folder structure & protection files)
+#-------------------------
+uploads/cuti/*
+!uploads/cuti/index.html
+!uploads/cuti/.htaccess
+uploads/pinjaman/*
+!uploads/pinjaman/index.html
+!uploads/pinjaman/.htaccess

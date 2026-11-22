@@ -88,13 +88,13 @@ Proyek ini mengusung **Arsitektur Tiga Antarmuka Berbasis Peran (*Role-Different
 ## Teknologi & Pustaka
 
 - **Backend**: PHP `7.4` s/d `8.2`, **CodeIgniter 3.1.11** (`mysqli`), **Dompdf `^3.1`** (`composer.json`)
-- **Database**: MySQL 5.7+ / MariaDB 10.x (**17 tabel**)
+- **Database**: MySQL 5.7+ / MariaDB 10.x (**16 tabel**)
 - **QR Code Engine**: Encoder murni PHP ISO/IEC 18004 (`application/libraries/Qr_matrix.php`) + GD PNG
 - **Frontend & UI**:
   - Auth, Admin, Pegawai, Pimpinan & Landing Page: `assets/css/auth-portal.css`, `assets/css/admin-portal.css`, `assets/css/portal-pegawai.css`, `assets/css/portal-pimpinan.css`, `assets/css/landing-page.css`, Bootstrap 4.6 (`sb-admin-2.min.css` grid untuk Admin), jQuery
   - Tipografi: Google Fonts (`Plus Jakarta Sans` dan `Source Serif 4`)
   - Pustaka Visual & Tabel: FontAwesome `6.5.1`, Chart.js `4.4.7`, DataTables `2.2.2`, SweetAlert2 `11.17.2`
-- **Testing**: PHPUnit `5.2.7` (`phpunit.xml`, `tests/PayrollCalculatorTest.php`, `tests/QrDokumenTest.php`)
+- **Testing & CI**: PHPUnit `5.2.7` (`phpunit.xml`, `tests/`) dan GitHub Actions (`.github/workflows/ci.yml`)
 
 ---
 
@@ -102,6 +102,7 @@ Proyek ini mengusung **Arsitektur Tiga Antarmuka Berbasis Peran (*Role-Different
 
 ```text
 penggajian/
+├── .github/workflows/ci.yml            # Pipeline CI GitHub Actions (PHP lint + PHPUnit)
 ├── DESIGN.md                           # Dokumentasi arah desain, dial, palet WCAG AA, & struktur antarmuka
 ├── README.md
 ├── composer.json                       # Dependensi PHP (dompdf/dompdf, phpunit)
@@ -118,14 +119,12 @@ penggajian/
 │   │   ├── portal-pegawai.css          # Stylesheet Portal Pegawai (Mobile-First Top-Nav + Bottom Bar)
 │   │   ├── portal-pimpinan.css         # Stylesheet Portal Pimpinan (Editorial Zero-Sidebar)
 │   │   └── sb-admin-2.min.css          # Grid Bootstrap dasar Portal Admin
-│   └── img/                            # Logo klinik (kpmh.png) & ilustrasi SVG
+│   ├── img/                            # Logo klinik (kpmh.png, kpmh.jpg) & ilustrasi SVG
+│   ├── js/sb-admin-2.min.js            # Script navigasi dasar Admin
+│   └── vendor/                         # jQuery, Bootstrap Bundle, & jQuery Easing (minified)
 ├── db database/
-│   ├── penggajian.sql                  # Skema lengkap konsolidasi (17 tabel) & data dasar
-│   ├── migration_absensi_harian.sql    # Migrasi absensi harian & aturan jam kerja
-│   ├── migration_komponen_gaji.sql     # Migrasi komponen gaji dinamis & override pegawai
-│   ├── migration_role_pimpinan.sql     # Migrasi hak_akses = 3, jabatan Direktur, & akun demo pimpinan
-│   ├── migration_hardening_audit.sql   # Migrasi tabel audit_log & login_attempts
-│   └── update_admin_password.sql       # Perluasan kolom password & migrasi hash BCRYPT
+│   ├── penggajian.sql                  # Skema lengkap konsolidasi (16 tabel) & data dasar
+│   └── migrations/                     # Arsip skrip migrasi bertahap (absensi, komponen, pimpinan, audit, password)
 ├── photo/                              # Foto profil pegawai (.htaccess terlindungi)
 ├── uploads/
 │   ├── cuti/                           # Berkas lampiran pengajuan cuti / SKD (.htaccess terlindungi)
@@ -160,9 +159,9 @@ penggajian/
 
 ## Struktur Basis Data
 
-Database `penggajian` terdiri atas **17 tabel**:
+Database `penggajian` terdiri atas **16 tabel** (terkonsolidasi penuh di `db database/penggajian.sql`):
 
-- **Kepegawaian & Akses**: `data_pegawai`, `data_jabatan`, `data_departemen`, `hak_akses` (`1 = admin`, `2 = pegawai`, `3 = pimpinan`)
+- **Kepegawaian & Akses**: `data_pegawai`, `data_jabatan`, `hak_akses` (`1 = admin`, `2 = pegawai`, `3 = pimpinan`)
 - **Keamanan & Audit**: `audit_log`, `login_attempts`
 - **Presensi & Kalender**: `absensi_harian`, `data_kehadiran`, `hari_libur`, `setting_absensi`
 - **Cuti, Lembur & Pinjaman**: `data_cuti`, `setting_cuti`, `data_lembur`, `data_pinjaman`
@@ -199,7 +198,7 @@ Cakupan uji saat ini meliputi:
    ```
 3. **Siapkan Basis Data**:
    - Buat database bernama `penggajian` pada MySQL/phpMyAdmin.
-   - Impor `db database/penggajian.sql` (skema dasar konsolidasi). Bila memperbarui basis data lama, jalankan juga skrip migrasi tambahan di `db database/` termasuk `migration_role_pimpinan.sql` dan `migration_hardening_audit.sql`.
+   - Impor `db database/penggajian.sql` (skema lengkap konsolidasi 16 tabel). Untuk pembaruan dari basis data lama, arsip skrip migrasi bertahap tersedia di `db database/migrations/`.
 4. **Konfigurasi Lingkungan & Keamanan**:
    - Pastikan kredensial pada `application/config/database.php` sesuai dengan server MySQL lokal.
    - Pastikan `$config['base_url']` pada `application/config/config.php` sesuai alamat instalasi, dan atur variabel lingkungan `APP_ENCRYPTION_KEY`, `CI_ENV`, `RECAPTCHA_SITE_KEY`, serta `RECAPTCHA_SECRET_KEY` di produksi pada `application/config/app_security.php` & `config.php`.

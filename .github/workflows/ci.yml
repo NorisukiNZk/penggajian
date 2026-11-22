@@ -1,0 +1,32 @@
+name: CI - Lint & Unit Tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup PHP 7.4
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+          extensions: gd, mbstring, dom, xml, json, curl, mysqli
+          tools: composer:v2
+
+      - name: PHP Syntax Lint
+        run: |
+          find application tests index.php -name '*.php' -print0 | xargs -0 -n1 php -l
+
+      - name: Install Composer dependencies
+        run: composer install --no-interaction --prefer-dist --no-progress
+
+      - name: Run PHPUnit test suite
+        run: php -d error_reporting=22527 vendor/phpunit/phpunit/phpunit

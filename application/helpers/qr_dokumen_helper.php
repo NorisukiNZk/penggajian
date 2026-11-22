@@ -16,6 +16,10 @@ if (!function_exists('qr_doc_secret')) {
 		if (!empty($envKey)) {
 			return hash('sha256', $envKey . '|KPMH_HRIS_DOC_V1');
 		}
+		if (defined('ENVIRONMENT') && ENVIRONMENT === 'production') {
+			log_message('error', 'APP_ENCRYPTION_KEY / encryption_key belum dikonfigurasi pada environment production.');
+			return '';
+		}
 		return hash('sha256', 'kpmh_hris_2026_9f3c7a1b8e4d206a5c3f8b1e7d4a92c1|KPMH_HRIS_DOC_V1');
 	}
 }
