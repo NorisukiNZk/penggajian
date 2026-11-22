@@ -216,7 +216,11 @@ Cakupan uji saat ini meliputi:
 1. **Salin Proyek**: Letakkan folder ke root web server (misal `C:\xampp\htdocs\penggajian`).
 2. **Pasang Dependensi Composer** (bila belum ada folder `vendor/`):
    ```bash
+   # Lingkungan pengembangan (termasuk PHPUnit):
    composer install
+
+   # Lingkungan produksi (tanpa paket dev/PHPUnit):
+   composer install --no-dev --optimize-autoloader
    ```
 3. **Siapkan Basis Data**:
    - Buat database bernama `penggajian` pada MySQL/phpMyAdmin.
@@ -239,7 +243,7 @@ Saat mode pengembangan aktif (`$config['show_demo_chips'] = TRUE`), akun berikut
 | **Pegawai** | `2` | `anya` | `12345` | `pegawai/dashboard` |
 | **Pimpinan / Direktur** | `3` | `pimpinan` | `pimpinan123` | `pimpinan/dashboard` |
 
-> **Catatan Produksi**: Atur `CI_ENV=production` di server produksi untuk menonaktifkan detail galat PHP/DB, menyembunyikan tombol pengisian demo, dan mengaktifkan kunci produksi reCAPTCHA v2 serta kunci enkripsi unik (`APP_ENCRYPTION_KEY`).
+> **Catatan Produksi**: Untuk server produksi/online, gunakan **PHP 8.1/8.2** (hindari PHP 7.4 EOL / XAMPP Windows di jaringan publik), pasang dependensi dengan `composer install --no-dev`, atur `CI_ENV=production`, serta tetapkan `APP_ENCRYPTION_KEY` dan kunci produksi reCAPTCHA v2. Root `.htaccess` sudah memblokir akses HTTP ke `/vendor/`, `/db database/`, `/tests/`, `/.git/`, `composer.json`, dan file `.sql`.
 
 ### Daftar Rute Utama
 - **Publik**: `/`, `/login`, `/lupa_password`, `/verifikasi`, `/verifikasi/cek`
