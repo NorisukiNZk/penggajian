@@ -19,6 +19,10 @@ require_once APPPATH . 'libraries/Payroll_calculator.php';
 require_once APPPATH . 'libraries/Qr_matrix.php';
 require_once APPPATH . 'helpers/qr_dokumen_helper.php';
 
+if (!class_exists('PHPUnit_Framework_TestCase', false) && class_exists('\PHPUnit\Framework\TestCase')) {
+    class_alias('\PHPUnit\Framework\TestCase', 'PHPUnit_Framework_TestCase');
+}
+
 if (!class_exists('PHP_Timer', false)) {
     class PHP_Timer
     {

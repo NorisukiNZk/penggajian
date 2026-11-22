@@ -56,14 +56,14 @@ class QrDokumenTest extends PHPUnit_Framework_TestCase
     public function testRenderQrDokumenHtmlAndPdfModes()
     {
         $htmlWeb = render_qr_dokumen('cuti', '15', '', 82, false);
-        $this->assertContains('qr-wrapper', $htmlWeb);
-        $this->assertContains('CUTI-', $htmlWeb);
-        $this->assertContains('data:image/png;base64,', $htmlWeb);
-        $this->assertNotContains('qrcode.min.js', $htmlWeb);
+        $this->assertTrue(strpos($htmlWeb, 'qr-wrapper') !== false);
+        $this->assertTrue(strpos($htmlWeb, 'CUTI-') !== false);
+        $this->assertTrue(strpos($htmlWeb, 'data:image/png;base64,') !== false);
+        $this->assertFalse(strpos($htmlWeb, 'qrcode.min.js') !== false);
 
         $htmlPdf = render_qr_dokumen('slip', '300001', '092026', 78, true);
-        $this->assertContains('SLIP-', $htmlPdf);
-        $this->assertContains('data:image/png;base64,', $htmlPdf);
+        $this->assertTrue(strpos($htmlPdf, 'SLIP-') !== false);
+        $this->assertTrue(strpos($htmlPdf, 'data:image/png;base64,') !== false);
     }
 
     private function decodeQrFromPngDataUri($dataUri)
