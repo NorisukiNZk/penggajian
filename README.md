@@ -2,6 +2,13 @@
 
 ### Klinik Pratama Dr. H.M. Hidayatullah (Banjarbaru)
 
+[![CI - Lint & Unit Tests](https://github.com/NorisukiNZk/penggajian/actions/workflows/ci.yml/badge.svg)](https://github.com/NorisukiNZk/penggajian/actions/workflows/ci.yml)
+![PHP](https://img.shields.io/badge/PHP-7.4%2B-18293D?style=flat)
+![CodeIgniter](https://img.shields.io/badge/CodeIgniter-3.1.11-854D0E?style=flat)
+![Database](https://img.shields.io/badge/MySQL%20%2F%20MariaDB-16%20Tabel-0F5132?style=flat)
+![Dompdf](https://img.shields.io/badge/PDF-Dompdf%203.1-18293D?style=flat)
+![PHPUnit](https://img.shields.io/badge/Tests-PHPUnit%209.6-0F5132?style=flat)
+
 Aplikasi web berbasis **CodeIgniter 3.1.11** untuk pengelolaan kepegawaian, presensi shift harian, cuti, lembur, pinjaman karyawan (kasbon), perhitungan penggajian (*payroll*), ekspor PDF resmi, serta verifikasi dokumen berbasis QR Code untuk **Klinik Pratama Dr. H.M. Hidayatullah**.
 
 Proyek ini mengusung **Arsitektur Tiga Antarmuka Berbasis Peran (*Role-Differentiated UI/UX*)**: halaman kerja **Admin/HRD**, **Pegawai**, dan **Pimpinan/Direktur** memiliki kerangka layout, struktur navigasi, tipografi, dan karakter visual yang sesuai dengan alur kerja masing-masing peran (didokumentasikan lengkap pada [DESIGN.md](DESIGN.md)).
@@ -10,6 +17,7 @@ Proyek ini mengusung **Arsitektur Tiga Antarmuka Berbasis Peran (*Role-Different
 
 ## Daftar Isi
 
+- [Galeri Tampilan Aplikasi](#galeri-tampilan-aplikasi)
 - [Arsitektur Antarmuka Berbasis Peran](#arsitektur-antarmuka-berbasis-peran)
 - [Fitur Lengkap Sistem](#fitur-lengkap-sistem)
 - [Pengerasan Keamanan & Rekayasa Backend](#pengerasan-keamanan--rekayasa-backend)
@@ -19,6 +27,18 @@ Proyek ini mengusung **Arsitektur Tiga Antarmuka Berbasis Peran (*Role-Different
 - [Pengujian Otomatis (PHPUnit)](#pengujian-otomatis-phpunit)
 - [Prasyarat & Panduan Instalasi](#prasyarat--panduan-instalasi)
 - [Kredensial Uji Coba & Daftar Rute](#kredensial-uji-coba--daftar-rute)
+
+---
+
+## Galeri Tampilan Aplikasi
+
+| Halaman Depan (*Landing Page*) | Portal Masuk Single Sign-On |
+| :---: | :---: |
+| ![Halaman Depan HRIS Klinik Hidayatullah](docs/screenshots/landing-desktop.png) | ![Portal Login Single Sign-On](docs/screenshots/login-sso.png) |
+
+| Pemulihan Kata Sandi (3 Tahap) | Verifikasi Dokumen QR (HMAC-SHA256) |
+| :---: | :---: |
+| ![Pemulihan Kata Sandi 3 Tahap](docs/screenshots/lupa-password.png) | ![Verifikasi Dokumen QR Terverifikasi Sah](docs/screenshots/verifikasi-valid.png) |
 
 ---
 
@@ -125,6 +145,8 @@ penggajian/
 ├── db database/
 │   ├── penggajian.sql                  # Skema lengkap konsolidasi (16 tabel) & data dasar
 │   └── migrations/                     # Arsip skrip migrasi bertahap (absensi, komponen, pimpinan, audit, password)
+├── docs/
+│   └── screenshots/                    # Tangkapan layar dokumentasi aplikasi untuk README GitHub
 ├── photo/                              # Foto profil pegawai (.htaccess terlindungi)
 ├── uploads/
 │   ├── cuti/                           # Berkas lampiran pengajuan cuti / SKD (.htaccess terlindungi)
