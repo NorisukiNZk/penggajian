@@ -895,3 +895,81 @@ body.dark-mode footer.sticky-footer span {
   border: 1px solid var(--adm-border-strong) !important;
   border-radius: 10px !important;
 }
+
+
+/* =========================================================
+   PAYROLL DIFF EXPLAINER (ADMIN BACKOFFICE)
+   ========================================================= */
+.adm-delta-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.28rem 0.65rem;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.adm-delta-pill.is-up {
+  background-color: var(--adm-emerald-bg);
+  color: var(--adm-emerald);
+}
+
+.adm-delta-pill.is-down {
+  background-color: var(--adm-danger-bg);
+  color: var(--adm-danger);
+}
+
+.adm-delta-pill.is-same,
+.adm-delta-pill.is-baseline,
+.adm-delta-pill.is-new {
+  background-color: var(--adm-info-bg);
+  color: var(--adm-info);
+}
+
+.adm-delta-sub {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  margin-top: 0.15rem;
+}
+
+.adm-delta-sub.is-up { color: var(--adm-emerald); }
+.adm-delta-sub.is-down { color: var(--adm-danger); }
+.adm-delta-sub.is-same,
+.adm-delta-sub.is-baseline { color: var(--text-muted); }
+
+.adm-diff-driver-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--adm-border);
+}
+
+.adm-diff-driver-row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.adm-diff-mover-item {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.65rem 0.8rem;
+  border-radius: 8px;
+  border: 1px solid var(--adm-border);
+  background-color: var(--adm-ground);
+  margin-bottom: 0.5rem;
+}
+
+.adm-diff-mover-item:last-child {
+  margin-bottom: 0;
+}

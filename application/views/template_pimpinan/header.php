@@ -33,5 +33,5 @@
   <link rel="stylesheet" href="https://cdn.datatables.net/2.2.2/css/dataTables.dataTables.min.css">
 
   <!-- Dedicated Portal Pimpinan Stylesheet -->
-  <link rel="stylesheet" href="<?php echo base_url('assets/css/portal-pimpinan.css'); ?>?v=20261121">
+  <link rel="stylesheet" href="<?php echo base_url('assets/css/portal-pimpinan.css'); ?>?v=20261123">
 </head>

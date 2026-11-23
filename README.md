@@ -73,17 +73,17 @@ Proyek ini mengusung **Arsitektur Tiga Antarmuka Berbasis Peran (*Role-Different
   - `Data_pegawai.php`, `Data_jabatan.php`, `Hari_libur.php` (termasuk sinkronisasi hari libur nasional API berverifikasi sertifikat CA XAMPP).
   - `Absensi_harian.php`: Monitoring presensi harian, rekap bulanan pintar, penyesuaian status sakit/izin, sinkronisasi ke `data_kehadiran`, serta pengaturan jam kerja/lembur (`setting_absensi`). *(Rute warisan `Data_absensi.php` telah diarahkan otomatis ke `absensi_harian/rekap`).*
   - `Data_Cuti.php`, `Data_lembur.php`, `Pinjaman.php` (beserta pratinjau KTP/jaminan in-page & unduhan PDF SPPK/SK).
-  - `Komponen_gaji.php`, `Potongan_gaji.php`, `Data_penggajian.php` (didukung `Payroll_calculator` & *batch component caching*).
+  - `Komponen_gaji.php`, `Potongan_gaji.php`, `Data_penggajian.php` (didukung `Payroll_calculator`, `Payroll_diff_explainer` untuk analisis selisih payroll bulan-ke-bulan, & *batch component caching*).
 - **Pusat Laporan & PDF Native** (`Laporan.php`, `Slip_gaji.php`, `Laporan_gaji.php`, `Laporan_Tahunan.php`, dan controller cetak lainnya):
   - Mendukung pratinjau cetak browser maupun pengunduhan langsung **PDF A4 native (Dompdf)** melalui `application/libraries/Pdf_exporter.php` dan template `application/views/pdf/` (`slip_gaji.php`, `daftar_gaji.php`, `sppk.php`, `surat_cuti.php`).
 - **Log Aktivitas Audit** (`Log_aktivitas.php`): Pencatatan jejak audit login, persetujuan cuti/lembur/pinjaman, serta mutasi data master & payroll lengkap dengan filter modul dan pencarian kata kunci.
 
 ### 3. Portal Pegawai (`application/controllers/pegawai/`)
 - **Beranda & Presensi** (`Dashboard.php`, `Absensi.php`): Absen masuk/pulang dengan jam server WITA via POST berproteksi CSRF, penutupan otomatis pada hari libur mingguan (default Sabtu & Minggu) dan tanggal merah nasional dengan pengecualian khusus bagi pegawai berjadwal **Lembur Disetujui**, unggah foto profil mandiri (`update_foto`), ringkasan kehadiran, dan jadwal libur.
-- **Layanan Mandiri** (`Cuti.php`, `Lembur.php`, `Pinjaman.php`, `Data_gaji.php`, `Ganti_Password.php`): Pengajuan cuti + delegasi shift, pembatalan aman via POST, simulator cicilan & DSR pinjaman, filter riwayat slip gaji berdasarkan tahun (`tahun`), cetak & unduh PDF slip gaji/SPPK/SK Cuti, dan pembaruan sandi minimal 8 karakter.
+- **Layanan Mandiri** (`Cuti.php`, `Lembur.php`, `Pinjaman.php`, `Data_gaji.php`, `Ganti_Password.php`): Pengajuan cuti + delegasi shift, pembatalan aman via POST, simulator cicilan & DSR pinjaman, **Penjelas Selisih Gaji Otomatis ("Kenapa Gaji Periode Ini Berubah?")**, filter riwayat slip gaji berdasarkan tahun (`tahun`), cetak & unduh PDF slip gaji/SPPK/SK Cuti, dan pembaruan sandi minimal 8 karakter.
 
 ### 4. Portal Pimpinan (`application/controllers/pimpinan/`)
-- **Ringkasan Eksekutif** (`Dashboard.php`): Komitmen payroll berjalan, tren penggajian & kehadiran 6 bulan, saldo kasbon berjalan, komposisi SDM, dan antrean persetujuan.
+- **Ringkasan Eksekutif** (`Dashboard.php`): Komitmen payroll berjalan, tren penggajian & kehadiran 6 bulan beserta **Penjelas Selisih Bulan Terakhir**, saldo kasbon berjalan, komposisi SDM, dan antrean persetujuan.
 - **Meja Persetujuan Pimpinan** (`Persetujuan.php`): Tab terpisah (Cuti, Lembur, Pinjaman), **Filter Status** (`Semua Status`, `Menunggu Keputusan`, `Disetujui`, `Ditolak`), aksi mutasi wajib metode POST berproteksi CSRF, modal pratinjau lampiran in-page (`#modalExecPreview`), serta tombol cetak SK/SPPK & unduh PDF langsung.
 - **Monitoring SDM & Pusat Laporan CSV/PDF** (`Monitoring.php`, `Laporan.php`): Ekspor **CSV UTF-8 BOM** bersanitasi *formula injection* (`Payroll_calculator::sanitizeCsvCell`), cetak laporan, dan unduh PDF daftar gaji.
 
@@ -131,6 +131,7 @@ penggajian/
 │   ├── bootstrap.php                   # Bootstrap test terisolasi + shim kompatibilitas timer PHPUnit 5
 │   ├── AttendancePolicyTest.php        # Uji aturan libur akhir pekan, tanggal merah, & pengecualian lembur disetujui
 │   ├── PayrollCalculatorTest.php       # Uji perhitungan slip, komponen persentase/override, urutan periode, CSV
+│   ├── PayrollDiffExplainerTest.php    # Uji penjelas selisih gaji otomatis per pegawai & tingkat klinik (MoM)
 │   └── QrDokumenTest.php               # Uji HMAC-SHA256, QR encoder, dan dekoder piksel PNG ISO 18004
 ├── assets/
 │   ├── css/

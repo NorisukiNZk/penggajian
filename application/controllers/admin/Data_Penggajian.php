@@ -32,6 +32,9 @@ class Data_Penggajian extends CI_Controller {
 	{
 		list($bulan, $tahun) = $this->_resolve_periode();
 		$payroll = $this->ModelPenggajian->hitung_payroll_bulan($bulan, $tahun, true);
+		$clinic_diff = !empty($payroll['rows'])
+			? $this->ModelPenggajian->hitung_diff_payroll_bulan($payroll)
+			: null;
 
 		$data['title']                = "Data Gaji Pegawai";
 		$data['bulan']                = $payroll['bulan'];
@@ -41,6 +44,8 @@ class Data_Penggajian extends CI_Controller {
 		$data['gaji']                 = $payroll['rows'];
 		$data['komponen_per_pegawai'] = $payroll['komponen_per_pegawai'];
 		$data['kpi']                  = $payroll['kpi'];
+		$data['clinic_diff']          = $clinic_diff;
+		$data['employee_diffs']       = ($clinic_diff && isset($clinic_diff['employee_diffs'])) ? $clinic_diff['employee_diffs'] : array();
 
 		$this->load->view('template_admin/header', $data);
 		$this->load->view('template_admin/sidebar');

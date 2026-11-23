@@ -31,6 +31,8 @@ class Data_Gaji extends CI_Controller {
 		$data['potongan']           = $history['potongan'];
 		$data['gaji']               = $history['gaji'];
 		$data['komponen_per_bulan'] = $history['komponen_per_bulan'];
+		$data['diffs_per_bulan']    = $history['diffs_per_bulan'];
+		$data['latest_diff']        = $history['latest_diff'];
 		$data['available_years']    = $history['available_years'];
 		$data['tahun_filter']       = $tahun_filter;
 

@@ -16,6 +16,7 @@ if (!function_exists('base_url')) {
 }
 
 require_once APPPATH . 'libraries/Payroll_calculator.php';
+require_once APPPATH . 'libraries/Payroll_diff_explainer.php';
 require_once APPPATH . 'libraries/Attendance_policy.php';
 require_once APPPATH . 'libraries/Qr_matrix.php';
 require_once APPPATH . 'helpers/qr_dokumen_helper.php';

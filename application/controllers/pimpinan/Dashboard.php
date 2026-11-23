@@ -108,6 +108,7 @@ class Dashboard extends CI_Controller {
 		$data['payroll_bersih']   = json_encode($tren['payroll_bersih']);
 		$data['payroll_lembur']   = json_encode($tren['payroll_lembur']);
 		$data['payroll_potongan'] = json_encode($tren['payroll_potongan']);
+		$data['payroll_diff']     = $this->ModelPenggajian->hitung_diff_payroll_terakhir();
 
 		// 5. Komposisi Staf per Jabatan & Jadwal Libur Terdekat
 		$data['komposisi_jabatan'] = $this->db->query("

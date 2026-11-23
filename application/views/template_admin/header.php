@@ -32,5 +32,5 @@
 
   <!-- Base Grid & Admin Portal Stylesheet -->
   <link href="<?php echo base_url('assets/css/sb-admin-2.min.css'); ?>" rel="stylesheet">
-  <link href="<?php echo base_url('assets/css/admin-portal.css'); ?>?v=20261121" rel="stylesheet">
+  <link href="<?php echo base_url('assets/css/admin-portal.css'); ?>?v=20261123" rel="stylesheet">
 </head>

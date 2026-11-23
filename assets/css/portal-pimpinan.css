@@ -779,3 +779,58 @@ html.dark-mode .btn-exec-accent {
     grid-template-columns: repeat(3, 1fr);
   }
 }
+
+
+/* =========================================================================
+   EXECUTIVE PAYROLL DIFF BRIEFING (PORTAL PIMPINAN)
+   ========================================================================= */
+.exec-diff-brief {
+  margin-top: 1.25rem;
+  padding-top: 1.15rem;
+  border-top: 1px solid var(--exec-border);
+}
+
+.exec-diff-kicker {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--exec-accent);
+  margin-bottom: 0.25rem;
+}
+
+.exec-diff-figure {
+  font-family: var(--exec-serif);
+  font-size: 1.3rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.2;
+}
+
+.exec-diff-figure.is-up { color: var(--exec-ok); }
+.exec-diff-figure.is-down { color: var(--exec-danger); }
+.exec-diff-figure.is-same,
+.exec-diff-figure.is-baseline { color: var(--exec-ink); }
+
+.exec-diff-box {
+  background-color: var(--exec-ground);
+  border: 1px solid var(--exec-border);
+  border-radius: var(--exec-radius-sm);
+  padding: 0.85rem 1rem;
+  height: 100%;
+}
+
+.exec-diff-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.65rem;
+  padding: 0.45rem 0;
+  border-bottom: 1px solid var(--exec-border);
+  font-size: 0.82rem;
+}
+
+.exec-diff-row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}

@@ -161,6 +161,111 @@ foreach ($potongan as $p) {
 			</div>
 		</div>
 
+		<?php
+			$cd = isset($clinic_diff) && is_array($clinic_diff) ? $clinic_diff : null;
+			$emp_diffs = isset($employee_diffs) && is_array($employee_diffs) ? $employee_diffs : array();
+			if ($cd) :
+				$cd_dir = isset($cd['direction']) ? $cd['direction'] : 'baseline';
+				if ($cd_dir === 'up') {
+					$cd_icon = 'fa-arrow-trend-up';
+					$cd_pill_text = Payroll_diff_explainer::formatRupiah($cd['net_delta'], true)
+						. ($cd['net_delta_pct'] !== null ? ' (' . Payroll_diff_explainer::formatPercent($cd['net_delta_pct']) . ')' : '');
+				} elseif ($cd_dir === 'down') {
+					$cd_icon = 'fa-arrow-trend-down';
+					$cd_pill_text = Payroll_diff_explainer::formatRupiah($cd['net_delta'], true)
+						. ($cd['net_delta_pct'] !== null ? ' (' . Payroll_diff_explainer::formatPercent($cd['net_delta_pct']) . ')' : '');
+				} elseif ($cd_dir === 'same') {
+					$cd_icon = 'fa-equals';
+					$cd_pill_text = 'Stabil (Rp 0)';
+				} else {
+					$cd_icon = 'fa-flag';
+					$cd_pill_text = 'Periode Awal';
+				}
+		?>
+		<div class="card mb-4">
+			<div class="card-header d-flex flex-wrap align-items-center justify-content-between" style="gap: 0.5rem;">
+				<div>
+					<h6 class="m-0 font-weight-bold text-gray-800">
+						<i class="fas fa-scale-balanced mr-1" aria-hidden="true"></i> Penjelas Perubahan Payroll Otomatis
+					</h6>
+					<small class="text-muted">
+						<?php if (!empty($cd['has_previous'])) : ?>
+							Perbandingan <?php echo htmlspecialchars($cd['current_label'], ENT_QUOTES, 'UTF-8'); ?> terhadap <?php echo htmlspecialchars($cd['previous_label'], ENT_QUOTES, 'UTF-8'); ?>
+						<?php else : ?>
+							Periode awal tercatat: <?php echo htmlspecialchars($cd['current_label'], ENT_QUOTES, 'UTF-8'); ?>
+						<?php endif; ?>
+					</small>
+				</div>
+				<span class="adm-delta-pill is-<?php echo htmlspecialchars($cd_dir, ENT_QUOTES, 'UTF-8'); ?>">
+					<i class="fas <?php echo $cd_icon; ?>" aria-hidden="true"></i>
+					<?php echo htmlspecialchars($cd_pill_text, ENT_QUOTES, 'UTF-8'); ?>
+				</span>
+			</div>
+			<div class="card-body">
+				<div class="row">
+					<div class="col-lg-7 mb-3 mb-lg-0">
+						<p class="mb-3" style="font-size: 0.92rem; line-height: 1.55;">
+							<?php echo htmlspecialchars($cd['summary_sentence'], ENT_QUOTES, 'UTF-8'); ?>
+						</p>
+						<?php if (!empty($cd['drivers'])) : ?>
+							<div class="text-xs font-weight-bold text-uppercase text-muted mb-2" style="letter-spacing: 0.05em;">Pemicu Perubahan Belanja Klinik</div>
+							<?php foreach ($cd['drivers'] as $drv) :
+								$drv_pos = $drv['impact_on_net'] >= 0;
+							?>
+								<div class="adm-diff-driver-row">
+									<div>
+										<div class="font-weight-bold small text-dark"><?php echo htmlspecialchars($drv['label'], ENT_QUOTES, 'UTF-8'); ?></div>
+										<div class="small text-muted"><?php echo htmlspecialchars($drv['detail'], ENT_QUOTES, 'UTF-8'); ?></div>
+									</div>
+									<div class="font-weight-bold small tabular-nums <?php echo $drv_pos ? 'text-success' : 'text-danger'; ?>" style="white-space: nowrap;">
+										<?php echo htmlspecialchars(Payroll_diff_explainer::formatRupiah($drv['impact_on_net'], true), ENT_QUOTES, 'UTF-8'); ?>
+									</div>
+								</div>
+							<?php endforeach; ?>
+						<?php elseif (!empty($cd['has_previous'])) : ?>
+							<div class="small text-muted">Tidak ada selisih nominal pada seluruh komponen payroll dibanding periode sebelumnya.</div>
+						<?php endif; ?>
+					</div>
+
+					<div class="col-lg-5">
+						<div class="text-xs font-weight-bold text-uppercase text-muted mb-2" style="letter-spacing: 0.05em;">Perubahan Terbesar per Pegawai</div>
+						<?php if (!empty($cd['top_movers'])) : ?>
+							<?php foreach ($cd['top_movers'] as $mv) :
+								$mv_dir = $mv['direction'];
+								$mv_cls = ($mv_dir === 'up') ? 'is-up' : (($mv_dir === 'down') ? 'is-down' : 'is-new');
+							?>
+								<div class="adm-diff-mover-item">
+									<div style="min-width: 0;">
+										<div class="font-weight-bold small text-dark text-truncate">
+											<?php echo htmlspecialchars($mv['nama_pegawai'], ENT_QUOTES, 'UTF-8'); ?>
+										</div>
+										<div class="small text-muted" style="line-height: 1.35;">
+											<?php echo htmlspecialchars($mv['short_reason'], ENT_QUOTES, 'UTF-8'); ?>
+										</div>
+									</div>
+									<div class="text-right flex-shrink-0">
+										<div class="adm-delta-pill <?php echo $mv_cls; ?> mb-1">
+											<?php echo htmlspecialchars(Payroll_diff_explainer::formatRupiah($mv['net_delta'], true), ENT_QUOTES, 'UTF-8'); ?>
+										</div>
+										<div>
+											<button type="button" class="btn btn-link btn-sm p-0 text-primary font-weight-bold" style="font-size: 0.75rem; min-height: auto;" data-toggle="modal" data-target="#modalRincian<?php echo htmlspecialchars($mv['nik'], ENT_QUOTES, 'UTF-8'); ?>">
+												Lihat rincian
+											</button>
+										</div>
+									</div>
+								</div>
+							<?php endforeach; ?>
+						<?php else : ?>
+							<div class="p-3 rounded border text-muted small" style="background: var(--adm-ground);">
+								<?php echo !empty($cd['has_previous']) ? 'Seluruh pegawai menerima gaji bersih yang sama dibanding periode sebelumnya.' : 'Data perubahan pegawai akan muncul otomatis mulai periode payroll kedua.'; ?>
+							</div>
+						<?php endif; ?>
+					</div>
+				</div>
+			</div>
+		</div>
+		<?php endif; ?>
+
 		<div class="card shadow mb-4 border-0">
 			<div class="card-header bg-white py-3 d-flex justify-content-between align-items-center border-bottom">
 				<h6 class="m-0 font-weight-bold text-primary">
@@ -258,7 +363,23 @@ foreach ($potongan as $p) {
 										<?php endif; ?>
 									</td>
 									<td class="text-right align-middle font-weight-bold text-success" style="font-size: 0.95rem;">
-										Rp. <?php echo number_format($total_gaji, 0, ',', '.'); ?>
+										<div class="tabular-nums">Rp. <?php echo number_format($total_gaji, 0, ',', '.'); ?></div>
+										<?php
+											$ed = isset($emp_diffs[$g->nik]) ? $emp_diffs[$g->nik] : null;
+											if ($ed) :
+												if (!empty($ed['is_new_in_period'])) : ?>
+													<div class="adm-delta-sub is-baseline"><i class="fas fa-user-plus" aria-hidden="true"></i> Baru di periode ini</div>
+												<?php elseif ($ed['direction'] === 'up') : ?>
+													<div class="adm-delta-sub is-up"><i class="fas fa-arrow-trend-up" aria-hidden="true"></i> <?php echo htmlspecialchars(Payroll_diff_explainer::formatRupiah($ed['net_delta'], true), ENT_QUOTES, 'UTF-8'); ?></div>
+												<?php elseif ($ed['direction'] === 'down') : ?>
+													<div class="adm-delta-sub is-down"><i class="fas fa-arrow-trend-down" aria-hidden="true"></i> <?php echo htmlspecialchars(Payroll_diff_explainer::formatRupiah($ed['net_delta'], true), ENT_QUOTES, 'UTF-8'); ?></div>
+												<?php elseif ($ed['direction'] === 'same') : ?>
+													<div class="adm-delta-sub is-same"><i class="fas fa-equals" aria-hidden="true"></i> Tetap</div>
+												<?php else : ?>
+													<div class="adm-delta-sub is-baseline">Periode awal</div>
+												<?php endif;
+											endif;
+										?>
 									</td>
 									<td class="text-center align-middle">
 										<div class="btn-group" role="group" aria-label="Aksi Gaji">
@@ -442,17 +563,74 @@ foreach ($potongan as $p) {
 								</div>
 							</div>
 
-							<div class="card border-success bg-white shadow-xs">
+							<div class="card border-success bg-white shadow-xs mb-3">
 								<div class="card-body p-3 d-flex flex-column flex-sm-row justify-content-between align-items-center">
 									<div>
 										<div class="text-xs font-weight-bold text-success text-uppercase">Take Home Pay (Gaji Bersih)</div>
 										<div class="text-muted small">Hak bersih yang ditransfer kepada pegawai</div>
 									</div>
 									<div class="text-right mt-2 mt-sm-0">
-										<div class="h4 font-weight-bold text-success mb-0">Rp. <?php echo number_format($take_home_pay, 0, ',', '.'); ?></div>
+										<div class="h4 font-weight-bold text-success mb-0 tabular-nums">Rp. <?php echo number_format($take_home_pay, 0, ',', '.'); ?></div>
 									</div>
 								</div>
 							</div>
+
+							<?php
+								$modal_diff = isset($emp_diffs[$g->nik]) ? $emp_diffs[$g->nik] : null;
+								if ($modal_diff) :
+									$md_dir = $modal_diff['direction'];
+							?>
+							<div class="card bg-white shadow-xs">
+								<div class="card-header py-2 d-flex flex-wrap justify-content-between align-items-center" style="gap: 0.4rem;">
+									<span class="font-weight-bold small text-dark">
+										<i class="fas fa-scale-balanced mr-1" aria-hidden="true"></i>
+										<?php echo !empty($modal_diff['has_previous']) ? 'Penjelas Perubahan vs ' . htmlspecialchars($modal_diff['previous_label'], ENT_QUOTES, 'UTF-8') : 'Status Perbandingan Periode'; ?>
+									</span>
+									<?php if (!empty($modal_diff['has_previous'])) : ?>
+										<span class="adm-delta-pill is-<?php echo htmlspecialchars($md_dir, ENT_QUOTES, 'UTF-8'); ?>">
+											<?php echo htmlspecialchars(Payroll_diff_explainer::formatRupiah($modal_diff['net_delta'], true), ENT_QUOTES, 'UTF-8'); ?>
+											<?php if ($modal_diff['net_delta_pct'] !== null) : ?>
+												(<?php echo htmlspecialchars(Payroll_diff_explainer::formatPercent($modal_diff['net_delta_pct']), ENT_QUOTES, 'UTF-8'); ?>)
+											<?php endif; ?>
+										</span>
+									<?php else : ?>
+										<span class="adm-delta-pill is-baseline">Periode Awal</span>
+									<?php endif; ?>
+								</div>
+								<div class="card-body p-3">
+									<p class="small mb-2" style="line-height: 1.5;"><?php echo htmlspecialchars($modal_diff['summary_sentence'], ENT_QUOTES, 'UTF-8'); ?></p>
+									<?php if (!empty($modal_diff['factors'])) : ?>
+										<div class="table-responsive">
+											<table class="table table-sm mb-0">
+												<thead>
+													<tr>
+														<th>Komponen &amp; Keterangan</th>
+														<th class="text-right">Lalu</th>
+														<th class="text-right">Kini</th>
+														<th class="text-right">Dampak THP</th>
+													</tr>
+												</thead>
+												<tbody>
+													<?php foreach ($modal_diff['factors'] as $mf) : ?>
+														<tr>
+															<td>
+																<div class="font-weight-bold small"><?php echo htmlspecialchars($mf['label'], ENT_QUOTES, 'UTF-8'); ?></div>
+																<div class="text-muted" style="font-size: 0.75rem;"><?php echo htmlspecialchars($mf['reason'], ENT_QUOTES, 'UTF-8'); ?></div>
+															</td>
+															<td class="text-right tabular-nums small"><?php echo htmlspecialchars(Payroll_diff_explainer::formatRupiah($mf['prev_amount']), ENT_QUOTES, 'UTF-8'); ?></td>
+															<td class="text-right tabular-nums small"><?php echo htmlspecialchars(Payroll_diff_explainer::formatRupiah($mf['curr_amount']), ENT_QUOTES, 'UTF-8'); ?></td>
+															<td class="text-right tabular-nums small font-weight-bold <?php echo $mf['impact_on_net'] >= 0 ? 'text-success' : 'text-danger'; ?>">
+																<?php echo htmlspecialchars(Payroll_diff_explainer::formatRupiah($mf['impact_on_net'], true), ENT_QUOTES, 'UTF-8'); ?>
+															</td>
+														</tr>
+													<?php endforeach; ?>
+												</tbody>
+											</table>
+										</div>
+									<?php endif; ?>
+								</div>
+							</div>
+							<?php endif; ?>
 						</div>
 						<div class="modal-footer bg-white border-top">
 							<a href="<?php echo base_url('admin/slip_gaji/download_pdf?nik=' . $g->nik . '&bulan=' . $bulan . '&tahun=' . $tahun); ?>" class="btn btn-outline-primary shadow-sm">

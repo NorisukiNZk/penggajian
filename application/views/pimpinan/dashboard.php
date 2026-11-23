@@ -179,6 +179,94 @@
           <div style="position: relative; height: 270px;">
             <canvas id="execPayrollChart" aria-label="Grafik tren pengeluaran payroll 6 bulan terakhir"></canvas>
           </div>
+          <?php if (!empty($payroll_diff) && is_array($payroll_diff)) :
+            $pd = $payroll_diff;
+            $pd_dir = isset($pd['direction']) ? $pd['direction'] : 'baseline';
+            $pd_tag_cls = ($pd_dir === 'up') ? 'exec-tag-ok' : (($pd_dir === 'down') ? 'exec-tag-danger' : 'exec-tag-info');
+          ?>
+            <div class="exec-diff-brief">
+              <div class="d-flex flex-wrap align-items-baseline justify-content-between" style="gap: 0.5rem;">
+                <div>
+                  <div class="exec-diff-kicker">
+                    Penjelas Selisih Bulan Terakhir &middot;
+                    <?php echo htmlspecialchars($pd['current_label'], ENT_QUOTES, 'UTF-8'); ?>
+                    <?php if (!empty($pd['has_previous'])) : ?>
+                      vs <?php echo htmlspecialchars($pd['previous_label'], ENT_QUOTES, 'UTF-8'); ?>
+                    <?php endif; ?>
+                  </div>
+                  <div class="exec-diff-figure is-<?php echo htmlspecialchars($pd_dir, ENT_QUOTES, 'UTF-8'); ?>">
+                    <?php if (!empty($pd['has_previous'])) : ?>
+                      <?php echo htmlspecialchars(Payroll_diff_explainer::formatRupiah($pd['net_delta'], true), ENT_QUOTES, 'UTF-8'); ?>
+                    <?php else : ?>
+                      <?php echo htmlspecialchars(Payroll_diff_explainer::formatRupiah($pd['current_total_net']), ENT_QUOTES, 'UTF-8'); ?>
+                    <?php endif; ?>
+                  </div>
+                </div>
+                <?php if (!empty($pd['has_previous'])) : ?>
+                  <span class="exec-tag <?php echo $pd_tag_cls; ?> tabular-nums">
+                    <?php
+                      if ($pd_dir === 'same') {
+                        echo 'Stabil (0,0%)';
+                      } else {
+                        echo htmlspecialchars($pd['net_delta_pct'] !== null ? Payroll_diff_explainer::formatPercent($pd['net_delta_pct']) : $pd['headline'], ENT_QUOTES, 'UTF-8');
+                      }
+                    ?>
+                  </span>
+                <?php else : ?>
+                  <span class="exec-tag exec-tag-info">Periode Awal</span>
+                <?php endif; ?>
+              </div>
+
+              <p class="small mt-2 mb-0" style="color: var(--exec-ink); line-height: 1.55;">
+                <?php echo htmlspecialchars($pd['summary_sentence'], ENT_QUOTES, 'UTF-8'); ?>
+              </p>
+
+              <?php if (!empty($pd['has_previous']) && (!empty($pd['drivers']) || !empty($pd['top_movers']))) : ?>
+                <div class="row mt-3">
+                  <div class="col-md-6 mb-3 mb-md-0">
+                    <div class="exec-diff-box">
+                      <div class="small font-weight-bold text-uppercase text-muted mb-2" style="letter-spacing: 0.04em;">Faktor Pemicu Utama</div>
+                      <?php if (!empty($pd['drivers'])) : ?>
+                        <?php foreach (array_slice($pd['drivers'], 0, 3) as $drv) : ?>
+                          <div class="exec-diff-row">
+                            <div>
+                              <div class="font-weight-bold"><?php echo htmlspecialchars($drv['label'], ENT_QUOTES, 'UTF-8'); ?></div>
+                              <div class="text-muted" style="font-size: 0.76rem;"><?php echo htmlspecialchars($drv['detail'], ENT_QUOTES, 'UTF-8'); ?></div>
+                            </div>
+                            <span class="font-weight-bold tabular-nums" style="white-space: nowrap; color: <?php echo $drv['impact_on_net'] >= 0 ? 'var(--exec-ok)' : 'var(--exec-danger)'; ?>;">
+                              <?php echo htmlspecialchars(Payroll_diff_explainer::formatRupiah($drv['impact_on_net'], true), ENT_QUOTES, 'UTF-8'); ?>
+                            </span>
+                          </div>
+                        <?php endforeach; ?>
+                      <?php else : ?>
+                        <div class="small text-muted">Tidak ada selisih komponen utama.</div>
+                      <?php endif; ?>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="exec-diff-box">
+                      <div class="small font-weight-bold text-uppercase text-muted mb-2" style="letter-spacing: 0.04em;">Perubahan Pegawai Menonjol</div>
+                      <?php if (!empty($pd['top_movers'])) : ?>
+                        <?php foreach (array_slice($pd['top_movers'], 0, 3) as $mv) : ?>
+                          <div class="exec-diff-row">
+                            <div style="min-width: 0;">
+                              <div class="font-weight-bold text-truncate"><?php echo htmlspecialchars($mv['nama_pegawai'], ENT_QUOTES, 'UTF-8'); ?></div>
+                              <div class="text-muted" style="font-size: 0.76rem;"><?php echo htmlspecialchars($mv['short_reason'], ENT_QUOTES, 'UTF-8'); ?></div>
+                            </div>
+                            <span class="font-weight-bold tabular-nums" style="white-space: nowrap; color: <?php echo $mv['net_delta'] >= 0 ? 'var(--exec-ok)' : 'var(--exec-danger)'; ?>;">
+                              <?php echo htmlspecialchars(Payroll_diff_explainer::formatRupiah($mv['net_delta'], true), ENT_QUOTES, 'UTF-8'); ?>
+                            </span>
+                          </div>
+                        <?php endforeach; ?>
+                      <?php else : ?>
+                        <div class="small text-muted">Seluruh pegawai menerima nominal tetap.</div>
+                      <?php endif; ?>
+                    </div>
+                  </div>
+                </div>
+              <?php endif; ?>
+            </div>
+          <?php endif; ?>
         <?php endif; ?>
       </div>
     </div>

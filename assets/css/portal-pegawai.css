@@ -1046,3 +1046,144 @@ html.dark-mode .btn-primary:hover {
 .swal2-html-container {
   color: var(--emp-muted) !important;
 }
+
+
+/* =========================================================================
+   PAYROLL DIFF EXPLAINER (PORTAL PEGAWAI)
+   ========================================================================= */
+.emp-diff-card {
+  background-color: var(--emp-surface);
+  border: 1px solid var(--emp-border);
+  border-radius: var(--emp-radius-md);
+  overflow: hidden;
+}
+
+.emp-diff-head {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--emp-border);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.emp-diff-body {
+  padding: 1.15rem 1.25rem;
+}
+
+.emp-diff-summary {
+  font-size: 0.92rem;
+  color: var(--emp-ink);
+  line-height: 1.6;
+  margin: 0 0 1rem 0;
+}
+
+.emp-diff-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.7rem;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.emp-diff-pill.is-up {
+  background-color: var(--emp-success-bg);
+  color: var(--emp-success);
+}
+
+.emp-diff-pill.is-down {
+  background-color: var(--emp-danger-bg);
+  color: var(--emp-danger);
+}
+
+.emp-diff-pill.is-same,
+.emp-diff-pill.is-baseline {
+  background-color: var(--emp-surface-alt);
+  color: var(--emp-muted);
+}
+
+.emp-diff-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.73rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  margin-top: 0.2rem;
+}
+
+.emp-diff-inline.is-up { color: var(--emp-success); }
+.emp-diff-inline.is-down { color: var(--emp-danger); }
+.emp-diff-inline.is-same,
+.emp-diff-inline.is-baseline { color: var(--emp-muted); }
+
+.emp-diff-factor-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.6rem;
+}
+
+@media (min-width: 768px) {
+  .emp-diff-factor-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.emp-diff-factor-item {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.75rem 0.9rem;
+  border-radius: var(--emp-radius-sm);
+  border: 1px solid var(--emp-border);
+  background-color: var(--emp-ground);
+}
+
+.emp-diff-factor-title {
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: var(--emp-ink);
+  margin-bottom: 0.15rem;
+}
+
+.emp-diff-factor-reason {
+  font-size: 0.78rem;
+  color: var(--emp-muted);
+  line-height: 1.45;
+}
+
+.emp-diff-factor-impact {
+  font-size: 0.84rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.emp-diff-factor-impact.is-up { color: var(--emp-success); }
+.emp-diff-factor-impact.is-down { color: var(--emp-danger); }
+
+.emp-diff-modal-summary {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.65rem;
+  margin-bottom: 1rem;
+}
+
+@media (min-width: 576px) {
+  .emp-diff-modal-summary {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.emp-diff-modal-box {
+  background-color: var(--emp-ground);
+  border: 1px solid var(--emp-border);
+  border-radius: var(--emp-radius-sm);
+  padding: 0.75rem 0.9rem;
+}

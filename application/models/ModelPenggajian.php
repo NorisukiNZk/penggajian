@@ -255,6 +255,68 @@ class ModelPenggajian extends CI_model{
 		}
 	}
 
+	private function _ensure_diff_explainer()
+	{
+		$this->_ensure_payroll_calculator();
+		if (!class_exists('Payroll_diff_explainer', false)) {
+			require_once APPPATH . 'libraries/Payroll_diff_explainer.php';
+		}
+	}
+
+	/**
+	 * Menormalkan 1 baris pegawai + komponen bulanan menjadi struktur slip siap banding.
+	 */
+	public function build_slip_snapshot($row, array $komp, $alpha_rate)
+	{
+		$this->_ensure_payroll_calculator();
+		$tj_data       = isset($komp['tunjangan']) ? $komp['tunjangan'] : array('total' => 0, 'detail' => array());
+		$pot_data      = isset($komp['potongan']) ? $komp['potongan'] : array('total' => 0, 'detail' => array());
+		$pinjaman_data = isset($komp['pinjaman']) ? $komp['pinjaman'] : array('total' => 0, 'detail' => array());
+		$uang_lembur   = isset($komp['uang_lembur']) ? (float)$komp['uang_lembur'] : 0.0;
+		$jam_lembur    = isset($komp['jam_lembur']) ? (int)$komp['jam_lembur'] : 0;
+		$tarif_lembur  = isset($komp['tarif_lembur']) ? (float)$komp['tarif_lembur'] : 0.0;
+
+		$calc = Payroll_calculator::calculateSlip(array(
+			'gaji_pokok'        => $row->gaji_pokok,
+			'tj_transport'      => $row->tj_transport,
+			'uang_makan'        => $row->uang_makan,
+			'tunjangan_dinamis' => isset($tj_data['total']) ? $tj_data['total'] : 0,
+			'uang_lembur'       => $uang_lembur,
+			'alpha'             => $row->alpha,
+			'alpha_rate'        => $alpha_rate,
+			'potongan_dinamis'  => isset($pot_data['total']) ? $pot_data['total'] : 0,
+			'potongan_pinjaman' => isset($pinjaman_data['total']) ? $pinjaman_data['total'] : 0
+		));
+
+		$bulan_code = isset($row->bulan) ? (string)$row->bulan : '';
+
+		return array(
+			'bulan'             => $bulan_code,
+			'label_periode'     => Payroll_calculator::formatPeriodLabel($bulan_code, false),
+			'nik'               => isset($row->nik) ? (string)$row->nik : '',
+			'nama_pegawai'      => isset($row->nama_pegawai) ? (string)$row->nama_pegawai : '',
+			'nama_jabatan'      => isset($row->nama_jabatan) ? (string)$row->nama_jabatan : '',
+			'gaji_pokok'        => $calc['gaji_pokok'],
+			'tj_transport'      => $calc['tj_transport'],
+			'uang_makan'        => $calc['uang_makan'],
+			'uang_lembur'       => $calc['uang_lembur'],
+			'jam_lembur'        => $jam_lembur,
+			'tarif_lembur'      => $tarif_lembur,
+			'tunjangan_dinamis' => $calc['tunjangan_dinamis'],
+			'tunjangan_detail'  => isset($tj_data['detail']) ? $tj_data['detail'] : array(),
+			'alpha'             => (int)$row->alpha,
+			'alpha_rate'        => (float)$alpha_rate,
+			'pot_alpha'         => $calc['pot_alpha'],
+			'potongan_dinamis'  => $calc['potongan_dinamis'],
+			'potongan_detail'   => isset($pot_data['detail']) ? $pot_data['detail'] : array(),
+			'pot_pinjaman'      => $calc['potongan_pinjaman'],
+			'pinjaman_detail'   => isset($pinjaman_data['detail']) ? $pinjaman_data['detail'] : array(),
+			'total_potongan'    => $calc['total_potongan'],
+			'gaji_bersih'       => $calc['gaji_bersih'],
+			'gaji_bersih_raw'   => $calc['gaji_bersih_raw']
+		);
+	}
+
 	/**
 	 * Layanan terpusat perhitungan payroll bulanan (dipakai Admin, Pimpinan, dan Cetak Daftar/Slip).
 	 */
@@ -311,11 +373,12 @@ class ModelPenggajian extends CI_model{
 			$pinjaman = $this->hitung_potongan_pinjaman($g->nik, $bulan, $tahun);
 
 			$komponen_per_pegawai[$g->nik] = array(
-				'tunjangan'   => $tj_din,
-				'potongan'    => $pot_din,
-				'uang_lembur' => $lembur['uang_lembur'],
-				'jam_lembur'  => $lembur['total_jam'],
-				'pinjaman'    => $pinjaman
+				'tunjangan'    => $tj_din,
+				'potongan'     => $pot_din,
+				'uang_lembur'  => $lembur['uang_lembur'],
+				'jam_lembur'   => $lembur['total_jam'],
+				'tarif_lembur' => isset($lembur['tarif']) ? $lembur['tarif'] : 0,
+				'pinjaman'     => $pinjaman
 			);
 
 			$calc = Payroll_calculator::calculateSlip(array(
@@ -357,15 +420,17 @@ class ModelPenggajian extends CI_model{
 	}
 
 	/**
-	 * Riwayat gaji 1 pegawai terurut kronologis terbaru-ke-terlama (fix urutan string MMYYYY).
+	 * Riwayat gaji 1 pegawai terurut kronologis terbaru-ke-terlama (fix urutan string MMYYYY),
+	 * lengkap dengan analisis selisih bulan-ke-bulan (Payroll Diff Explainer).
 	 */
 	public function hitung_payroll_pegawai_history($nik, $tahun_filter = null)
 	{
-		$this->_ensure_payroll_calculator();
+		$this->_ensure_diff_explainer();
 		$this->ModelAbsensiHarian->sinkron_ke_kehadiran(date('m'), date('Y'));
 
-		$potongan = $this->get_data('potongan_gaji')->result();
-		$all_rows = $this->db->query("
+		$potongan   = $this->get_data('potongan_gaji')->result();
+		$alpha_rate = Payroll_calculator::extractAlphaRate($potongan);
+		$raw_rows   = $this->db->query("
 			SELECT data_pegawai.nama_pegawai, data_pegawai.nik, data_jabatan.nama_jabatan,
 				   data_jabatan.gaji_pokok, data_jabatan.tj_transport, data_jabatan.uang_makan,
 				   data_kehadiran.alpha, data_kehadiran.bulan, data_kehadiran.id_kehadiran
@@ -376,20 +441,44 @@ class ModelPenggajian extends CI_model{
 			ORDER BY STR_TO_DATE(CONCAT('01', data_kehadiran.bulan), '%d%m%Y') DESC, data_kehadiran.id_kehadiran DESC
 		", array($nik))->result();
 
+		// Deduplikasi periode (jaga 1 baris terbaru per bulan) agar pembanding kronologis bersih
+		$all_rows = array();
+		$seen_months = array();
+		foreach ($raw_rows as $rr) {
+			if (!isset($seen_months[$rr->bulan])) {
+				$seen_months[$rr->bulan] = true;
+				$all_rows[] = $rr;
+			}
+		}
+
 		$available_years = array();
-		$filtered_rows = array();
-		foreach ($all_rows as $r) {
+		$filtered_rows   = array();
+		$filtered_index  = array();
+		foreach ($all_rows as $idx => $r) {
 			$yr = substr($r->bulan, 2, 4);
 			if ($yr !== '' && !in_array($yr, $available_years, true)) {
 				$available_years[] = $yr;
 			}
 			if ($tahun_filter === null || $tahun_filter === '' || $yr === (string)$tahun_filter) {
 				$filtered_rows[] = $r;
+				$filtered_index[$r->bulan] = $idx;
+			}
+		}
+
+		// Kumpulkan periode yang perlu dihitung: seluruh baris terfilter + 1 periode sebelumnya untuk baseline diff
+		$rows_to_compute = array();
+		foreach ($filtered_rows as $fr) {
+			$rows_to_compute[$fr->bulan] = $fr;
+			$idx = $filtered_index[$fr->bulan];
+			if (isset($all_rows[$idx + 1])) {
+				$prev_row = $all_rows[$idx + 1];
+				$rows_to_compute[$prev_row->bulan] = $prev_row;
 			}
 		}
 
 		$komponen_per_bulan = array();
-		foreach ($filtered_rows as $g) {
+		$snapshots_by_bulan = array();
+		foreach ($rows_to_compute as $g) {
 			$tj_din   = $this->ModelKomponen->hitung_total_tunjangan($g->nik, $g->bulan, $g->gaji_pokok);
 			$pot_din  = $this->ModelKomponen->hitung_total_potongan($g->nik, $g->bulan, $g->gaji_pokok);
 			$b        = substr($g->bulan, 0, 2);
@@ -397,21 +486,147 @@ class ModelPenggajian extends CI_model{
 			$pinjaman = $this->hitung_potongan_pinjaman($g->nik, $b, $y);
 			$lembur   = $this->hitung_uang_lembur($g->nik, $b, $y);
 
-			$komponen_per_bulan[$g->bulan] = array(
-				'tunjangan'   => $tj_din,
-				'potongan'    => $pot_din,
-				'pinjaman'    => $pinjaman,
-				'uang_lembur' => $lembur['uang_lembur'],
-				'jam_lembur'  => $lembur['total_jam']
+			$komp_item = array(
+				'tunjangan'    => $tj_din,
+				'potongan'     => $pot_din,
+				'pinjaman'     => $pinjaman,
+				'uang_lembur'  => $lembur['uang_lembur'],
+				'jam_lembur'   => $lembur['total_jam'],
+				'tarif_lembur' => isset($lembur['tarif']) ? $lembur['tarif'] : 0
 			);
+			$komponen_per_bulan[$g->bulan] = $komp_item;
+			$snapshots_by_bulan[$g->bulan] = $this->build_slip_snapshot($g, $komp_item, $alpha_rate);
 		}
+
+		$diffs_per_bulan = array();
+		foreach ($filtered_rows as $fr) {
+			$idx      = $filtered_index[$fr->bulan];
+			$curr_snp = isset($snapshots_by_bulan[$fr->bulan]) ? $snapshots_by_bulan[$fr->bulan] : null;
+			$prev_snp = null;
+			if (isset($all_rows[$idx + 1])) {
+				$prev_bulan = $all_rows[$idx + 1]->bulan;
+				if (isset($snapshots_by_bulan[$prev_bulan])) {
+					$prev_snp = $snapshots_by_bulan[$prev_bulan];
+				}
+			}
+			if ($curr_snp !== null) {
+				$diffs_per_bulan[$fr->bulan] = Payroll_diff_explainer::explainEmployeeDiff($curr_snp, $prev_snp);
+			}
+		}
+
+		$latest_diff = (!empty($filtered_rows) && isset($diffs_per_bulan[$filtered_rows[0]->bulan]))
+			? $diffs_per_bulan[$filtered_rows[0]->bulan]
+			: null;
 
 		return array(
 			'potongan'           => $potongan,
 			'gaji'               => $filtered_rows,
 			'komponen_per_bulan' => $komponen_per_bulan,
+			'diffs_per_bulan'    => $diffs_per_bulan,
+			'latest_diff'        => $latest_diff,
 			'available_years'    => $available_years
 		);
+	}
+
+	/**
+	 * Cari periode penggajian terdekat sebelum ($bulan, $tahun) yang tercatat di data_kehadiran.
+	 */
+	public function get_previous_period_before($bulan, $tahun)
+	{
+		$bulan = str_pad((string)$bulan, 2, '0', STR_PAD_LEFT);
+		$tahun = (string)$tahun;
+		$target_date = '01' . $bulan . $tahun;
+
+		$row = $this->db->query("
+			SELECT DISTINCT bulan
+			FROM data_kehadiran
+			WHERE CHAR_LENGTH(bulan) = 6
+			  AND STR_TO_DATE(CONCAT('01', bulan), '%d%m%Y') < STR_TO_DATE(?, '%d%m%Y')
+			ORDER BY STR_TO_DATE(CONCAT('01', bulan), '%d%m%Y') DESC
+			LIMIT 1
+		", array($target_date))->row();
+
+		if (!$row || strlen((string)$row->bulan) !== 6) {
+			return null;
+		}
+
+		return array(
+			'bulan'      => substr($row->bulan, 0, 2),
+			'tahun'      => substr($row->bulan, 2, 4),
+			'bulantahun' => $row->bulan
+		);
+	}
+
+	/**
+	 * Menghitung perbandingan payroll tingkat klinik dan per-pegawai terhadap periode sebelumnya.
+	 */
+	public function hitung_diff_payroll_bulan(array $current_payroll)
+	{
+		$this->_ensure_diff_explainer();
+		$curr_slips = array();
+		foreach ($current_payroll['rows'] as $row) {
+			$komp = isset($current_payroll['komponen_per_pegawai'][$row->nik])
+				? $current_payroll['komponen_per_pegawai'][$row->nik]
+				: array();
+			$curr_slips[$row->nik] = $this->build_slip_snapshot($row, $komp, $current_payroll['alpha_rate']);
+		}
+
+		$curr_data = array(
+			'bulan'         => $current_payroll['bulantahun'],
+			'label_periode' => Payroll_calculator::formatPeriodLabel($current_payroll['bulantahun'], false),
+			'slips'         => $curr_slips
+		);
+
+		$prev_period = $this->get_previous_period_before($current_payroll['bulan'], $current_payroll['tahun']);
+		$prev_data   = null;
+
+		if ($prev_period !== null) {
+			$prev_payroll = $this->hitung_payroll_bulan($prev_period['bulan'], $prev_period['tahun'], false);
+			if (!empty($prev_payroll['rows'])) {
+				$prev_slips = array();
+				foreach ($prev_payroll['rows'] as $prow) {
+					$pkomp = isset($prev_payroll['komponen_per_pegawai'][$prow->nik])
+						? $prev_payroll['komponen_per_pegawai'][$prow->nik]
+						: array();
+					$prev_slips[$prow->nik] = $this->build_slip_snapshot($prow, $pkomp, $prev_payroll['alpha_rate']);
+				}
+				$prev_data = array(
+					'bulan'         => $prev_payroll['bulantahun'],
+					'label_periode' => Payroll_calculator::formatPeriodLabel($prev_payroll['bulantahun'], false),
+					'slips'         => $prev_slips
+				);
+			}
+		}
+
+		return Payroll_diff_explainer::explainClinicPeriodDiff($curr_data, $prev_data);
+	}
+
+	/**
+	 * Menghitung ringkasan selisih payroll periode terbaru yang tercatat di database (untuk Pimpinan).
+	 */
+	public function hitung_diff_payroll_terakhir()
+	{
+		$this->_ensure_diff_explainer();
+		$latest = $this->db->query("
+			SELECT DISTINCT bulan
+			FROM data_kehadiran
+			WHERE CHAR_LENGTH(bulan) = 6
+			ORDER BY STR_TO_DATE(CONCAT('01', bulan), '%d%m%Y') DESC
+			LIMIT 1
+		")->row();
+
+		if (!$latest || strlen((string)$latest->bulan) !== 6) {
+			return null;
+		}
+
+		$b = substr($latest->bulan, 0, 2);
+		$y = substr($latest->bulan, 2, 4);
+		$current_payroll = $this->hitung_payroll_bulan($b, $y, false);
+		if (empty($current_payroll['rows'])) {
+			return null;
+		}
+
+		return $this->hitung_diff_payroll_bulan($current_payroll);
 	}
 
 	/**
